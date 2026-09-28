@@ -13,6 +13,7 @@ class MarketService:
         provider: MarketDataProvider,
         *,
         index_ttl: float = 5,
+        intraday_ttl: float = 1,
         stale_ttl: float = 3600,
         timer: Callable[[], float] | None = None,
     ) -> None:
@@ -21,7 +22,7 @@ class MarketService:
             ttl=index_ttl, stale_ttl=stale_ttl, timer=timer
         )
         self._intraday: AsyncTTLStore[list[IntradayPoint]] = AsyncTTLStore(
-            ttl=index_ttl, stale_ttl=stale_ttl, timer=timer
+            ttl=intraday_ttl, stale_ttl=stale_ttl, timer=timer
         )
 
     async def get_indices(self) -> CachedResult[list[MarketIndex]]:

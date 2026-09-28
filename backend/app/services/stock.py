@@ -14,6 +14,7 @@ class StockService:
         provider: MarketDataProvider,
         *,
         quote_ttl: float = 5,
+        intraday_ttl: float = 1,
         kline_ttl: float = 60,
         search_ttl: float = 300,
         stale_ttl: float = 3600,
@@ -21,7 +22,7 @@ class StockService:
     ) -> None:
         self._provider = provider
         self._intraday: AsyncTTLStore[list[IntradayPoint]] = AsyncTTLStore(
-            ttl=quote_ttl, stale_ttl=stale_ttl, timer=timer
+            ttl=intraday_ttl, stale_ttl=stale_ttl, timer=timer
         )
         self._quotes: AsyncTTLStore[list[StockQuote]] = AsyncTTLStore(
             ttl=quote_ttl, stale_ttl=stale_ttl, timer=timer

@@ -110,7 +110,11 @@ def test_market_service_uses_short_cache_and_stale_flag() -> None:
         assert provider.index_calls == 2
         provider.fail = False
         assert (await service.get_index_intraday()).data[0].price == 3000.0
+        await service.get_index_intraday()
         assert provider.intraday_calls == 1
+        clock.now = 6.0
+        await service.get_index_intraday()
+        assert provider.intraday_calls == 2
         provider.fail = True
         clock.now = 8.0
         assert (await service.get_index_intraday()).stale
@@ -134,7 +138,7 @@ def test_stock_search_and_kline_cache_separately() -> None:
     asyncio.run(run())
 
 
-def test_stock_intraday_cache_is_per_symbol_and_stale_after_five_seconds():
+def test_stock_intraday_cache_is_per_symbol_and_refreshes_before_next_poll():
     async def run():
         clock = Clock()
         provider = FakeProvider()
@@ -143,11 +147,17 @@ def test_stock_intraday_cache_is_per_symbol_and_stale_after_five_seconds():
         await service.get_intraday("300750")
         await service.get_intraday("600519")
         assert provider.intraday_calls == 2
-        clock.now = 6
+        clock.now = 0.9
+        await service.get_intraday("300750")
+        assert provider.intraday_calls == 2
+        clock.now = 2
+        assert not (await service.get_intraday("300750")).stale
+        assert provider.intraday_calls == 3
+        clock.now = 4
         provider.fail = True
         result = await service.get_intraday("300750")
         assert result.stale and result.data[0].price == 3000
-        clock.now = 401
+        clock.now = 403
         with pytest.raises(DataSourceError):
             await service.get_intraday("300750")
 

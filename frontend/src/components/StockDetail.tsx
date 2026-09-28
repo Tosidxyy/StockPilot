@@ -19,7 +19,7 @@ export function StockDetail({ code }: { code: string }) {
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
   const quote = useResource<StockQuote>(`/api/stocks/${code}/quote`, 10000);
-  const intraday = useResource<IntradayPoint[]>(period === "intraday" ? `/api/stocks/${code}/intraday` : null, 10000);
+  const intraday = useResource<IntradayPoint[]>(period === "intraday" ? `/api/stocks/${code}/intraday` : null, 2000);
   const kline = useResource<KlineItem[]>(period !== "intraday" ? `/api/stocks/${code}/kline?period=${period}&limit=120` : null, 60000);
   const chart = period === "intraday" ? intraday : kline;
   const watchlist = useResource<WatchlistEntry[]>("/api/watchlist");
@@ -77,7 +77,7 @@ export function StockDetail({ code }: { code: string }) {
       </section>
 
       <section className="card kline-card" aria-labelledby="kline-title">
-        <div className="section-head"><div><h2 id="kline-title">{period === "intraday" ? "实时分时与成交量" : "K 线与成交量"}</h2><span>{period === "intraday" ? `最新交易日 · 每 10 秒刷新${intraday.data?.length ? ` · 更新至 ${intraday.data.at(-1)?.time.replace("T", " ")}` : ""}` : "不复权 · 最近 120 根"}</span></div><div className="period-tabs" role="group" aria-label="行情周期"><button className={period === "intraday" ? "active" : ""} type="button" onClick={() => setPeriod("intraday")}>分时</button><button className={period === "daily" ? "active" : ""} type="button" onClick={() => setPeriod("daily")}>日 K</button><button className={period === "weekly" ? "active" : ""} type="button" onClick={() => setPeriod("weekly")}>周 K</button></div></div>
+        <div className="section-head"><div><h2 id="kline-title">{period === "intraday" ? "实时分时与成交量" : "K 线与成交量"}</h2><span>{period === "intraday" ? `最新交易日 · 每 2 秒刷新${intraday.data?.length ? ` · 更新至 ${intraday.data.at(-1)?.time.replace("T", " ")}` : ""}` : "不复权 · 最近 120 根"}</span></div><div className="period-tabs" role="group" aria-label="行情周期"><button className={period === "intraday" ? "active" : ""} type="button" onClick={() => setPeriod("intraday")}>分时</button><button className={period === "daily" ? "active" : ""} type="button" onClick={() => setPeriod("daily")}>日 K</button><button className={period === "weekly" ? "active" : ""} type="button" onClick={() => setPeriod("weekly")}>周 K</button></div></div>
         {chart.loading ? <div className="chart kline-chart skeleton" /> :
           chart.error && !chart.data ? <div className="section-state error-state">{chart.error}<button onClick={chart.refresh}>重试</button></div> :
             !chart.data?.length ? <div className="section-state">暂无该周期行情数据。</div> :

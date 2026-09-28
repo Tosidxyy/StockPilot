@@ -14,8 +14,11 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
   useEffect(() => {
     if (!path) return;
     let active = true;
+    let pending = false;
     const controller = new AbortController();
     const load = async () => {
+      if (pending) return;
+      pending = true;
       try {
         const result = await getData<T>(path, controller.signal);
         if (active) {
@@ -26,6 +29,8 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
         if (active && !(error instanceof Error && error.name === "AbortError")) {
           setFailure({ path, message: errorText(error) });
         }
+      } finally {
+        pending = false;
       }
     };
     void load();

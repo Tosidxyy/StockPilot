@@ -17,7 +17,7 @@ export function MarketDashboard() {
   const [selected, setSelected] = useState("000001");
   const [traceVersion, setTraceVersion] = useState(0);
   const indices = useResource<MarketIndex[]>("/api/market/indices", 30000);
-  const trend = useResource<IntradayPoint[]>(`/api/market/indices/${selected}/intraday`, 30000);
+  const trend = useResource<IntradayPoint[]>(`/api/market/indices/${selected}/intraday`, 2000);
   const active = indices.data?.find((item) => item.symbol === selected);
 
   return (
@@ -39,7 +39,7 @@ export function MarketDashboard() {
       <div className="dashboard-grid">
         <div className="left-col">
           <section className="card market-card" aria-labelledby="trend-title">
-            <div className="section-head"><div><h2 id="trend-title">{indexNames[selected]} · 分时走势</h2><span>{trend.data?.length ? trend.data[trend.data.length - 1].time.slice(0, 10) : "最新交易日"}</span></div><span className="soft-label">09:30 — 15:00</span></div>
+            <div className="section-head"><div><h2 id="trend-title">{indexNames[selected]} · 分时走势</h2><span>{trend.data?.length ? trend.data[trend.data.length - 1].time.slice(0, 10) : "最新交易日"} · 每 2 秒刷新</span></div><span className="soft-label">09:30 — 15:00</span></div>
             <div className="market-meta">
               <div className="metric"><span>最新</span><strong>{number(active?.value)}</strong></div>
               <div className="metric"><span>涨跌幅</span><strong className={moveClass(active?.change_percent)}>{signed(active?.change_percent)}</strong></div>
