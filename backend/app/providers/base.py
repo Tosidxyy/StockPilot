@@ -7,9 +7,13 @@ from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote,
 from app.providers.exceptions import DataSourceError
 from app.models.news import NewsBatch
 from app.models.announcements import AnnouncementBatch, AnnouncementItem
+from app.models.money_flow import MoneyFlowSeries
 
 
 class MarketDataProvider(ABC):
+    async def get_stock_money_flow(self, symbol: str) -> MoneyFlowSeries:
+        raise DataSourceError("Money flow is not supported by this provider")
+
     async def get_stock_announcements(self, symbol: str) -> AnnouncementBatch:
         raise DataSourceError("Announcements are not supported by this provider")
 

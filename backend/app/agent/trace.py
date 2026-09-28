@@ -28,6 +28,10 @@ def _summary(tool_name: str, result: dict) -> str:
         return ("返回 1 条报价" if result.get("found") else "暂无缓存报价" if state else "未找到报价") + stale
     if tool_name == "get_stock_kline":
         return f"返回 {len(result['klines'])} 条 K 线" + stale
+    if tool_name == "get_stock_money_flow":
+        items = result.get("items", [])
+        through = f"；统计截至 {items[-1]['date']}" if items else ""
+        return f"返回 {len(items)} 个交易日资金流（元、%）" + through + stale
     if tool_name == "get_market_indices":
         return f"返回 {len(result['indices'])} 条指数" + stale
     if tool_name == "get_watchlist":

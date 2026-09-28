@@ -10,6 +10,7 @@ import { KlineChart, StockIntradayChart } from "./Charts";
 import { CollectionStatus } from "./CollectionStatus";
 import { NewsPanel } from "./NewsPanel";
 import { AnnouncementPanel } from "./AnnouncementPanel";
+import { MoneyFlowPanel } from "./MoneyFlowPanel";
 
 function exchange(symbol: string): string {
   if (symbol.startsWith("6")) return "上交所";
@@ -115,7 +116,7 @@ export function StockDetail({ code }: { code: string }) {
       </section>
 
       <div className="stock-secondary stock-news-section">
-        <section className="card placeholder-card"><div className="section-head"><div><h2>资金流向</h2><span>P1 数据待接入</span></div></div><div className="section-state">当前暂无资金流接口，接入后展示真实资金数据。</div></section>
+        <MoneyFlowPanel key={`flows-${code}`} symbol={code} />
         <NewsPanel key={code} symbol={code} />
         <AnnouncementPanel key={`announcements-${code}`} symbol={code} />
       </div>

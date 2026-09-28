@@ -46,6 +46,19 @@ export type MarketIndex = {
   low: number | null;
 };
 
+export type MoneyFlow = {
+  date: string;
+  main_net: number | null; super_large_net: number | null; large_net: number | null;
+  medium_net: number | null; small_net: number | null;
+  main_ratio: number | null; super_large_ratio: number | null; large_ratio: number | null;
+  medium_ratio: number | null; small_ratio: number | null;
+};
+
+export type MoneyFlowSeries = {
+  symbol: string; source: "eastmoney"; amount_unit: "CNY"; ratio_unit: "percent";
+  definition: string; coverage: string; items: MoneyFlow[];
+};
+
 export type IntradayPoint = {
   time: string;
   price: number;

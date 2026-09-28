@@ -14,6 +14,7 @@ from app.services.cache import CachedResult
 from app.services.reads import StockReadService
 from app.services.news import NewsService
 from app.services.announcements import AnnouncementService
+from app.services.money_flow import MoneyFlowService
 from app.providers.exceptions import DataSourceError
 from app.agent.trace import ToolStep
 
@@ -27,6 +28,7 @@ class AgentDependencies:
     reader: StockReadService | None = None
     news: NewsService | None = None
     announcements: AnnouncementService | None = None
+    money_flow: MoneyFlowService | None = None
 
 
 def _symbol(value: str) -> str:
@@ -108,6 +110,17 @@ async def get_stock_news(deps: AgentDependencies, symbol: str, days: int = 7, li
     start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
     result = await deps.news.get(symbol, start=start, page_size=limit)
     return {"symbol": symbol, "days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+
+
+async def get_stock_money_flow(deps: AgentDependencies, symbol: str, limit: int = 5) -> dict:
+    """Read cached daily flows; limit is trading-day rows, not calendar days."""
+    symbol = _symbol(symbol)
+    if not 1 <= limit <= 30:
+        raise ValueError("limit 必须在1到30个交易日之间")
+    if deps.money_flow is None:
+        raise DataSourceError("Money flow service unavailable")
+    result = await deps.money_flow.get(symbol, limit, prefer_cached=True)
+    return {**_cache_metadata(result), **result.data.model_dump(mode="json")}
 
 
 async def get_market_news(deps: AgentDependencies, days: int = 7, limit: int = 10) -> dict:
