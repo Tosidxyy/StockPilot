@@ -16,7 +16,7 @@ from app.api.routes import router
 from app.core.config import get_settings
 from app.database.session import create_database_engine, create_session_factory, init_db
 from app.providers.base import MarketDataProvider
-from app.providers.eastmoney import EastMoneyProvider
+from app.providers.resilient import ResilientMarketProvider
 from app.providers.exceptions import DataSourceError, InvalidSymbolError, ProviderTimeoutError
 from app.services.market import MarketService
 from app.services.chat import ChatService
@@ -35,7 +35,7 @@ def create_app(
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         engine = create_database_engine(database_url)
         owns_provider = provider is None
-        data_provider = provider if provider is not None else EastMoneyProvider()
+        data_provider = provider if provider is not None else ResilientMarketProvider()
         try:
             init_db(engine)
             session_factory = create_session_factory(engine)

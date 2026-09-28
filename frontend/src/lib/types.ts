@@ -42,7 +42,8 @@ export type KlineItem = {
   high: number;
   low: number;
   volume: number;
-  turnover: number;
+  turnover: number | null;
+  source: "eastmoney" | "tencent";
 };
 
 export type StockSearchResult = {

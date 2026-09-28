@@ -1,6 +1,7 @@
 """Provider-independent P0 market data models."""
 
 from datetime import date, datetime
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -47,7 +48,8 @@ class KlineItem(BaseModel):
     high: float
     low: float
     volume: int
-    turnover: float
+    turnover: float | None
+    source: Literal["eastmoney", "tencent"] = "eastmoney"
 
 
 class SymbolSearchResult(BaseModel):

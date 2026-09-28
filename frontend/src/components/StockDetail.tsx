@@ -79,10 +79,11 @@ export function StockDetail({ code }: { code: string }) {
       <section className="card kline-card" aria-labelledby="kline-title">
         <div className="section-head"><div><h2 id="kline-title">{period === "intraday" ? "实时分时与成交量" : "K 线与成交量"}</h2><span>{period === "intraday" ? `最新交易日 · 每 2 秒刷新${intraday.data?.length ? ` · 更新至 ${intraday.data.at(-1)?.time.replace("T", " ")}` : ""}` : "不复权 · 最近 120 根"}</span></div><div className="period-tabs" role="group" aria-label="行情周期"><button className={period === "intraday" ? "active" : ""} type="button" onClick={() => setPeriod("intraday")}>分时</button><button className={period === "daily" ? "active" : ""} type="button" onClick={() => setPeriod("daily")}>日 K</button><button className={period === "weekly" ? "active" : ""} type="button" onClick={() => setPeriod("weekly")}>周 K</button></div></div>
         {chart.loading ? <div className="chart kline-chart skeleton" /> :
-          chart.error && !chart.data ? <div className="section-state error-state">{chart.error}<button onClick={chart.refresh}>重试</button></div> :
+          chart.error && !chart.data ? <div className="section-state error-state">{period === "intraday" ? "分时数据暂不可用，可查看历史日 K。" : "历史 K 线暂不可用，请稍后重试。"}<button onClick={chart.refresh}>重试</button>{period === "intraday" && <button onClick={() => setPeriod("daily")}>查看历史日 K</button>}</div> :
             !chart.data?.length ? <div className="section-state">暂无该周期行情数据。</div> :
               <div className="chart-wrap">{period === "intraday" ? <StockIntradayChart points={intraday.data!} name={data?.name || code} /> : <KlineChart items={kline.data!} />}</div>}
         {chart.stale && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(chart.cachedAt)}。<button className="text-button" onClick={chart.refresh}>重试更新</button></p>}
+        {period !== "intraday" && kline.data?.length && <p className="table-note">历史 K 线来源：{kline.data[0].source === "tencent" ? "腾讯财经（备用源，未提供历史成交额）" : "东方财富"} · 数据截至 {kline.data.at(-1)?.date} · 当日/本周尚未收盘的数据可能变化</p>}
       </section>
 
       <div className="stock-secondary">
