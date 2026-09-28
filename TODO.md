@@ -59,7 +59,7 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 
 - [x] Market indices / overview
 - [x] Stock search / quote / kline
-- [x] Stock intraday API + 5 秒缓存 / stale
+- [x] Stock intraday API + 1 秒缓存 / stale
 - [x] Watchlist GET / POST / DELETE
 - [ ] P1：money-flow
 - [ ] P1：news
@@ -78,7 +78,7 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 - [ ] 市场温度
 - [x] 股票搜索
 - [x] 个股基础行情
-- [x] 个股默认分时 + 成交量 + 10 秒刷新
+- [x] 个股默认分时 + 成交量 + 2 秒刷新（首页指数分时同频率）
 - [x] 日 K / 周 K + 成交量
 - [x] 自选股导航锚点选中状态
 - [ ] P1：资金流
@@ -162,3 +162,5 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 注：2026-09-28 K 线专项修复与复验见 `docs/acceptance.md`。真实日/周 K 及单股 K 线 Agent 已通过，后端 42 测试和前端 lint / Type Check / Build 通过，修复已 Commit 并 Push。其余页面全链路、自选股批量报价和 Agent 核心 Case 尚未完整复验，前两项保持进行中；固定响应测试与 Eval 不替代这些在线验证。
 
 2026-09-28 用户交互增补闭环：个股分时、导航蓝点、Markdown 与流式回答已实现、测试并分别 Commit / Push（`cb34556`、`a06ea9b`、`ab3fa12`）。最新后端 50 passed，前端 lint / Type Check / Build 通过；真实分时与 DeepSeek 流式接口、浏览器中的图表/导航/格式化回答均已验证。已同步 PRD、设计、架构、数据源、验收及 README；本轮未继续其他功能阶段。
+
+分时刷新频率补充：个股和指数分时每 2 秒刷新，后端分时独立缓存 1 秒，并防止未完成请求重叠。后端 50 passed，前端 lint / Type Check / Build 通过；修复 `733e705` 已 Commit / Push，相关文档已同步。

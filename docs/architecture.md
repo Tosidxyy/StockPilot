@@ -147,7 +147,7 @@ K 线         30～60 秒
 新闻         3～5 分钟
 ```
 
-当前已实现：行情、指数与指数/个股分时 TTL 为 5 秒、K 线 60 秒、搜索 300 秒。每类缓存最多保留 256 个键；最近成功结果额外保留 3600 秒。新请求遇到 `DataSourceError` 且存在未过期的旧结果时，返回 `CachedResult(data=..., stale=True)`；无旧结果则继续抛异常。返回缓存数据时复制模型，避免调用方修改缓存。
+当前已实现：行情、指数 TTL 为 5 秒，指数/个股分时独立 TTL 为 1 秒，K 线 60 秒、搜索 300 秒。分时缓存独立于报价和指数缓存，配合前端 2 秒刷新。每类缓存最多保留 256 个键；最近成功结果额外保留 3600 秒。新请求遇到 `DataSourceError` 且存在未过期的旧结果时，返回 `CachedResult(data=..., stale=True)`；无旧结果则继续抛异常。返回缓存数据时复制模型，避免调用方修改缓存。
 
 Provider 短暂失败且存在旧缓存时，可返回：
 
@@ -219,7 +219,7 @@ GET    /api/stocks/{code}/news
 
 本地 Next.js 来源通过 `CORS_ORIGINS` 配置允许跨域访问后端。
 
-`GET /api/stocks/{code}/intraday` 经 StockService → Provider 获取最新交易日分钟价格、成交量与成交额，仍返回 `{ data, stale }`。详情默认展示分时，每 10 秒刷新；日/周 K 切换使用原接口。
+`GET /api/stocks/{code}/intraday` 经 StockService → Provider 获取最新交易日分钟价格、成交量与成交额，仍返回 `{ data, stale }`。详情默认展示分时，每 2 秒刷新，首页指数分时也每 2 秒刷新；日/周 K 切换使用原接口。前端轮询在上次请求完成前跳过重复调用，避免慢源请求堆积；切换资源或卸载时取消旧请求。
 
 `POST /api/agent/chat/stream` 接受同一 ChatRequest，返回 `text/event-stream`：`session` 提供会话 ID，`delta` 提供文本增量，`done` 提供完整答案；模型或行情失败发送包含规范化状态码和会话 ID 的 `error` 事件。未配置、未知会话、无效输入在流开始前分别返回 HTTP 503/404/422；开始后的失败以流内事件通知。原 JSON chat 接口保留供现有调用和 Eval 使用。
 
