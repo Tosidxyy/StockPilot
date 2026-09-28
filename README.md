@@ -102,7 +102,7 @@ npm install
 npm run dev
 ```
 
-访问 `http://localhost:3000`。前端默认连接 `http://localhost:8000`，可参考 `frontend/.env.example` 设置 `NEXT_PUBLIC_API_BASE_URL`。首页提供三大指数、分时走势、搜索、自选股、Agent 对话和最近 Tool Trace；个股详情默认显示最新交易日分时价格与成交量，每 2 秒刷新，并可切换日/周 K。首页指数分时同样每 2 秒刷新；后端分时缓存为 1 秒，慢请求未完成时跳过重复轮询。自选股导航按 `/#watchlist` 高亮。
+访问 `http://localhost:3000`。前端默认连接 `http://localhost:8000`，可参考 `frontend/.env.example` 设置 `NEXT_PUBLIC_API_BASE_URL`。首页提供三大指数、分时走势、搜索、自选股、Agent 对话和最近 Tool Trace；自选股批量报价、个股报价、指数及分时统一每 2 秒刷新，后端对应缓存为 1 秒。个股详情可切换日/周 K，日/周 K 仍每 60 秒刷新。页面显示最近成功更新时间，慢请求未完成时跳过重复轮询，分时点未变化时不重复重绘；成功行情持久化到 SQLite，断连时可展示最多 7 天内的旧快照与保存时间。每 2 秒查询不保证第三方每轮都有新数据返回。自选股导航按 `/#watchlist` 高亮。
 
 首页与 `/agent` 的回复支持 Markdown 粗体、列表、代码和表格，并经 `/api/agent/chat/stream` 逐段输出，可点击“停止”。完整答案保存到 SQLite，浏览器仅保存会话 ID；不完整输出不会作为完整回答保存。刷新后历史回答也按 Markdown 展示。数据源不可用时显示重试提示，有最近成功缓存时标注旧数据；市场温度、资金流和新闻仍待接入。
 
