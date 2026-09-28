@@ -162,3 +162,24 @@ def test_stock_intraday_cache_is_per_symbol_and_refreshes_before_next_poll():
             await service.get_intraday("300750")
 
     asyncio.run(run())
+
+
+def test_default_quote_and_index_caches_refresh_at_two_second_poll():
+    async def run():
+        clock = Clock()
+        provider = FakeProvider()
+        stocks = StockService(provider, timer=clock)
+        market = MarketService(provider, timer=clock)
+        await stocks.get_quotes(["600519", "000001"])
+        await market.get_indices()
+        clock.now = 0.9
+        await stocks.get_quotes(["600519", "000001"])
+        await market.get_indices()
+        assert len(provider.quote_calls) == 1 and provider.index_calls == 1
+        clock.now = 2
+        assert not (await stocks.get_quotes(["600519", "000001"])).stale
+        assert not (await market.get_indices()).stale
+        assert provider.quote_calls == [("600519", "000001")] * 2
+        assert provider.index_calls == 2
+
+    asyncio.run(run())

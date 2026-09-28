@@ -22,7 +22,14 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
       try {
         const result = await getData<T>(path, controller.signal);
         if (active) {
-          setSnapshot({ path, data: result.data, stale: result.stale, cachedAt: result.cached_at ?? null });
+          setSnapshot((previous) => ({
+            path,
+            // Keep charts stable when a new response contains identical minute points.
+            data: previous?.path === path && JSON.stringify(previous.data) === JSON.stringify(result.data)
+              ? previous.data : result.data,
+            stale: result.stale,
+            cachedAt: result.cached_at ?? null,
+          }));
           setFailure(null);
         }
       } catch (error) {

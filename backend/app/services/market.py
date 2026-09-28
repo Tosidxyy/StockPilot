@@ -14,7 +14,7 @@ class MarketService:
         self,
         provider: MarketDataProvider,
         *,
-        index_ttl: float = 5,
+        index_ttl: float = 1,
         intraday_ttl: float = 1,
         stale_ttl: float = 3600,
         timer: Callable[[], float] | None = None,

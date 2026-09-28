@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiRequest, errorText } from "../lib/api";
-import { amount, cachedTime, moveClass, number, signed } from "../lib/format";
+import { amount, cachedTime, moveClass, number, signed, updatedTime } from "../lib/format";
 import type { IntradayPoint, KlineItem, StockQuote, WatchlistEntry } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { KlineChart, StockIntradayChart } from "./Charts";
@@ -18,7 +18,7 @@ export function StockDetail({ code }: { code: string }) {
   const [period, setPeriod] = useState<"intraday" | "daily" | "weekly">("intraday");
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
-  const quote = useResource<StockQuote>(`/api/stocks/${code}/quote`, 10000);
+  const quote = useResource<StockQuote>(`/api/stocks/${code}/quote`, 2000);
   const intraday = useResource<IntradayPoint[]>(period === "intraday" ? `/api/stocks/${code}/intraday` : null, 2000);
   const kline = useResource<KlineItem[]>(period !== "intraday" ? `/api/stocks/${code}/kline?period=${period}&limit=120` : null, 60000);
   const chart = period === "intraday" ? intraday : kline;
@@ -57,7 +57,7 @@ export function StockDetail({ code }: { code: string }) {
       {watchlist.error && !watchlist.data && <p className="inline-error" role="alert">自选股状态获取失败：{watchlist.error} <button onClick={watchlist.refresh}>重试</button></p>}
 
       <section className="card quote-card" aria-labelledby="quote-title">
-        <div className="section-head"><div><h2 id="quote-title">基础行情</h2><span>来自行情数据源</span></div>{quote.stale && <span className="stale-pill">旧缓存</span>}</div>
+        <div className="section-head"><div><h2 id="quote-title">基础行情</h2><span>每 2 秒刷新{!quote.stale && updatedTime(quote.cachedAt)}</span></div>{quote.stale && <span className="stale-pill">旧缓存</span>}</div>
         {quote.loading ? <div className="quote-main skeleton" /> :
           quote.error && !data ? <div className="section-state error-state">{quote.error}<button onClick={quote.refresh}>重试</button></div> :
             !data ? <div className="section-state">暂无该股票行情。</div> : <>

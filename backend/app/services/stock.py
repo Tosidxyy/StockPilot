@@ -15,7 +15,7 @@ class StockService:
         self,
         provider: MarketDataProvider,
         *,
-        quote_ttl: float = 5,
+        quote_ttl: float = 1,
         intraday_ttl: float = 1,
         kline_ttl: float = 60,
         search_ttl: float = 300,

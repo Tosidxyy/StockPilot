@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiRequest, errorText } from "../lib/api";
-import { amount, cachedTime, moveClass, number, signed } from "../lib/format";
+import { amount, cachedTime, moveClass, number, signed, updatedTime } from "../lib/format";
 import type { StockQuote, StockSearchResult, WatchlistEntry } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { StockSearch } from "./StockSearch";
@@ -11,7 +11,7 @@ import { StockSearch } from "./StockSearch";
 export function WatchlistPanel() {
   const entries = useResource<WatchlistEntry[]>("/api/watchlist");
   const codes = entries.data?.map((entry) => entry.symbol).join(",") || "";
-  const quotes = useResource<StockQuote[]>(codes ? `/api/stocks/quotes?codes=${encodeURIComponent(codes)}` : null, 30000);
+  const quotes = useResource<StockQuote[]>(codes ? `/api/stocks/quotes?codes=${encodeURIComponent(codes)}` : null, 2000);
   const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
@@ -50,7 +50,7 @@ export function WatchlistPanel() {
   return (
     <section className="card watch-card" id="watchlist" aria-labelledby="watchlist-title">
       <div className="section-head">
-        <div><h2 id="watchlist-title">我的自选股</h2><span>{entries.data ? `${entries.data.length} 只` : "加载中"} · 行情定期刷新</span></div>
+        <div><h2 id="watchlist-title">我的自选股</h2><span>{entries.data ? `${entries.data.length} 只` : "加载中"} · 每 2 秒刷新{!quotes.stale && updatedTime(quotes.cachedAt)}</span></div>
         <button className="text-button" type="button" onClick={() => setAdding(!adding)}>{adding ? "收起" : "+ 添加股票"}</button>
       </div>
       {adding && <div className="watch-add"><StockSearch onSelect={add} placeholder="搜索代码或名称后添加" autoFocus />{busy && <span className="muted-text">正在添加…</span>}</div>}

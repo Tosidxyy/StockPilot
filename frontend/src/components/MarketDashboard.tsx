@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { amount, cachedTime, moveClass, number, signed } from "../lib/format";
+import { amount, cachedTime, moveClass, number, signed, updatedTime } from "../lib/format";
 import type { IntradayPoint, MarketIndex } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { MarketLineChart } from "./Charts";
@@ -16,7 +16,7 @@ const indexNames: Record<string, string> = {
 export function MarketDashboard() {
   const [selected, setSelected] = useState("000001");
   const [traceVersion, setTraceVersion] = useState(0);
-  const indices = useResource<MarketIndex[]>("/api/market/indices", 30000);
+  const indices = useResource<MarketIndex[]>("/api/market/indices", 2000);
   const trend = useResource<IntradayPoint[]>(`/api/market/indices/${selected}/intraday`, 2000);
   const active = indices.data?.find((item) => item.symbol === selected);
 
@@ -35,6 +35,7 @@ export function MarketDashboard() {
               </button>
             ))}</section>}
       {indices.stale && <p className="stale-note">指数暂未更新，正在显示旧缓存{cachedTime(indices.cachedAt)}。<button className="text-button" onClick={indices.refresh}>重试更新</button></p>}
+      {!indices.stale && indices.cachedAt && <p className="card-note">指数每 2 秒刷新{updatedTime(indices.cachedAt)}</p>}
 
       <div className="dashboard-grid">
         <div className="left-col">

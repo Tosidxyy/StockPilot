@@ -26,3 +26,10 @@ export function cachedTime(value: string | null): string {
   if (!Number.isFinite(date.getTime())) return "";
   return ` · 缓存保存于 ${date.toLocaleString("zh-CN", { timeZone: "Asia/Shanghai", hour12: false })}`;
 }
+
+export function updatedTime(value: string | null): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  return ` · 最近更新 ${date.toLocaleTimeString("zh-CN", { timeZone: "Asia/Shanghai", hour12: false })}`;
+}
