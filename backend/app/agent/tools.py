@@ -34,6 +34,7 @@ async def get_stock_quote(deps: AgentDependencies, symbol: str) -> dict:
         "symbol": symbol,
         "found": result.data is not None,
         "stale": result.stale,
+        "cached_at": result.cached_at.isoformat() if result.cached_at else None,
         "quote": result.data.model_dump(mode="json") if result.data else None,
     }
 
@@ -53,6 +54,7 @@ async def get_stock_kline(
         "symbol": symbol,
         "period": period,
         "stale": result.stale,
+        "cached_at": result.cached_at.isoformat() if result.cached_at else None,
         "klines": [item.model_dump(mode="json") for item in result.data],
     }
 
@@ -62,6 +64,7 @@ async def get_market_indices(deps: AgentDependencies) -> dict:
     result = await deps.market.get_indices()
     return {
         "stale": result.stale,
+        "cached_at": result.cached_at.isoformat() if result.cached_at else None,
         "indices": [item.model_dump(mode="json") for item in result.data],
     }
 
@@ -77,4 +80,5 @@ async def get_watchlist(deps: AgentDependencies) -> dict:
         "entries": [entry.model_dump(mode="json") for entry in entries],
         "quotes": [item.model_dump(mode="json") for item in result.data],
         "stale": result.stale,
+        "cached_at": result.cached_at.isoformat() if result.cached_at else None,
     }

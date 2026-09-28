@@ -4,12 +4,15 @@ import asyncio
 from collections.abc import Awaitable, Callable, Hashable
 from copy import deepcopy
 from dataclasses import dataclass
+from datetime import datetime
 from time import monotonic
 from typing import Generic, TypeVar
 
 from cachetools import TTLCache
 
 from app.providers.exceptions import DataSourceError
+from app.database.models import utc_now
+from app.services.snapshots import SnapshotStore
 
 T = TypeVar("T")
 
@@ -18,6 +21,7 @@ T = TypeVar("T")
 class CachedResult(Generic[T]):
     data: T
     stale: bool = False
+    cached_at: datetime | None = None
 
 
 @dataclass(frozen=True)
@@ -36,12 +40,15 @@ class AsyncTTLStore(Generic[T]):
         stale_ttl: float = 3600,
         maxsize: int = 256,
         timer: Callable[[], float] | None = None,
+        snapshots: SnapshotStore[T] | None = None,
     ) -> None:
         if ttl <= 0 or stale_ttl <= ttl or maxsize <= 0:
             raise ValueError("cache TTL and capacity must be positive; stale_ttl must exceed ttl")
         kwargs = {"timer": timer} if timer is not None else {}
         self._fresh: TTLCache[Hashable, T] = TTLCache(maxsize=maxsize, ttl=ttl, **kwargs)
         self._stale: TTLCache[Hashable, T] = TTLCache(maxsize=maxsize, ttl=stale_ttl, **kwargs)
+        self._saved_at: TTLCache[Hashable, datetime] = TTLCache(maxsize=maxsize, ttl=stale_ttl, **kwargs)
+        self._snapshots = snapshots
         self._failures: TTLCache[Hashable, RetryState] = TTLCache(
             maxsize=maxsize, ttl=stale_ttl, **kwargs
         )
@@ -50,7 +57,7 @@ class AsyncTTLStore(Generic[T]):
 
     async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]]) -> CachedResult[T]:
         if key in self._fresh:
-            return CachedResult(deepcopy(self._fresh[key]))
+            return CachedResult(deepcopy(self._fresh[key]), cached_at=self._saved_at.get(key))
         task = self._pending.get(key)
         if task is None:
             task = asyncio.create_task(self._load(key, loader))
@@ -58,7 +65,17 @@ class AsyncTTLStore(Generic[T]):
             task.add_done_callback(lambda completed: self._finish(key, completed))
         # A disconnected caller must not cancel the fetch shared by other callers.
         result = await asyncio.shield(task)
-        return CachedResult(deepcopy(result.data), stale=result.stale)
+        return CachedResult(deepcopy(result.data), stale=result.stale, cached_at=result.cached_at)
+
+    async def _fallback(self, key: Hashable) -> CachedResult[T] | None:
+        if key in self._stale:
+            return CachedResult(self._stale[key], stale=True, cached_at=self._saved_at.get(key))
+        if self._snapshots is not None:
+            stored = await self._snapshots.read(key)
+            if stored is not None:
+                data, saved_at = stored
+                return CachedResult(data, stale=True, cached_at=saved_at)
+        return None
 
     def _finish(self, key: Hashable, task: asyncio.Task[CachedResult[T]]) -> None:
         if self._pending.get(key) is task:
@@ -70,8 +87,9 @@ class AsyncTTLStore(Generic[T]):
     async def _load(self, key: Hashable, loader: Callable[[], Awaitable[T]]) -> CachedResult[T]:
         failure = self._failures.get(key)
         if failure is not None and self._timer() < failure.retry_at:
-            if key in self._stale:
-                return CachedResult(self._stale[key], stale=True)
+            fallback = await self._fallback(key)
+            if fallback is not None:
+                return fallback
             raise failure.error_type(failure.message)
         try:
             data = await loader()
@@ -80,10 +98,15 @@ class AsyncTTLStore(Generic[T]):
             self._failures[key] = RetryState(
                 attempts, self._timer() + min(2 ** attempts, 30), type(error), str(error)
             )
-            if key in self._stale:
-                return CachedResult(self._stale[key], stale=True)
+            fallback = await self._fallback(key)
+            if fallback is not None:
+                return fallback
             raise
         self._failures.pop(key, None)
+        saved_at = utc_now()
+        if self._snapshots is not None:
+            saved_at = await self._snapshots.save(key, data) or saved_at
         self._fresh[key] = deepcopy(data)
         self._stale[key] = deepcopy(data)
-        return CachedResult(deepcopy(data))
+        self._saved_at[key] = saved_at
+        return CachedResult(deepcopy(data), cached_at=saved_at)

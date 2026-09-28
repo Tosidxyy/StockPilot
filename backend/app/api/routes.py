@@ -23,7 +23,7 @@ Code = Annotated[str, Path(pattern=r"^[03468][0-9]{5}$")]
 @router.get("/market/indices", response_model=DataResponse[list[MarketIndex]])
 async def get_indices(market: Market) -> DataResponse[list[MarketIndex]]:
     result = await market.get_indices()
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/market/indices/{code}/intraday", response_model=DataResponse[list[IntradayPoint]])
@@ -31,7 +31,7 @@ async def get_index_intraday(
     market: Market, code: Annotated[str, Path(pattern=r"^(000001|399001|399006)$")]
 ) -> DataResponse[list[IntradayPoint]]:
     result = await market.get_index_intraday(code)
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/market/overview", response_model=MarketOverviewResponse)
@@ -39,7 +39,7 @@ async def get_market_overview(market: Market, watchlist: Watchlist) -> MarketOve
     result = await market.get_indices()
     entries = await run_in_threadpool(watchlist.list_entries)
     return MarketOverviewResponse(
-        indices=result.data, watchlist_count=len(entries), stale=result.stale
+        indices=result.data, watchlist_count=len(entries), stale=result.stale, cached_at=result.cached_at
     )
 
 
@@ -50,7 +50,7 @@ async def search_stocks(
     limit: Annotated[int, Query(ge=1, le=100)] = 20,
 ) -> DataResponse[list[SymbolSearchResult]]:
     result = await stock.search(q, limit)
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/stocks/quotes", response_model=DataResponse[list[StockQuote]])
@@ -65,7 +65,7 @@ async def get_batch_quotes(
     ):
         raise HTTPException(status_code=422, detail="codes must contain 1-50 valid A-share symbols")
     result = await stock.get_quotes(symbols)
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/stocks/{code}/quote", response_model=DataResponse[StockQuote])
@@ -73,7 +73,7 @@ async def get_stock_quote(stock: Stock, code: Code) -> DataResponse[StockQuote]:
     result = await stock.get_quote(code)
     if result.data is None:
         raise HTTPException(status_code=404, detail="Stock quote not found")
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/stocks/{code}/kline", response_model=DataResponse[list[KlineItem]])
@@ -84,13 +84,13 @@ async def get_stock_kline(
     limit: Annotated[int, Query(ge=1, le=1000)] = 120,
 ) -> DataResponse[list[KlineItem]]:
     result = await stock.get_kline(code, period, limit)
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/stocks/{code}/intraday", response_model=DataResponse[list[IntradayPoint]])
 async def get_stock_intraday(stock: Stock, code: Code) -> DataResponse[list[IntradayPoint]]:
     result = await stock.get_intraday(code)
-    return DataResponse(data=result.data, stale=result.stale)
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/watchlist", response_model=DataResponse[list[WatchlistEntry]])

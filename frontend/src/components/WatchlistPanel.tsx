@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiRequest, errorText } from "../lib/api";
-import { amount, moveClass, number, signed } from "../lib/format";
+import { amount, cachedTime, moveClass, number, signed } from "../lib/format";
 import type { StockQuote, StockSearchResult, WatchlistEntry } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { StockSearch } from "./StockSearch";
@@ -76,7 +76,8 @@ export function WatchlistPanel() {
             </div>}
       {codes && (quotes.loading || quotes.error || quotes.stale) &&
         <p className={`table-note ${quotes.error ? "inline-error" : ""}`}>
-          {quotes.loading ? "正在获取自选股行情…" : quotes.error ? `行情更新失败：${quotes.error}` : "当前展示数据源旧缓存。"}
+          {quotes.loading ? "正在获取自选股行情…" : quotes.stale ? `行情暂未更新，正在显示旧缓存${cachedTime(quotes.cachedAt)}。` : `行情更新失败：${quotes.error}`}
+          {!quotes.loading && <button className="text-button" onClick={quotes.refresh}>重试更新</button>}
         </p>}
       {entries.stale && <p className="table-note">自选股列表暂未更新，当前展示上次结果。</p>}
     </section>

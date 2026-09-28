@@ -15,6 +15,15 @@ class Base(DeclarativeBase):
     pass
 
 
+class MarketSnapshot(Base):
+    __tablename__ = "market_snapshot"
+
+    namespace: Mapped[str] = mapped_column(String(40), primary_key=True)
+    cache_key: Mapped[str] = mapped_column(Text, primary_key=True)
+    payload: Mapped[list[dict[str, Any]]] = mapped_column(JSON, nullable=False)
+    saved_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+
+
 class WatchlistItem(Base):
     __tablename__ = "watchlist"
     __table_args__ = (UniqueConstraint("symbol", name="uq_watchlist_symbol"),)

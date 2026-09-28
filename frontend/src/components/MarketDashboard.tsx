@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { amount, moveClass, number, signed } from "../lib/format";
+import { amount, cachedTime, moveClass, number, signed } from "../lib/format";
 import type { IntradayPoint, MarketIndex } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { MarketLineChart } from "./Charts";
@@ -34,7 +34,7 @@ export function MarketDashboard() {
                 <span className="index-sub"><span className={moveClass(index.change_amount)}>{signed(index.change_amount, "")}</span><span>成交额 {amount(index.turnover)}</span></span>
               </button>
             ))}</section>}
-      {indices.stale && <p className="stale-note">指数使用最近成功数据，行情源暂时不可用。</p>}
+      {indices.stale && <p className="stale-note">指数暂未更新，正在显示旧缓存{cachedTime(indices.cachedAt)}。<button className="text-button" onClick={indices.refresh}>重试更新</button></p>}
 
       <div className="dashboard-grid">
         <div className="left-col">
@@ -53,7 +53,7 @@ export function MarketDashboard() {
                   !trend.data?.length ? <div className="section-state">最新交易日暂无分时数据。</div> :
                     <MarketLineChart points={trend.data} name={indexNames[selected]} />}
             </div>
-            {trend.stale && <p className="stale-note">分时图使用最近成功数据。</p>}
+            {trend.stale && <p className="stale-note">分时暂未更新，正在显示旧缓存{cachedTime(trend.cachedAt)}。<button className="text-button" onClick={trend.refresh}>重试更新</button></p>}
           </section>
 
           <WatchlistPanel />

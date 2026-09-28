@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { errorText, getData } from "./api";
 
-type Snapshot<T> = { path: string; data: T; stale: boolean };
+type Snapshot<T> = { path: string; data: T; stale: boolean; cachedAt: string | null };
 type Failure = { path: string; message: string };
 
 export function useResource<T>(path: string | null, refreshMs = 0) {
@@ -22,7 +22,7 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
       try {
         const result = await getData<T>(path, controller.signal);
         if (active) {
-          setSnapshot({ path, data: result.data, stale: result.stale });
+          setSnapshot({ path, data: result.data, stale: result.stale, cachedAt: result.cached_at ?? null });
           setFailure(null);
         }
       } catch (error) {
@@ -47,6 +47,7 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
   return {
     data: current?.data ?? null,
     stale: Boolean(current && (current.stale || currentError)),
+    cachedAt: current?.cachedAt ?? null,
     loading: Boolean(path && !current && !currentError),
     error: currentError,
     refresh: () => { setFailure(null); setRetryKey((key) => key + 1); },

@@ -39,8 +39,8 @@ def create_app(
         try:
             init_db(engine)
             session_factory = create_session_factory(engine)
-            application.state.stock_service = StockService(data_provider)
-            application.state.market_service = MarketService(data_provider)
+            application.state.stock_service = StockService(data_provider, snapshot_sessions=session_factory)
+            application.state.market_service = MarketService(data_provider, snapshot_sessions=session_factory)
             application.state.watchlist_service = WatchlistService(session_factory)
             application.state.trace_service = TraceService(session_factory)
             application.state.agent_service = StockAgentService(

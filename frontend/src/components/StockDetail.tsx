@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { apiRequest, errorText } from "../lib/api";
-import { amount, moveClass, number, signed } from "../lib/format";
+import { amount, cachedTime, moveClass, number, signed } from "../lib/format";
 import type { IntradayPoint, KlineItem, StockQuote, WatchlistEntry } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { KlineChart, StockIntradayChart } from "./Charts";
@@ -73,7 +73,7 @@ export function StockDetail({ code }: { code: string }) {
                 <div className="metric"><span>市盈率</span><strong>{number(data.pe_ratio)}</strong></div>
               </div>
             </>}
-        {quote.error && data && <p className="stale-note">行情更新失败：{quote.error}</p>}
+        {quote.stale && data && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(quote.cachedAt)}。<button className="text-button" onClick={quote.refresh}>重试更新</button></p>}
       </section>
 
       <section className="card kline-card" aria-labelledby="kline-title">
@@ -82,7 +82,7 @@ export function StockDetail({ code }: { code: string }) {
           chart.error && !chart.data ? <div className="section-state error-state">{chart.error}<button onClick={chart.refresh}>重试</button></div> :
             !chart.data?.length ? <div className="section-state">暂无该周期行情数据。</div> :
               <div className="chart-wrap">{period === "intraday" ? <StockIntradayChart points={intraday.data!} name={data?.name || code} /> : <KlineChart items={kline.data!} />}</div>}
-        {chart.stale && <p className="stale-note">正在显示最近成功数据，本次行情更新暂不可用。</p>}
+        {chart.stale && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(chart.cachedAt)}。<button className="text-button" onClick={chart.refresh}>重试更新</button></p>}
       </section>
 
       <div className="stock-secondary">

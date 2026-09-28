@@ -2,10 +2,12 @@
 
 from collections.abc import Callable, Sequence
 from typing import Literal
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.models.market import IntradayPoint, KlineItem, StockQuote, SymbolSearchResult
 from app.providers.base import MarketDataProvider
 from app.services.cache import AsyncTTLStore, CachedResult
+from app.services.snapshots import SnapshotStore
 
 
 class StockService:
@@ -19,16 +21,20 @@ class StockService:
         search_ttl: float = 300,
         stale_ttl: float = 3600,
         timer: Callable[[], float] | None = None,
+        snapshot_sessions: sessionmaker[Session] | None = None,
     ) -> None:
         self._provider = provider
         self._intraday: AsyncTTLStore[list[IntradayPoint]] = AsyncTTLStore(
-            ttl=intraday_ttl, stale_ttl=stale_ttl, timer=timer
+            ttl=intraday_ttl, stale_ttl=stale_ttl, timer=timer,
+            snapshots=SnapshotStore(snapshot_sessions, "stock_intraday", list[IntradayPoint]) if snapshot_sessions else None,
         )
         self._quotes: AsyncTTLStore[list[StockQuote]] = AsyncTTLStore(
-            ttl=quote_ttl, stale_ttl=stale_ttl, timer=timer
+            ttl=quote_ttl, stale_ttl=stale_ttl, timer=timer,
+            snapshots=SnapshotStore(snapshot_sessions, "stock_quotes", list[StockQuote]) if snapshot_sessions else None,
         )
         self._klines: AsyncTTLStore[list[KlineItem]] = AsyncTTLStore(
-            ttl=kline_ttl, stale_ttl=stale_ttl, timer=timer
+            ttl=kline_ttl, stale_ttl=stale_ttl, timer=timer,
+            snapshots=SnapshotStore(snapshot_sessions, "stock_klines", list[KlineItem]) if snapshot_sessions else None,
         )
         self._search: AsyncTTLStore[list[SymbolSearchResult]] = AsyncTTLStore(
             ttl=search_ttl, stale_ttl=stale_ttl, timer=timer
@@ -48,7 +54,7 @@ class StockService:
 
     async def get_quote(self, symbol: str) -> CachedResult[StockQuote | None]:
         result = await self.get_quotes([symbol])
-        return CachedResult(result.data[0] if result.data else None, stale=result.stale)
+        return CachedResult(result.data[0] if result.data else None, stale=result.stale, cached_at=result.cached_at)
 
     async def get_kline(
         self, symbol: str, period: Literal["daily", "weekly"] = "daily", limit: int = 120

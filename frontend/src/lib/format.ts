@@ -19,3 +19,10 @@ export function amount(value: number | null | undefined): string {
 export function moveClass(value: number | null | undefined): string {
   return value == null ? "" : value > 0 ? "up" : value < 0 ? "down" : "";
 }
+
+export function cachedTime(value: string | null): string {
+  if (!value) return "";
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return "";
+  return ` · 缓存保存于 ${date.toLocaleString("zh-CN", { timeZone: "Asia/Shanghai", hour12: false })}`;
+}

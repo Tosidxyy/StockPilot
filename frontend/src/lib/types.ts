@@ -1,4 +1,4 @@
-export type DataEnvelope<T> = { data: T; stale: boolean };
+export type DataEnvelope<T> = { data: T; stale: boolean; cached_at?: string | null };
 
 export type MarketIndex = {
   symbol: string;
