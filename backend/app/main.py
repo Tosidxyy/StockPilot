@@ -24,6 +24,7 @@ from app.services.trace import TraceService
 from app.services.stock import StockService
 from app.services.watchlist import WatchlistService
 from app.services.collector import WatchlistCollector
+from app.services.reads import StockReadService
 
 
 def create_app(
@@ -46,12 +47,14 @@ def create_app(
             application.state.market_service = MarketService(data_provider, snapshot_sessions=session_factory)
             application.state.watchlist_service = WatchlistService(session_factory)
             application.state.trace_service = TraceService(session_factory)
+            reader = StockReadService(application.state.stock_service, application.state.watchlist_service, None)
             application.state.agent_service = StockAgentService(
                 get_settings(),
                 AgentDependencies(
                     stocks=application.state.stock_service,
                     market=application.state.market_service,
                     watchlist=application.state.watchlist_service,
+                    reader=reader,
                 ),
                 ChatService(session_factory),
                 application.state.trace_service,
@@ -67,6 +70,7 @@ def create_app(
                 )
                 collector.start()
             application.state.watchlist_collector = collector
+            reader.collector = collector
             yield
         finally:
             if collector is not None:

@@ -11,6 +11,7 @@ from app.services.market import MarketService
 from app.services.stock import StockService
 from app.services.watchlist import WatchlistService
 from app.services.cache import CachedResult
+from app.services.reads import StockReadService
 from app.agent.trace import ToolStep
 
 
@@ -20,6 +21,7 @@ class AgentDependencies:
     market: MarketService
     watchlist: WatchlistService
     trace_steps: list[ToolStep] = field(default_factory=list)
+    reader: StockReadService | None = None
 
 
 def _symbol(value: str) -> str:
@@ -30,6 +32,7 @@ def _symbol(value: str) -> str:
 
 def _cache_metadata(result: CachedResult) -> dict:
     return {
+        **({"collection_state": result.state} if getattr(result, "state", None) else {}),
         "stale": result.stale,
         "cached_at": result.cached_at.isoformat() if result.cached_at else None,
         "cache_age_seconds": max(0, round((datetime.now(timezone.utc) - result.cached_at).total_seconds(), 1))
@@ -40,7 +43,7 @@ def _cache_metadata(result: CachedResult) -> dict:
 async def get_stock_quote(deps: AgentDependencies, symbol: str) -> dict:
     """Read the latest cached quote; fetch only if no usable cache exists."""
     symbol = _symbol(symbol)
-    result = await deps.stocks.get_quote(symbol, prefer_cached=True)
+    result = await deps.reader.quote(symbol, prefer_cached=True) if deps.reader else await deps.stocks.get_quote(symbol, prefer_cached=True)
     return {
         "symbol": symbol,
         "found": result.data is not None,
@@ -59,7 +62,7 @@ async def get_stock_kline(
     symbol = _symbol(symbol)
     if not 1 <= limit <= 120:
         raise ValueError("limit 必须在 1 到 120 之间")
-    result = await deps.stocks.get_kline(symbol, period, limit, prefer_cached=True)
+    result = await deps.reader.kline(symbol, period, limit, prefer_cached=True) if deps.reader else await deps.stocks.get_kline(symbol, period, limit, prefer_cached=True)
     return {
         "symbol": symbol,
         "period": period,
@@ -83,7 +86,7 @@ async def get_watchlist(deps: AgentDependencies) -> dict:
     symbols = [entry.symbol for entry in entries]
     if not symbols:
         return {"entries": [], "quotes": [], "stale": False, "cached_at": None, "cache_age_seconds": None}
-    result = await deps.stocks.get_quotes(symbols, prefer_cached=True)
+    result = await deps.reader.quotes(symbols, prefer_cached=True) if deps.reader else await deps.stocks.get_quotes(symbols, prefer_cached=True)
     return {
         "entries": [entry.model_dump(mode="json") for entry in entries],
         "quotes": [item.model_dump(mode="json") for item in result.data],

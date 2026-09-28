@@ -1,4 +1,17 @@
-export type DataEnvelope<T> = { data: T; stale: boolean; cached_at?: string | null };
+export type CollectionState = "warming" | "ready" | "stale" | "partial" | "unavailable";
+export type DataEnvelope<T> = { data: T; stale: boolean; cached_at?: string | null; collection_state?: CollectionState | null };
+export type ResourceCollectionStatus = {
+  state: CollectionState;
+  cached_at: string | null;
+  last_attempt_at: string | null;
+  source: string | null;
+};
+export type StockCollectionStatus = {
+  symbol: string;
+  state: CollectionState;
+  resources: Record<"quote" | "intraday" | "daily" | "weekly", ResourceCollectionStatus>;
+};
+export type CollectionOverview = { enabled: boolean; items: StockCollectionStatus[] };
 
 export type MarketIndex = {
   symbol: string;

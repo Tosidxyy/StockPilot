@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { errorText, getData } from "./api";
+import type { CollectionState } from "./types";
 
-type Snapshot<T> = { path: string; data: T; stale: boolean; cachedAt: string | null };
+type Snapshot<T> = { path: string; data: T; stale: boolean; cachedAt: string | null; collectionState: CollectionState | null };
 type Failure = { path: string; message: string };
 
 export function useResource<T>(path: string | null, refreshMs = 0) {
@@ -29,6 +30,7 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
               ? previous.data : result.data,
             stale: result.stale,
             cachedAt: result.cached_at ?? null,
+            collectionState: result.collection_state ?? null,
           }));
           setFailure(null);
         }
@@ -55,6 +57,7 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
     data: current?.data ?? null,
     stale: Boolean(current && (current.stale || currentError)),
     cachedAt: current?.cachedAt ?? null,
+    collectionState: current?.collectionState ?? null,
     loading: Boolean(path && !current && !currentError),
     error: currentError,
     refresh: () => { setFailure(null); setRetryKey((key) => key + 1); },

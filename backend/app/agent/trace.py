@@ -22,8 +22,10 @@ class ToolStep:
 
 def _summary(tool_name: str, result: dict) -> str:
     stale = "；旧缓存" if result.get("stale") else ""
+    state = result.get("collection_state")
+    stale += {"warming": "；后台预热中", "unavailable": "；暂无可用缓存", "partial": "；部分数据缺失"}.get(state, "")
     if tool_name == "get_stock_quote":
-        return ("返回 1 条报价" if result.get("found") else "未找到报价") + stale
+        return ("返回 1 条报价" if result.get("found") else "暂无缓存报价" if state else "未找到报价") + stale
     if tool_name == "get_stock_kline":
         return f"返回 {len(result['klines'])} 条 K 线" + stale
     if tool_name == "get_market_indices":

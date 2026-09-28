@@ -1,6 +1,7 @@
 """Bounded fresh and stale caches for provider results."""
 
 import asyncio
+import json
 from collections.abc import Awaitable, Callable, Hashable
 from copy import deepcopy
 from dataclasses import dataclass
@@ -83,6 +84,23 @@ class AsyncTTLStore(Generic[T]):
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
         self._pending.clear()
+
+    async def peek_all(self, matches: Callable[[object], bool]) -> list[tuple[object, CachedResult[T]]]:
+        """Read covering snapshots without refreshing timestamps or invoking loaders."""
+        results = {}
+        if self._snapshots is not None:
+            for key, data, saved_at in await self._snapshots.read_all(matches):
+                results[json.dumps(key)] = (key, CachedResult(
+                    data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl, cached_at=saved_at,
+                ))
+        for key, data in list(self._stale.items()):
+            saved_at = self._saved_at.get(key)
+            if data and saved_at is not None and matches(key):
+                encoded = json.dumps(key)
+                previous = results.get(encoded)
+                if previous is None or saved_at >= previous[1].cached_at:
+                    results[encoded] = (key, CachedResult(data, stale=key not in self._fresh, cached_at=saved_at))
+        return deepcopy(list(results.values()))
 
     async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]]) -> CachedResult[T]:
         if key in self._fresh:

@@ -4,9 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import { apiRequest, errorText } from "../lib/api";
 import { amount, cachedTime, moveClass, number, signed, updatedTime } from "../lib/format";
-import type { IntradayPoint, KlineItem, StockQuote, WatchlistEntry } from "../lib/types";
+import type { CollectionOverview, IntradayPoint, KlineItem, StockQuote, WatchlistEntry } from "../lib/types";
 import { useResource } from "../lib/use-resource";
 import { KlineChart, StockIntradayChart } from "./Charts";
+import { CollectionStatus } from "./CollectionStatus";
 
 function exchange(symbol: string): string {
   if (symbol.startsWith("6")) return "上交所";
@@ -18,12 +19,31 @@ export function StockDetail({ code }: { code: string }) {
   const [period, setPeriod] = useState<"intraday" | "daily" | "weekly">("intraday");
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [retrying, setRetrying] = useState(false);
+  const [retryNote, setRetryNote] = useState("");
+  const watchlist = useResource<WatchlistEntry[]>("/api/watchlist", 5000);
+  const saved = watchlist.data?.some((entry) => entry.symbol === code) ?? false;
+  const collection = useResource<CollectionOverview>(saved ? "/api/watchlist/status" : null, 2000);
+  const collectionStatus = collection.data?.items.find((item) => item.symbol === code);
   const quote = useResource<StockQuote>(`/api/stocks/${code}/quote`, 2000);
   const intraday = useResource<IntradayPoint[]>(period === "intraday" ? `/api/stocks/${code}/intraday` : null, 2000);
-  const kline = useResource<KlineItem[]>(period !== "intraday" ? `/api/stocks/${code}/kline?period=${period}&limit=120` : null, 60000);
+  const kline = useResource<KlineItem[]>(period !== "intraday" ? `/api/stocks/${code}/kline?period=${period}&limit=120` : null, saved ? 2000 : 60000);
   const chart = period === "intraday" ? intraday : kline;
-  const watchlist = useResource<WatchlistEntry[]>("/api/watchlist");
-  const saved = watchlist.data?.some((entry) => entry.symbol === code) ?? false;
+  const retry = async () => {
+    setRetrying(true);
+    setActionError(null);
+    try {
+      if (saved && collection.data?.enabled) {
+        await apiRequest(`/api/watchlist/${code}/refresh`, { method: "POST" });
+        setRetryNote("已请求后台重试，成功后自动更新，已有缓存继续显示。");
+      }
+      quote.refresh(); intraday.refresh(); kline.refresh(); collection.refresh();
+    } catch (error) {
+      setActionError(errorText(error));
+    } finally {
+      setRetrying(false);
+    }
+  };
 
   const toggleWatchlist = async () => {
     setSaving(true);
@@ -38,6 +58,7 @@ export function StockDetail({ code }: { code: string }) {
         });
       }
       watchlist.refresh();
+      quote.refresh(); intraday.refresh(); kline.refresh(); collection.refresh();
     } catch (error) {
       setActionError(errorText(error));
     } finally {
@@ -55,12 +76,15 @@ export function StockDetail({ code }: { code: string }) {
       </div>
       {actionError && <p className="inline-error" role="alert">{actionError}</p>}
       {watchlist.error && !watchlist.data && <p className="inline-error" role="alert">自选股状态获取失败：{watchlist.error} <button onClick={watchlist.refresh}>重试</button></p>}
+      {saved && collection.data?.enabled && collectionStatus && <CollectionStatus status={collectionStatus} retry={() => void retry()} busy={retrying} />}
+      {saved && collection.error && <p className="table-note">采集状态暂不可用，已有行情继续显示。</p>}
+      {retryNote && <p className="table-note" role="status">{retryNote}</p>}
 
       <section className="card quote-card" aria-labelledby="quote-title">
         <div className="section-head"><div><h2 id="quote-title">基础行情</h2><span>每 2 秒刷新{!quote.stale && updatedTime(quote.cachedAt)}</span></div>{quote.stale && <span className="stale-pill">旧缓存</span>}</div>
         {quote.loading ? <div className="quote-main skeleton" /> :
-          quote.error && !data ? <div className="section-state error-state">{quote.error}<button onClick={quote.refresh}>重试</button></div> :
-            !data ? <div className="section-state">暂无该股票行情。</div> : <>
+          quote.error && !data ? <div className="section-state error-state">{quote.error}<button disabled={retrying} onClick={() => void retry()}>重试</button></div> :
+            !data ? <div className="section-state">{quote.collectionState === "warming" ? "后台正在预热报价，成功后自动显示。" : quote.collectionState === "unavailable" ? "后台暂未获取到报价，正在等待重试。" : "暂无该股票行情。"}<button className="text-button" disabled={retrying} onClick={() => void retry()}>重试更新</button></div> : <>
               <div className="quote-main"><strong className={moveClass(data.change_percent)}>{number(data.price)}</strong><span className={moveClass(data.change_percent)}>{signed(data.change_amount, "")} · {signed(data.change_percent)}</span></div>
               <div className="quote-metrics">
                 <div className="metric"><span>今开</span><strong>{number(data.open)}</strong></div>
@@ -73,16 +97,16 @@ export function StockDetail({ code }: { code: string }) {
                 <div className="metric"><span>市盈率</span><strong>{number(data.pe_ratio)}</strong></div>
               </div>
             </>}
-        {quote.stale && data && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(quote.cachedAt)}。<button className="text-button" onClick={quote.refresh}>重试更新</button></p>}
+        {quote.stale && data && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(quote.cachedAt)}。<button className="text-button" disabled={retrying} onClick={() => void retry()}>重试更新</button></p>}
       </section>
 
       <section className="card kline-card" aria-labelledby="kline-title">
         <div className="section-head"><div><h2 id="kline-title">{period === "intraday" ? "实时分时与成交量" : "K 线与成交量"}</h2><span>{period === "intraday" ? `最新交易日 · 每 2 秒刷新${intraday.data?.length ? ` · 更新至 ${intraday.data.at(-1)?.time.replace("T", " ")}` : ""}` : "不复权 · 最近 120 根"}</span></div><div className="period-tabs" role="group" aria-label="行情周期"><button className={period === "intraday" ? "active" : ""} type="button" onClick={() => setPeriod("intraday")}>分时</button><button className={period === "daily" ? "active" : ""} type="button" onClick={() => setPeriod("daily")}>日 K</button><button className={period === "weekly" ? "active" : ""} type="button" onClick={() => setPeriod("weekly")}>周 K</button></div></div>
         {chart.loading ? <div className="chart kline-chart skeleton" /> :
-          chart.error && !chart.data ? <div className="section-state error-state">{period === "intraday" ? "分时数据暂不可用，可查看历史日 K。" : "历史 K 线暂不可用，请稍后重试。"}<button onClick={chart.refresh}>重试</button>{period === "intraday" && <button onClick={() => setPeriod("daily")}>查看历史日 K</button>}</div> :
-            !chart.data?.length ? <div className="section-state">暂无该周期行情数据。</div> :
+          (chart.error || chart.collectionState === "unavailable") && !chart.data?.length ? <div className="section-state error-state">{period === "intraday" ? "分时数据暂不可用，可查看历史日 K。" : "历史 K 线暂不可用，请稍后重试。"}<button disabled={retrying} onClick={() => void retry()}>重试</button>{period === "intraday" && <button onClick={() => setPeriod("daily")}>查看历史日 K</button>}</div> :
+            !chart.data?.length ? <div className="section-state">{chart.collectionState === "warming" ? "后台正在预热此周期数据，成功后自动显示。" : "暂无该周期行情数据。"}</div> :
               <div className="chart-wrap">{period === "intraday" ? <StockIntradayChart points={intraday.data!} name={data?.name || code} /> : <KlineChart items={kline.data!} />}</div>}
-        {chart.stale && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(chart.cachedAt)}。<button className="text-button" onClick={chart.refresh}>重试更新</button></p>}
+        {chart.stale && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(chart.cachedAt)}。<button className="text-button" disabled={retrying} onClick={() => void retry()}>重试更新</button></p>}
         {period !== "intraday" && kline.data?.length && <p className="table-note">历史 K 线来源：{kline.data[0].source === "tencent" ? "腾讯财经（备用源，未提供历史成交额）" : "东方财富"} · 数据截至 {kline.data.at(-1)?.date} · 当日/本周尚未收盘的数据可能变化</p>}
       </section>
 

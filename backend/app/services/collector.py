@@ -4,17 +4,27 @@ import asyncio
 import logging
 from collections.abc import Awaitable, Callable
 from datetime import datetime, time, timedelta, timezone
+from dataclasses import dataclass
 from time import monotonic
 
 from starlette.concurrency import run_in_threadpool
 
 from app.providers.exceptions import DataSourceError
 from app.services.stock import StockService
+from app.services.cache import CachedResult
 from app.services.watchlist import WatchlistService
 
 logger = logging.getLogger(__name__)
 BEIJING = timezone(timedelta(hours=8))
 JobKey = tuple[str, str | tuple[str, ...]]
+
+
+@dataclass(frozen=True)
+class CollectionAttempt:
+    attempted_at: datetime
+    failed: bool
+
+
 
 
 def is_market_session(now: datetime) -> bool:
@@ -44,6 +54,27 @@ class WatchlistCollector:
         self._attempted: dict[JobKey, float] = {}
         self._symbols: tuple[str, ...] = ()
         self._synced_at: float | None = None
+        self._observations: dict[tuple[str, str], CollectionAttempt] = {}
+
+    def observation(self, symbol: str, resource: str) -> CollectionAttempt | None:
+        return self._observations.get((symbol, resource))
+
+    def is_pending(self, symbol: str, resource: str) -> bool:
+        kind = "quotes" if resource == "quote" else resource
+        return any(not task.done() and key[0] == kind and (
+            symbol in key[1] if kind == "quotes" else symbol == key[1]
+        ) for key, task in self._pending.items())
+
+    def interval(self, resource: str) -> int:
+        if not is_market_session(self._clock()):
+            return 300
+        return 60 if resource in ("daily", "weekly") else 2
+
+    def request_refresh(self, symbols: set[str]) -> None:
+        for key in list(self._attempted):
+            covered = set(key[1]) if key[0] == "quotes" else {key[1]}
+            if covered.intersection(symbols):
+                del self._attempted[key]
 
     def start(self) -> None:
         if self._runner is None:
@@ -75,6 +106,7 @@ class WatchlistCollector:
             self._symbols = tuple(entry.symbol for entry in entries)
             self._synced_at = now
         symbols = self._symbols
+        self._observations = {key: value for key, value in self._observations.items() if key[0] in symbols}
         active = is_market_session(self._clock())
         live_interval = 2 if active else 300
         history_interval = 60 if active else 300
@@ -112,11 +144,26 @@ class WatchlistCollector:
             capacities[lane] -= 1
             self._pending[key] = asyncio.create_task(self._fetch(key, loader))
 
-    async def _fetch(self, key: JobKey, loader: Callable[[], Awaitable[object]]) -> None:
+    async def _fetch(self, key: JobKey, loader: Callable[[], Awaitable[CachedResult]]) -> None:
+        attempted_at = self._clock()
+        symbols = key[1] if key[0] == "quotes" else (key[1],)
+        resource = "quote" if key[0] == "quotes" else key[0]
         try:
-            await loader()
+            result = await loader()
+            available = {item.symbol for item in result.data} if key[0] == "quotes" else set(symbols) if result.data else set()
+            for symbol in symbols:
+                if symbol in self._symbols:
+                    self._observations[(symbol, resource)] = CollectionAttempt(
+                        attempted_at, failed=result.stale or symbol not in available,
+                    )
         except DataSourceError:
             # Service owns backoff and stale snapshots; another stock/lane can still succeed.
             logger.warning("Watchlist collection unavailable: %s", key)
+            for symbol in symbols:
+                if symbol in self._symbols:
+                    self._observations[(symbol, resource)] = CollectionAttempt(attempted_at, failed=True)
         except Exception:
             logger.exception("Watchlist collection failed: %s", key)
+            for symbol in symbols:
+                if symbol in self._symbols:
+                    self._observations[(symbol, resource)] = CollectionAttempt(attempted_at, failed=True)

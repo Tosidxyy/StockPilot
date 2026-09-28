@@ -7,10 +7,16 @@ from app.services.market import MarketService
 from app.services.stock import StockService
 from app.services.watchlist import WatchlistService
 from app.services.trace import TraceService
+from app.services.reads import StockReadService
 
 
 def get_stock_service(request: Request) -> StockService:
     return request.app.state.stock_service
+
+
+def get_stock_reader(request: Request) -> StockReadService:
+    return StockReadService(request.app.state.stock_service, request.app.state.watchlist_service,
+                            getattr(request.app.state, "watchlist_collector", None))
 
 
 def get_market_service(request: Request) -> MarketService:

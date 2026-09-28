@@ -66,6 +66,29 @@ class SnapshotStore(Generic[T]):
     async def read(self, key: Hashable) -> tuple[T, datetime] | None:
         return await asyncio.to_thread(self._read, key)
 
+    async def read_all(self, matches: Callable[[object], bool]) -> list[tuple[object, T, datetime]]:
+        """One bounded database read for a multi-stock status/cache response."""
+        def read_rows():
+            results = []
+            try:
+                with self._sessions() as session:
+                    rows = session.scalars(select(MarketSnapshot).where(
+                        MarketSnapshot.namespace == self._namespace,
+                    ).order_by(MarketSnapshot.saved_at.desc()).limit(self._maxsize))
+                    for row in rows:
+                        try:
+                            key = json.loads(row.cache_key)
+                            if matches(key):
+                                decoded = self._decode(row)
+                                if decoded is not None:
+                                    results.append((key, *decoded))
+                        except (ValueError, TypeError):
+                            continue
+            except SQLAlchemyError:
+                logger.warning("Market snapshot read failed")
+            return results
+        return await asyncio.to_thread(read_rows)
+
     async def read_latest(self, matches: Callable[[object], bool],
                           accepts: Callable[[T], bool] | None = None) -> tuple[T, datetime] | None:
         return await asyncio.to_thread(self._read_latest, matches, accepts)
