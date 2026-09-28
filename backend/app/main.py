@@ -14,6 +14,7 @@ from app.agent.tools import AgentDependencies
 from app.api.agent import router as agent_router
 from app.api.routes import router
 from app.api.news import router as news_router
+from app.api.announcements import router as announcement_router
 from app.core.config import get_settings
 from app.database.session import create_database_engine, create_session_factory, init_db
 from app.providers.base import MarketDataProvider
@@ -28,6 +29,8 @@ from app.services.collector import WatchlistCollector
 from app.services.reads import StockReadService
 from app.services.news import NewsService
 from app.services.news_collector import NewsCollector
+from app.services.announcements import AnnouncementService
+from app.services.announcement_collector import AnnouncementCollector
 
 
 def create_app(
@@ -44,6 +47,7 @@ def create_app(
         data_provider = provider if provider is not None else ResilientMarketProvider()
         collector = None
         news_collector = None
+        announcement_collector = None
         try:
             init_db(engine)
             session_factory = create_session_factory(engine)
@@ -55,6 +59,8 @@ def create_app(
             )
             news = NewsService(data_provider, session_factory, application.state.watchlist_service, background=enabled)
             application.state.news_service = news
+            announcements = AnnouncementService(data_provider, session_factory, application.state.watchlist_service, background=enabled)
+            application.state.announcement_service = announcements
             application.state.trace_service = TraceService(session_factory)
             reader = StockReadService(application.state.stock_service, application.state.watchlist_service, None)
             application.state.agent_service = StockAgentService(
@@ -65,6 +71,7 @@ def create_app(
                     watchlist=application.state.watchlist_service,
                     reader=reader,
                     news=news,
+                    announcements=announcements,
                 ),
                 ChatService(session_factory),
                 application.state.trace_service,
@@ -79,15 +86,20 @@ def create_app(
                 news_collector = NewsCollector(news)
                 news.collector = news_collector
                 news_collector.start()
+                announcement_collector = AnnouncementCollector(announcements)
+                announcements.collector = announcement_collector
+                announcement_collector.start()
             application.state.watchlist_collector = collector
             reader.collector = collector
             yield
         finally:
+            if announcement_collector is not None:
+                await announcement_collector.stop()
             if news_collector is not None:
                 await news_collector.stop()
             if collector is not None:
                 await collector.stop()
-            for name in ("stock_service", "market_service", "news_service"):
+            for name in ("stock_service", "market_service", "news_service", "announcement_service"):
                 service = getattr(application.state, name, None)
                 if service is not None:
                     await service.aclose()
@@ -105,6 +117,7 @@ def create_app(
     )
     application.include_router(router)
     application.include_router(news_router)
+    application.include_router(announcement_router)
     application.include_router(agent_router)
 
     @application.exception_handler(ProviderTimeoutError)

@@ -34,6 +34,12 @@ def _summary(tool_name: str, result: dict) -> str:
         return f"返回 {len(result['entries'])} 只自选股、{len(result['quotes'])} 条报价" + stale
     if tool_name in ("get_stock_news", "get_market_news"):
         return f"返回 {len(result['items'])} 条新闻标题/来源片段（非全文）" + stale
+    if tool_name == "get_stock_announcements":
+        document = result.get("document")
+        detail = f"；正文 {document['text_status']}" if document else ""
+        if document and document.get("tool_text_truncated"):
+            detail += "（Tool片段截断）"
+        return f"返回 {len(result['items'])} 条公告" + detail + stale
     return "Tool 已执行"
 
 

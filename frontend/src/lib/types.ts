@@ -9,6 +9,18 @@ export type NewsPage = {
   source_truncated: boolean; partial: boolean; coverage: string; collection_state: CollectionState;
 };
 export type DataEnvelope<T> = { data: T; stale: boolean; cached_at?: string | null; collection_state?: CollectionState | null };
+export type AnnouncementCategory = { code: string; name: string };
+export type AnnouncementItem = {
+  id: string; title: string; notice_date: string; disclosed_at: string | null; source: string; url: string;
+  symbols: string[]; categories: AnnouncementCategory[]; attachment_urls: string[];
+  text_status: "pending" | "ready" | "partial" | "unavailable"; text: string | null; text_source: string | null;
+  text_reason: string | null; text_hash: string | null; source_text_hash: string | null; text_length: number;
+  pages_extracted: number; total_pages: number | null; text_fetched_at: string | null; text_stale: boolean;
+};
+export type AnnouncementPage = {
+  items: AnnouncementItem[]; categories: AnnouncementCategory[]; total: number; page: number; page_size: number;
+  has_more: boolean; source_truncated: boolean; partial: boolean; coverage: string; collection_state: CollectionState;
+};
 export type ResourceCollectionStatus = {
   state: CollectionState;
   cached_at: string | null;

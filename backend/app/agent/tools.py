@@ -13,6 +13,7 @@ from app.services.watchlist import WatchlistService
 from app.services.cache import CachedResult
 from app.services.reads import StockReadService
 from app.services.news import NewsService
+from app.services.announcements import AnnouncementService
 from app.providers.exceptions import DataSourceError
 from app.agent.trace import ToolStep
 
@@ -25,6 +26,7 @@ class AgentDependencies:
     trace_steps: list[ToolStep] = field(default_factory=list)
     reader: StockReadService | None = None
     news: NewsService | None = None
+    announcements: AnnouncementService | None = None
 
 
 def _symbol(value: str) -> str:
@@ -116,3 +118,28 @@ async def get_market_news(deps: AgentDependencies, days: int = 7, limit: int = 1
     start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
     result = await deps.news.get(start=start, page_size=limit)
     return {"days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+
+
+async def get_stock_announcements(deps: AgentDependencies, symbol: str, days: int = 30,
+                                  limit: int = 10, document_id: str | None = None) -> dict:
+    symbol = _symbol(symbol)
+    if not 1 <= days <= 90 or not 1 <= limit <= 50:
+        raise ValueError("days 需为1–90，limit需为1–50")
+    if deps.announcements is None:
+        raise DataSourceError("Announcement service unavailable")
+    start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
+    result = await deps.announcements.get(symbol, start=start, page_size=limit)
+    output = {"symbol": symbol, "days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+    if document_id:
+        if re.fullmatch(r"AN[0-9]{18}", document_id) is None:
+            raise ValueError("公告ID无效")
+        item = await deps.announcements.document(symbol, document_id)
+        if item and item.notice_date < start:
+            item = None
+        document = item.model_dump(mode="json") if item else None
+        if document:
+            text = document.get("text") or ""
+            document["text"] = text[:8000] or None
+            document["tool_text_truncated"] = len(text) > 8000
+        output["document"] = document
+    return output

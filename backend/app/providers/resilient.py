@@ -10,6 +10,12 @@ from app.providers.history import TencentHistory
 
 
 class ResilientMarketProvider(MarketDataProvider):
+    async def get_stock_announcements(self, symbol: str):
+        return await self._primary.get_stock_announcements(symbol)
+
+    async def get_announcement_content(self, item, previous=None):
+        return await self._primary.get_announcement_content(item, previous)
+
     async def get_stock_news(self, symbol: str):
         return await self._primary.get_stock_news(symbol)
 

@@ -1,9 +1,9 @@
 """V0.1 persistence schema; no Agent execution logic lives here."""
 
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from typing import Any
 
-from sqlalchemy import DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, JSON, String, Text, UniqueConstraint
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 
@@ -13,6 +13,30 @@ def utc_now() -> datetime:
 
 class Base(DeclarativeBase):
     pass
+
+
+class AnnouncementRecord(Base):
+    __tablename__ = "announcement_record"
+    id: Mapped[str] = mapped_column(String(20), primary_key=True)
+    notice_date: Mapped[date] = mapped_column(Date, index=True)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON)
+    body: Mapped[str | None] = mapped_column(Text)
+
+
+class AnnouncementScopeItem(Base):
+    __tablename__ = "announcement_scope_item"
+    scope: Mapped[str] = mapped_column(String(6), primary_key=True)
+    announcement_id: Mapped[str] = mapped_column(ForeignKey("announcement_record.id", ondelete="CASCADE"), primary_key=True)
+
+
+class AnnouncementFetchState(Base):
+    __tablename__ = "announcement_fetch_state"
+    scope: Mapped[str] = mapped_column(String(6), primary_key=True)
+    fetched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    attempted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    failed: Mapped[bool] = mapped_column(default=False)
+    partial: Mapped[bool] = mapped_column(default=False)
+    truncated: Mapped[bool] = mapped_column(default=False)
 
 
 class NewsRecord(Base):

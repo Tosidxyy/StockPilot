@@ -6,9 +6,16 @@ from typing import Literal, Sequence
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
 from app.providers.exceptions import DataSourceError
 from app.models.news import NewsBatch
+from app.models.announcements import AnnouncementBatch, AnnouncementItem
 
 
 class MarketDataProvider(ABC):
+    async def get_stock_announcements(self, symbol: str) -> AnnouncementBatch:
+        raise DataSourceError("Announcements are not supported by this provider")
+
+    async def get_announcement_content(self, item: AnnouncementItem, previous: AnnouncementItem | None = None) -> AnnouncementItem:
+        raise DataSourceError("Announcement text is not supported by this provider")
+
     async def get_stock_news(self, symbol: str) -> NewsBatch:
         raise DataSourceError("Stock news is not supported by this provider")
 
