@@ -108,7 +108,7 @@ WatchlistService
 
 东方财富 `fX` 字段不得进入 Service、Agent 或前端。
 
-当前 Provider 接口包含 `search_stocks()`、`get_quotes()`、`get_indices()`、`get_index_intraday()` 和 `get_kline()`；均返回内部模型。Provider 使用 `httpx.AsyncClient`，可注入客户端用于测试。行情、指数和指数分时均有主备节点；K 线和搜索使用数据源文档中的单一节点。
+当前 Provider 接口包含 `search_stocks()`、`get_quotes()`、`get_indices()`、`get_index_intraday()` 和 `get_kline()`；均返回内部模型。Provider 使用 `httpx.AsyncClient`，可注入客户端用于测试。行情、指数、指数分时及 K 线均有主备节点，搜索使用单一节点。K 线只在完整解析成功后记住可用节点，连接断开时单个节点最多重试一次，再回退另一节点；返回按日期升序排列的最近 `limit` 根数据。具体节点、网页参数和在线验证见数据源文档。
 
 ## 5. 内部模型
 
@@ -246,7 +246,7 @@ MODEL_API_KEY
 MODEL_BASE_URL
 ```
 
-Agent 不硬编码模型 Key。缺少名称或 Key 时不构造模型，前端显示未配置状态。真实 DeepSeek 模型已验证会选择指数 Tool；使用固定测试行情时完成回答。2026-09-25 本机真实东方财富行情源返回 503，完整在线行情 Case 仍待数据源恢复后复验。
+Agent 不硬编码模型 Key。缺少名称或 Key 时不构造模型，前端显示未配置状态。真实 DeepSeek 模型已验证会选择指数 Tool；使用固定测试行情时完成回答。2026-09-28 修复 K 线请求后，真实 DeepSeek 与东方财富联调完成宁德时代最近 5 根日 K 走势任务，K 线 Tool 和 Trace 均成功；其余核心 Case 的完整在线复验仍待完成。
 
 ## 10. Trace
 

@@ -2,7 +2,7 @@
 
 StockPilot V0.1 是 A 股看盘与 AI 辅助分析应用。当前已完成 P0 行情数据链、REST API、Web 行情页面、核心 Agent 对话、Tool Trace 和 Agent Evaluation。
 
-当前完整 V0.1 验收仍受东方财富 K 线源连接失败影响，实际通过项与阻断项见 [验收记录](docs/acceptance.md)。
+2026-09-28 已修复东方财富 K 线请求：两只股票的真实日/周 K API 与 DeepSeek K 线任务复验通过。完整 V0.1 验收仍待其余页面及 Agent 核心 Case 复验，证据见 [验收记录](docs/acceptance.md)。
 
 ## Quick Start
 
@@ -89,7 +89,9 @@ uv run python -c "from app.database.session import create_database_engine, init_
 
 Agent 对话需在 `backend/.env` 中填写 `MODEL_NAME` 和 `MODEL_API_KEY`；使用 OpenAI 兼容服务时按需设置 `MODEL_BASE_URL`。未配置模型时页面会显示提示，聊天接口返回 503。四个核心 Tool 分别查询个股行情、日/周 K 线、三大指数和自选股；模型请求失败或行情源不可用时不生成模拟回答。Tool Trace 保存输入、结果摘要、成功/失败状态和耗时，可通过 `/api/agent/traces/recent` 与 `/api/agent/traces/{session_id}` 查询；不保存模型私有推理。聊天失败时可从响应头 `X-Agent-Session-ID` 取得会话 ID 查询失败 Trace。
 
-2026-09-25 使用真实 DeepSeek 模型验证了指数 Tool 选择；配合固定测试行情完成回答与成功 Trace。连接真实东方财富行情源时返回 503，失败 Trace 已记录；真实行情的完整在线验收待数据源恢复后复验。
+2026-09-25 使用真实 DeepSeek 模型验证了指数 Tool 选择；配合固定测试行情完成回答与成功 Trace。2026-09-28 修复行情请求后，真实 DeepSeek 与东方财富联调完成宁德时代最近 5 根日 K 任务，Agent 返回 200，K 线 Tool Trace 为 success；全部核心 Case 的在线验收仍待完成。
+
+更新 K 线修复后，请重启后端（在原终端按 `Ctrl+C`，然后在 `backend/` 执行 `uv run uvicorn app.main:app --reload`），再刷新个股详情页。无需新增 K 线 API Key。可访问 `http://localhost:8000/api/stocks/300750/kline?period=daily&limit=5` 检查真实接口响应。
 
 ## 启动前端
 

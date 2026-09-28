@@ -40,6 +40,7 @@ Service
 | 分时 | `push2.eastmoney.com/api/qt/stock/trends2/get` |
 | 分时备用 | `push2delay.eastmoney.com/api/qt/stock/trends2/get` |
 | K 线 | `push2his.eastmoney.com/api/qt/stock/kline/get` |
+| K 线备用（2026-09-28 验证） | `1.push2his.eastmoney.com/api/qt/stock/kline/get` |
 | 股票搜索 | `searchapi.eastmoney.com/api/suggest/get` |
 
 资金流、新闻、公告在新项目开发时单独验证，不预设未经验证的 Endpoint。
@@ -200,3 +201,16 @@ Desktop 调用     → FastAPI + Agent Web
 - `get_kline()` 用 `klt=101` / `102` 表示日 K / 周 K、`fqt=0` 表示不复权，并解析逗号分隔的 K 线。空 K 线作为数据源失败处理，避免把接口受限误报为无历史数据。
 
 本机在线请求已确认搜索、无结果搜索、批量行情及备用节点指数响应结构。2026-09-25 备用分时节点曾返回真实分钟数据，随后的在线请求又出现连接中断；主备切换和解析已用固定响应测试。`push2his.eastmoney.com` 在本次验证中持续断开连接；日 K / 周 K 的解析和错误路径已用固定响应测试，K 线在线成功验证仍待节点恢复后重试。
+
+## 12. K 线修复与在线复验（2026-09-28）
+
+开盘后旧请求仍出现 `RemoteProtocolError`；交易时段不能解决节点连接与请求兼容问题。参考东方财富[官方图表脚本](https://quote.eastmoney.com/newstatic/libs/quotekchart/1.0.6.js)中的编号节点、日期范围和公开网页 `ut` 参数，验证 HTTPS 编号节点 `1.push2his.eastmoney.com` 可返回真实日 K 与周 K。
+
+当前请求约定：
+
+- 主节点失败、返回空数据或无法解析时回退编号节点，完整解析成功的节点优先复用。
+- 使用完整浏览器 User-Agent、Referer、Accept；请求增加 `beg=0`、`end=20500101`、公开网页 `ut` 和动态 `_` 时间戳。该 `ut` 来自公开脚本，不是用户账户 API Key。
+- 固定 URL 在复验中仍曾断开，增加动态时间戳后多轮请求成功；断开原因无法仅凭这些响应确定。`RemoteProtocolError` 每节点最多重试一次，不无限重试；超时、HTTP 错误或异常数据直接尝试另一节点。
+- 上游可能忽略 `lmt` 并返回全历史；Provider 按日期升序取最近 `limit` 根。Service 继续使用既有 60 秒 TTL 和 stale 降级。
+
+最终真实 FastAPI 联调：宁德时代 `300750`、贵州茅台 `600519` 的日 K / 周 K 四个请求均为 HTTP 200、120 根、`stale=false`，最新日期 `2026-09-28`；另一次验证日/周各 5 根也返回 200。真实 DeepSeek 调用宁德时代最近 5 根日 K Tool 成功，Agent 返回 200，Trace 为 success。42 个后端测试覆盖断连重试、超时/空/异常响应回退、成功节点优先、备用失效回主节点及数量裁剪。
