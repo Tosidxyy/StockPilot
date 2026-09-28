@@ -56,6 +56,7 @@ export function MarketDashboard() {
                     <MarketLineChart points={trend.data} name={indexNames[selected]} />}
             </div>
             {trend.stale && <p className="stale-note">分时暂未更新，正在显示旧缓存{cachedTime(trend.cachedAt)}。<button className="text-button" onClick={trend.refresh}>重试更新</button></p>}
+            {Boolean(trend.data?.length) && <p className="table-note">分时来源：{trend.data![0].source === "tencent" ? "腾讯财经（备用源）" : "东方财富"} · 更新至 {trend.data!.at(-1)?.time.replace("T", " ")}（北京时间）</p>}
           </section>
 
           <WatchlistPanel />

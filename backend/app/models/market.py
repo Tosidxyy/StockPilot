@@ -37,8 +37,9 @@ class MarketIndex(BaseModel):
 class IntradayPoint(BaseModel):
     time: datetime
     price: float
-    volume: int
-    turnover: float
+    volume: int | None
+    turnover: float | None
+    source: Literal["eastmoney", "tencent"] = "eastmoney"
 
 
 class KlineItem(BaseModel):

@@ -55,7 +55,7 @@ class StockReadService:
             too_old = cached.cached_at is None or (utc_now() - cached.cached_at).total_seconds() >= max_age
             state = "stale" if too_old or (observation and observation.failed) else "ready"
         source = None
-        if cached and resource in ("daily", "weekly") and cached.data:
+        if cached and resource in ("intraday", "daily", "weekly") and cached.data:
             source = cached.data[-1].source
         return ResourceCollectionStatus(state=state, cached_at=cached.cached_at if cached else None,
                                         last_attempt_at=observation.attempted_at if observation else None, source=source)

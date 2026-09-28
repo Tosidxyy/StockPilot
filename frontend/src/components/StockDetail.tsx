@@ -110,6 +110,8 @@ export function StockDetail({ code }: { code: string }) {
               <div className="chart-wrap">{period === "intraday" ? <StockIntradayChart points={intraday.data!} name={data?.name || code} /> : <KlineChart items={kline.data!} />}</div>}
         {chart.stale && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(chart.cachedAt)}。<button className="text-button" disabled={retrying} onClick={() => void retry()}>重试更新</button></p>}
         {period !== "intraday" && kline.data?.length && <p className="table-note">历史 K 线来源：{kline.data[0].source === "tencent" ? "腾讯财经（备用源，未提供历史成交额）" : "东方财富"} · 数据截至 {kline.data.at(-1)?.date} · 当日/本周尚未收盘的数据可能变化</p>}
+        {period === "intraday" && Boolean(intraday.data?.length) && <p className="table-note">分时来源：{intraday.data![0].source === "tencent" ? "腾讯财经（备用源）" : "东方财富"} · 常规交易时段 · 成交量单位：手 · 成交额单位：元</p>}
+        {period === "intraday" && intraday.data?.some((point) => point.volume === null || point.turnover === null) && <p className="table-note">部分分钟缺失，无法还原该段成交量或成交额；空值不代表零。</p>}
       </section>
 
       <div className="stock-secondary stock-news-section">

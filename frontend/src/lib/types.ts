@@ -49,8 +49,9 @@ export type MarketIndex = {
 export type IntradayPoint = {
   time: string;
   price: number;
-  volume: number;
-  turnover: number;
+  volume: number | null;
+  turnover: number | null;
+  source: "eastmoney" | "tencent";
 };
 
 export type StockQuote = {

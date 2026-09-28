@@ -117,7 +117,7 @@ export function StockIntradayChart({ points, name }: { points: IntradayPoint[]; 
     ],
     series: [
       { name: "价格", type: "line", showSymbol: false, data: points.map((point) => point.price), lineStyle: { color: "#6ea8fe", width: 2 }, itemStyle: { color: "#6ea8fe" }, areaStyle: { color: "rgba(110,168,254,.12)" } },
-      { name: "成交量", type: "bar", xAxisIndex: 1, yAxisIndex: 1, data: points.map((point, index) => ({ value: point.volume, itemStyle: { color: index > 0 && point.price < points[index - 1].price ? "#22c55e80" : "#f0525280" } })) },
+      { name: "成交量（手）", type: "bar", xAxisIndex: 1, yAxisIndex: 1, data: points.map((point, index) => ({ value: point.volume, itemStyle: { color: index > 0 && point.price < points[index - 1].price ? "#22c55e80" : "#f0525280" } })) },
     ],
   }), [points]);
   return <ChartFrame option={option} label={`${name}实时分时与成交量图`} className="kline-chart" />;
