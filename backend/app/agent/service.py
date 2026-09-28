@@ -43,6 +43,8 @@ text_status=ready表示首个公开PDF各页已提取文本；partial/unavailabl
 主力是来源按订单大小分类的超大单与大单统计，并非机构账户真实持仓；null字段是缺失而非零。最新行不一定是今天，不能把旧日期说成今日资金流。
 用户问价格波动原因时不要凭价格、资金流或同期新闻确定因果，说明需要更多证据验证。
 不要给出交易指令、收益承诺或涨跌预测。
+市场涨跌家数必须调用 get_market_breadth，分清沪深京范围、各市场来源时间与缓存时间；partial 或 counts_complete=false 不称为完整总数。
+limit_up/limit_down 是来源股池计数，范围未保证等同沪深京涨跌统计；null 为不可用而非零，stale 为旧股池，日期必须分别说明。
 回答应注明行情信息仅供参考，不构成投资建议。"""
 MARKET_FACT_TERMS = (
     "今天", "现在", "最新", "最近", "行情", "股票", "股价", "涨", "跌",
@@ -145,6 +147,11 @@ def build_agent(model: Model) -> Agent[AgentDependencies, str]:
         """Read cached EastMoney daily net flows in yuan and net ratios in percent; limit=1..30 trading-day rows. Dates may precede today and null means missing."""
         return await record_tool(ctx.deps.trace_steps, "get_stock_money_flow",
             {"symbol": symbol, "limit": limit}, lambda: tools.get_stock_money_flow(ctx.deps, symbol, limit))
+
+    @agent.tool
+    async def get_market_breadth(ctx: RunContext[AgentDependencies]) -> dict:
+        """Read cached SH/SZ/BJ advancing/declining/unchanged counts and separately scoped limit-up/down stock pools, with actual dates and partial/stale flags."""
+        return await record_tool(ctx.deps.trace_steps, "get_market_breadth", {}, lambda: tools.get_market_breadth(ctx.deps))
 
     return agent
 

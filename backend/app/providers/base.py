@@ -8,9 +8,13 @@ from app.providers.exceptions import DataSourceError
 from app.models.news import NewsBatch
 from app.models.announcements import AnnouncementBatch, AnnouncementItem
 from app.models.money_flow import MoneyFlowSeries
+from app.models.breadth import MarketBreadth
 
 
 class MarketDataProvider(ABC):
+    async def get_market_breadth(self) -> MarketBreadth:
+        raise DataSourceError("Market breadth is not supported by this provider")
+
     async def get_stock_money_flow(self, symbol: str) -> MoneyFlowSeries:
         raise DataSourceError("Money flow is not supported by this provider")
 

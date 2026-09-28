@@ -46,6 +46,16 @@ export type MarketIndex = {
   low: number | null;
 };
 
+export type MarketBreadth = {
+  source: "eastmoney"; scope: string; definition: string;
+  advancing: number | null; declining: number | null; unchanged: number | null;
+  date: string | null; partial: boolean; counts_complete: boolean;
+  exchanges: { exchange: "SH" | "SZ" | "BJ"; advancing: number | null; declining: number | null;
+    unchanged: number | null; as_of: string | null; stale: boolean; complete: boolean }[];
+  limit_up: { count: number | null; date: string | null; stale: boolean; scope: string };
+  limit_down: { count: number | null; date: string | null; stale: boolean; scope: string };
+};
+
 export type MoneyFlow = {
   date: string;
   main_net: number | null; super_large_net: number | null; large_net: number | null;

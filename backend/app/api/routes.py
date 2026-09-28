@@ -10,6 +10,7 @@ from app.api.schemas import DataResponse, StockDataResponse, MarketOverviewRespo
 from app.models.collection import CollectionOverview
 from app.services.reads import StockReadService
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
+from app.models.breadth import MarketBreadth
 from app.services.market import MarketService
 from app.services.stock import StockService
 from app.services.watchlist import WatchlistEntry, WatchlistService
@@ -21,6 +22,12 @@ Market = Annotated[MarketService, Depends(get_market_service)]
 Watchlist = Annotated[WatchlistService, Depends(get_watchlist_service)]
 Reader = Annotated[StockReadService, Depends(get_stock_reader)]
 Code = Annotated[str, Path(pattern=r"^[03468][0-9]{5}$")]
+
+
+@router.get("/market/breadth", response_model=DataResponse[MarketBreadth])
+async def get_market_breadth(market: Market):
+    result = await market.get_breadth()
+    return DataResponse(data=result.data, stale=result.stale, cached_at=result.cached_at)
 
 
 @router.get("/market/indices", response_model=DataResponse[list[MarketIndex]])

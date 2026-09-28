@@ -9,6 +9,7 @@ import { AgentChat } from "./AgentChat";
 import { TracePanel } from "./TracePanel";
 import { WatchlistPanel } from "./WatchlistPanel";
 import { NewsPanel } from "./NewsPanel";
+import { MarketBreadthPanel } from "./MarketBreadthPanel";
 
 const indexNames: Record<string, string> = {
   "000001": "上证指数", "399001": "深证成指", "399006": "创业板指",
@@ -62,13 +63,7 @@ export function MarketDashboard() {
           <WatchlistPanel />
           <NewsPanel />
 
-          <section className="card temperature-card" aria-labelledby="temperature-title">
-            <div className="section-head"><div><h2 id="temperature-title">市场温度</h2><span>全市场 · P1 数据待接入</span></div></div>
-            <div className="overview-grid">
-              {["上涨", "下跌", "涨停", "两市成交额"].map((label) => <div className="mini" key={label}><span>{label}</span><strong>—</strong></div>)}
-            </div>
-            <p className="card-note">当前数据接口不提供全市场涨跌家数；接入后在此显示真实统计。</p>
-          </section>
+          <MarketBreadthPanel />
         </div>
 
         <aside className="right-col" aria-label="智能分析">

@@ -236,3 +236,9 @@ a{color:inherit;text-decoration:none}
 @media(max-width:1150px) { .money-flow-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media(max-width:610px) { .money-flow-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .announcement-text { max-height: 480px; overflow: auto; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: #0d131b; color: #c8d3e2; font-family: inherit; font-size: 13px; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+.breadth-markets { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 12px; margin: 18px 0; }
+.breadth-markets > div { display: grid; gap: 8px; padding: 12px; border: 1px solid var(--line); border-radius: 7px; }
+.breadth-markets span, .breadth-markets small, .mini small { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.mini .breadth-date { font-size: 15px; }
+@media(max-width:610px) { .breadth-markets { grid-template-columns: 1fr; } }

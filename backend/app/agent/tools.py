@@ -87,6 +87,11 @@ async def get_market_indices(deps: AgentDependencies) -> dict:
     }
 
 
+async def get_market_breadth(deps: AgentDependencies) -> dict:
+    result = await deps.market.get_breadth(prefer_cached=True)
+    return {**_cache_metadata(result), **result.data.model_dump(mode="json")}
+
+
 async def get_watchlist(deps: AgentDependencies) -> dict:
     """Read saved symbols with cached quotes; fetch a batch only on cache miss."""
     entries = await run_in_threadpool(deps.watchlist.list_entries)

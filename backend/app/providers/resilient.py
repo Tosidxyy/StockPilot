@@ -13,6 +13,9 @@ from app.providers.intraday import TencentIntraday
 
 
 class ResilientMarketProvider(MarketDataProvider):
+    async def get_market_breadth(self):
+        return await self._primary.get_market_breadth()
+
     async def get_stock_money_flow(self, symbol: str):
         return await self._primary.get_stock_money_flow(symbol)
 

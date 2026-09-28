@@ -34,6 +34,8 @@ def _summary(tool_name: str, result: dict) -> str:
         return f"返回 {len(items)} 个交易日资金流（元、%）" + through + stale
     if tool_name == "get_market_indices":
         return f"返回 {len(result['indices'])} 条指数" + stale
+    if tool_name == "get_market_breadth":
+        return "返回沪深京市场涨跌统计" + ("；部分数据缺失/旧值" if result.get("partial") else "") + stale
     if tool_name == "get_watchlist":
         return f"返回 {len(result['entries'])} 只自选股、{len(result['quotes'])} 条报价" + stale
     if tool_name in ("get_stock_news", "get_market_news"):

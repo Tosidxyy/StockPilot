@@ -12,6 +12,7 @@ from app.providers.exceptions import DataSourceError, InvalidSymbolError, Provid
 from app.providers.news import EastMoneyNews
 from app.providers.announcements import EastMoneyAnnouncements
 from app.providers.money_flow import EastMoneyFlows
+from app.providers.breadth import EastMoneyBreadth
 
 _QUOTE_ENDPOINTS = (
     "https://push2.eastmoney.com/api/qt/ulist.np/get",
@@ -62,6 +63,9 @@ def _integer(value: Any, *, required: bool = False) -> int | None:
 
 
 class EastMoneyProvider(MarketDataProvider):
+    async def get_market_breadth(self):
+        return await EastMoneyBreadth(self._client).collect()
+
     async def get_stock_money_flow(self, symbol: str):
         return await EastMoneyFlows(self._client).collect(symbol, to_secid(symbol))
 
