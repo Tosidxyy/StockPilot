@@ -23,6 +23,7 @@ from app.services.chat import ChatService
 from app.services.trace import TraceService
 from app.services.stock import StockService
 from app.services.watchlist import WatchlistService
+from app.services.collector import WatchlistCollector
 
 
 def create_app(
@@ -30,12 +31,14 @@ def create_app(
     provider: MarketDataProvider | None = None,
     database_url: str | None = None,
     agent_model: Model | None = None,
+    prefetch_enabled: bool | None = None,
 ) -> FastAPI:
     @asynccontextmanager
     async def lifespan(application: FastAPI) -> AsyncIterator[None]:
         engine = create_database_engine(database_url)
         owns_provider = provider is None
         data_provider = provider if provider is not None else ResilientMarketProvider()
+        collector = None
         try:
             init_db(engine)
             session_factory = create_session_factory(engine)
@@ -54,8 +57,24 @@ def create_app(
                 application.state.trace_service,
                 model=agent_model,
             )
+            enabled = prefetch_enabled if prefetch_enabled is not None else (
+                get_settings().watchlist_prefetch_enabled and owns_provider
+            )
+            if enabled:
+                collector = WatchlistCollector(
+                    application.state.stock_service, application.state.watchlist_service,
+                    workers=get_settings().watchlist_prefetch_workers,
+                )
+                collector.start()
+            application.state.watchlist_collector = collector
             yield
         finally:
+            if collector is not None:
+                await collector.stop()
+            for name in ("stock_service", "market_service"):
+                service = getattr(application.state, name, None)
+                if service is not None:
+                    await service.aclose()
             if owns_provider:
                 await data_provider.aclose()
             engine.dispose()

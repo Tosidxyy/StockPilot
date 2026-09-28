@@ -46,6 +46,10 @@ class StockService:
             (normalized, limit), lambda: self._provider.search_stocks(normalized, limit)
         )
 
+    async def aclose(self) -> None:
+        for store in (self._quotes, self._intraday, self._klines, self._search):
+            await store.aclose()
+
     async def get_quotes(self, symbols: Sequence[str], *, prefer_cached: bool = False) -> CachedResult[list[StockQuote]]:
         unique = tuple(dict.fromkeys(symbols))
         if not unique:

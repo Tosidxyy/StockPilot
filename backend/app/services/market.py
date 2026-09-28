@@ -37,6 +37,10 @@ class MarketService:
                 return cached
         return await self._indices.get("indices", self._provider.get_indices)
 
+    async def aclose(self) -> None:
+        await self._indices.aclose()
+        await self._intraday.aclose()
+
     async def get_index_intraday(self, index_code: str = "000001") -> CachedResult[list[IntradayPoint]]:
         return await self._intraday.get(
             index_code, lambda: self._provider.get_index_intraday(index_code)

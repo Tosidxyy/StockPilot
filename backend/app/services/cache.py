@@ -76,6 +76,14 @@ class AsyncTTLStore(Generic[T]):
                     newest = CachedResult(data, stale=candidate not in self._fresh, cached_at=saved_at)
         return CachedResult(deepcopy(newest.data), stale=newest.stale, cached_at=newest.cached_at) if newest else None
 
+    async def aclose(self) -> None:
+        """Cancel shared loaders before their provider/database is closed."""
+        tasks = list(self._pending.values())
+        for task in tasks:
+            task.cancel()
+        await asyncio.gather(*tasks, return_exceptions=True)
+        self._pending.clear()
+
     async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]]) -> CachedResult[T]:
         if key in self._fresh:
             return CachedResult(deepcopy(self._fresh[key]), cached_at=self._saved_at.get(key))
