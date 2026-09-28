@@ -11,3 +11,15 @@
 **/.tsbuildinfo
 *.py[cod]
 *.db
+*.db-shm
+*.db-wal
+
+# Local development instructions and planning notes.
+/AGENT.md
+/TODO.md
+/docs/*.md
+/docs/ui-demo.html
+/frontend/AGENTS.md
+/frontend/CLAUDE.md
+/evals/.gitkeep
+/.release-tools/
