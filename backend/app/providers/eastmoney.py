@@ -1,6 +1,7 @@
 """EastMoney public-Web adapter for P0 A-share market data."""
 
 from datetime import date, datetime
+from time import time_ns
 from typing import Any, Literal, Sequence
 
 import httpx
@@ -13,7 +14,12 @@ _QUOTE_ENDPOINTS = (
     "https://push2.eastmoney.com/api/qt/ulist.np/get",
     "https://push2delay.eastmoney.com/api/qt/ulist.np/get",
 )
-_KLINE_ENDPOINT = "https://push2his.eastmoney.com/api/qt/stock/kline/get"
+_KLINE_ENDPOINTS = (
+    "https://push2his.eastmoney.com/api/qt/stock/kline/get",
+    "https://1.push2his.eastmoney.com/api/qt/stock/kline/get",
+)
+# Public token used by EastMoney's quote chart, not an account API key.
+_KLINE_WEB_TOKEN = "fa5fd1943c7b386f172d6893dbfba10b"
 _SEARCH_ENDPOINT = "https://searchapi.eastmoney.com/api/suggest/get"
 _TREND_ENDPOINTS = (
     "https://push2.eastmoney.com/api/qt/stock/trends2/get",
@@ -57,10 +63,18 @@ class EastMoneyProvider(MarketDataProvider):
         self._owns_client = client is None
         self._client = client or httpx.AsyncClient(
             timeout=httpx.Timeout(connect=1.5, read=3.0, write=3.0, pool=3.0),
-            headers={"User-Agent": "Mozilla/5.0", "Referer": "https://quote.eastmoney.com/"},
+            headers={
+                "User-Agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0.0.0 Safari/537.36"
+                ),
+                "Referer": "https://quote.eastmoney.com/",
+                "Accept": "*/*",
+            },
         )
         self._preferred_quote_endpoint = _QUOTE_ENDPOINTS[0]
         self._preferred_trend_endpoint = _TREND_ENDPOINTS[0]
+        self._preferred_kline_endpoint = _KLINE_ENDPOINTS[0]
 
     async def __aenter__(self) -> "EastMoneyProvider":
         return self
@@ -251,15 +265,43 @@ class EastMoneyProvider(MarketDataProvider):
             raise ValueError("period must be daily or weekly")
         if not 1 <= limit <= 1000:
             raise ValueError("limit must be between 1 and 1000")
-        payload = await self._request_json(
-            (_KLINE_ENDPOINT,),
-            {
-                "secid": secid, "klt": 101 if period == "daily" else 102,
-                "fqt": 0, "lmt": limit,
-                "fields1": "f1,f2,f3,f4,f5,f6",
-                "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
-            },
-        )
+        params = {
+            "secid": secid, "klt": 101 if period == "daily" else 102,
+            "fqt": 0, "lmt": limit,
+            "beg": 0, "end": 20500101, "ut": _KLINE_WEB_TOKEN,
+            "fields1": "f1,f2,f3,f4,f5,f6",
+            "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
+        }
+        preferred = self._preferred_kline_endpoint
+        other = next(endpoint for endpoint in _KLINE_ENDPOINTS if endpoint != preferred)
+        last_error: DataSourceError | None = None
+        for endpoint in (preferred, other):
+            try:
+                payload = await self._request_kline(endpoint, params)
+                items = self._parse_kline(payload)
+                self._preferred_kline_endpoint = endpoint
+                # The public endpoint can ignore lmt and return the full history.
+                return sorted(items, key=lambda item: item.date)[-limit:]
+            except DataSourceError as exc:
+                last_error = exc
+        assert last_error is not None
+        raise last_error
+
+    async def _request_kline(self, endpoint: str, params: dict[str, str | int]) -> dict[str, Any]:
+        for attempt in range(2):
+            try:
+                # Match the chart's cache-busting requests; Service owns our TTL cache.
+                return await self._request_json(
+                    (endpoint,), {**params, "_": time_ns() // 1_000_000}
+                )
+            except DataSourceError as exc:
+                # Retry a disconnected socket once, then let get_kline try the other node.
+                if attempt or not isinstance(exc.__cause__, httpx.RemoteProtocolError):
+                    raise
+        raise AssertionError("unreachable")
+
+    @staticmethod
+    def _parse_kline(payload: dict[str, Any]) -> list[KlineItem]:
         data = payload.get("data")
         if not isinstance(data, dict) or not isinstance(data.get("klines"), list):
             raise DataSourceError("EastMoney kline response is invalid")

@@ -139,6 +139,9 @@ def test_kline_periods_and_standard_model(period: str, klt: str) -> None:
         assert request.url.params["klt"] == klt
         assert request.url.params["fqt"] == "0"
         assert request.url.params["lmt"] == "2"
+        assert request.url.params["beg"] == "0"
+        assert request.url.params["end"] == "20500101"
+        assert request.url.params["ut"]
         return httpx.Response(200, json={"rc": 0, "data": {
             "klines": ["2026-09-24,1250.01,1237.00,1256.13,1231.05,31239,3867310920.0,0,0,0,0"]
         }})
@@ -211,5 +214,91 @@ def test_empty_kline_is_reported_as_data_source_failure() -> None:
         async with _client(lambda request: httpx.Response(200, json={"rc": 0, "data": {"klines": []}})) as client:
             with pytest.raises(DataSourceError):
                 await EastMoneyProvider(client).get_kline("600519")
+
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("failure", ["disconnect", "timeout", "empty", "malformed"])
+def test_kline_fallback_prefers_valid_node_and_limits_latest_history(failure: str) -> None:
+    hosts = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        hosts.append(request.url.host)
+        if request.url.host == "push2his.eastmoney.com":
+            if failure == "disconnect":
+                raise httpx.RemoteProtocolError("disconnected", request=request)
+            if failure == "timeout":
+                raise httpx.ReadTimeout("late", request=request)
+            rows = [] if failure == "empty" else ["invalid"]
+        else:
+            # Endpoint may ignore lmt; keep latest dates in ascending order.
+            rows = [f"2026-09-{day},10,11,12,9,100,1100" for day in (28, 24, 25)]
+        return httpx.Response(200, json={"rc": 0, "data": {"klines": rows}})
+
+    async def run() -> None:
+        async with _client(handler) as client:
+            provider = EastMoneyProvider(client)
+            for _ in range(2):
+                candles = await provider.get_kline("300750", limit=2)
+                assert [item.date.isoformat() for item in candles] == ["2026-09-25", "2026-09-28"]
+                assert candles[-1].close == 11
+        primary_calls = 2 if failure == "disconnect" else 1
+        assert hosts == ["push2his.eastmoney.com"] * primary_calls + [
+            "1.push2his.eastmoney.com", "1.push2his.eastmoney.com"
+        ]
+
+    asyncio.run(run())
+
+
+def test_kline_can_return_to_primary_when_preferred_backup_fails() -> None:
+    hosts = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        hosts.append(request.url.host)
+        if len(hosts) in (1, 3):
+            return httpx.Response(503)
+        return httpx.Response(200, json={"rc": 0, "data": {
+            "klines": ["2026-09-28,10,11,12,9,100,1100"]
+        }})
+
+    async def run() -> None:
+        async with _client(handler) as client:
+            provider = EastMoneyProvider(client)
+            for _ in range(3):
+                assert len(await provider.get_kline("300750")) == 1
+        assert hosts == [
+            "push2his.eastmoney.com", "1.push2his.eastmoney.com",
+            "1.push2his.eastmoney.com", "push2his.eastmoney.com", "push2his.eastmoney.com",
+        ]
+
+    asyncio.run(run())
+
+
+def test_owned_client_uses_complete_web_headers() -> None:
+    async def run() -> None:
+        async with EastMoneyProvider() as provider:
+            assert "AppleWebKit" in provider._client.headers["User-Agent"]
+            assert provider._client.headers["Referer"] == "https://quote.eastmoney.com/"
+            assert provider._client.headers["Accept"] == "*/*"
+
+    asyncio.run(run())
+
+
+def test_kline_retries_disconnected_socket_once_before_switching_nodes() -> None:
+    calls = []
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        calls.append(request)
+        if len(calls) == 1:
+            raise httpx.RemoteProtocolError("disconnected", request=request)
+        return httpx.Response(200, json={"rc": 0, "data": {
+            "klines": ["2026-09-28,10,11,12,9,100,1100"]
+        }})
+
+    async def run() -> None:
+        async with _client(handler) as client:
+            assert len(await EastMoneyProvider(client).get_kline("300750")) == 1
+        assert [request.url.host for request in calls] == ["push2his.eastmoney.com"] * 2
+        assert all(request.url.params["_"].isdigit() for request in calls)
 
     asyncio.run(run())
