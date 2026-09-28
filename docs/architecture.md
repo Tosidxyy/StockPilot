@@ -149,7 +149,9 @@ K 线         30～60 秒
 
 当前已实现：行情、指数 TTL 为 5 秒，指数/个股分时独立 TTL 为 1 秒，K 线 60 秒、搜索 300 秒。分时缓存独立于报价和指数缓存，配合前端 2 秒刷新。每类缓存最多保留 256 个键；最近成功结果额外保留 3600 秒。新请求遇到 `DataSourceError` 且存在未过期的旧结果时，返回 `CachedResult(data=..., stale=True)`；无旧结果则继续抛异常。返回缓存数据时复制模型，避免调用方修改缓存。
 
-同一 Service 缓存内、同一键的并发未命中请求共用一个异步查询任务，调用方取消不会取消其他调用方等待的查询。连续数据源失败按 2、4、8、16、30 秒退避，后续最高 30 秒；冷却期间不访问上游，有有效旧数据则返回 stale，否则保留数据源错误类型。成功清除退避；失败元数据有容量与过期限制。不同键或进程不共享任务。缓存只在内存中，后端重启或开发热重载会清空；首次取数失败无法降级。前端仍每 2 秒请求。
+同一 Service 缓存内、同一键的并发未命中请求共用一个异步查询任务，调用方取消不会取消其他调用方等待的查询。连续数据源失败按 2、4、8、16、30 秒退避，后续最高 30 秒；冷却期间不访问上游，有有效旧数据则返回 stale，否则保留数据源错误类型。成功清除退避；失败元数据有容量与过期限制。不同键或进程不共享任务。前端仍每 2 秒请求。
+
+指数、报价、个股/指数分时、K 线成功取数后，将规范化模型与 UTC 保存时间写入现有 SQLite 的 `market_snapshot`；空结果不覆盖持久化快照。内存缓存重启后清空，但数据源失败时可从 SQLite 读取同一键的快照，返回 HTTP 200、`stale=true` 与 `cached_at`。每类最多 256 个快照，最多用于降级 7 天；成功写入时清理过期与超容量记录。读取时校验模型与时间，失效或损坏快照不参与降级；数据库缓存读写失败不会掩盖成功行情。SQLite 操作在线程中执行。快照按类别及完整查询键隔离，包括股票、周期、数量、批量代码组合；搜索不持久化。`cached_at` 是缓存保存时间，不是交易发生时间，前端另行展示图表数据最后时间。Agent Tool 同样传递 stale 与保存时间。没有有效快照时继续返回原错误，无法恢复此前已清空且未落盘的数据。
 
 Provider 短暂失败且存在旧缓存时，可返回：
 
@@ -168,6 +170,7 @@ watchlist
 chat_session
 chat_message
 agent_trace
+market_snapshot
 ```
 
 Trace 至少保存：
@@ -177,7 +180,7 @@ session_id / step_index / tool_name / tool_input
 tool_output_summary / status / latency_ms / created_at
 ```
 
-当前已建立四张表及 `watchlist` 唯一代码约束、聊天消息和 Trace 到会话的外键。`create_database_engine()` 读取 `DATABASE_URL`，SQLite 连接启用外键；FastAPI 启动时调用 `init_db(engine)` 创建表，关闭时释放数据库连接与 Provider 客户端。自选股添加同一代码是幂等操作，列表按添加顺序返回，删除不存在的代码返回 `False`。Agent 对话将用户与助手可见消息写入 `chat_session` / `chat_message`；每次实际执行的 Tool 步骤写入 `agent_trace`。
+当前已建立五张表及 `watchlist` 唯一代码约束、聊天消息和 Trace 到会话的外键。`market_snapshot` 使用类别与查询键联合主键，保存规范化 JSON 和保存时间。`create_database_engine()` 读取 `DATABASE_URL`，SQLite 连接启用外键；FastAPI 启动时调用 `init_db(engine)` 创建缺失表，关闭时释放数据库连接与 Provider 客户端。自选股添加同一代码是幂等操作，列表按添加顺序返回，删除不存在的代码返回 `False`。Agent 对话将用户与助手可见消息写入 `chat_session` / `chat_message`；每次实际执行的 Tool 步骤写入 `agent_trace`。
 
 ## 8. API
 
