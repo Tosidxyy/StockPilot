@@ -1,13 +1,25 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { apiRequest } from "../lib/api";
 import { StockSearch } from "./StockSearch";
 
+function subscribeHash(change: () => void) {
+  window.addEventListener("hashchange", change);
+  window.addEventListener("popstate", change);
+  return () => {
+    window.removeEventListener("hashchange", change);
+    window.removeEventListener("popstate", change);
+  };
+}
+
 export function SiteChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const hash = useSyncExternalStore(subscribeHash, () => window.location.hash, () => "");
+  const watchlistActive = pathname === "/" && hash === "#watchlist";
+  const overviewActive = pathname === "/" && !watchlistActive;
   const [apiConnected, setApiConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -29,10 +41,10 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
         </Link>
         <nav aria-label="主导航">
           <p className="nav-title">Workspace</p>
-          <Link className={`nav-link ${pathname === "/" ? "active" : ""}`} href="/" aria-current={pathname === "/" ? "page" : undefined}>
+          <Link className={`nav-link ${overviewActive ? "active" : ""}`} href="/" aria-current={overviewActive ? "page" : undefined} onClick={(event) => { if (pathname === "/" && hash) { event.preventDefault(); window.location.hash = ""; } }}>
             <span className="nav-dot" />市场概览
           </Link>
-          <Link className="nav-link" href="/#watchlist"><span className="nav-dot" />自选股</Link>
+          <Link className={`nav-link ${watchlistActive ? "active" : ""}`} href="/#watchlist" aria-current={watchlistActive ? "page" : undefined} onClick={(event) => { if (pathname === "/") { event.preventDefault(); window.location.hash = "watchlist"; } }}><span className="nav-dot" />自选股</Link>
           <Link className={`nav-link ${pathname === "/agent" ? "active" : ""}`} href="/agent" aria-current={pathname === "/agent" ? "page" : undefined}><span className="nav-dot" />AI Agent</Link>
           <span className="nav-link muted"><span className="nav-dot" />执行追踪 <small>待接入</small></span>
         </nav>
