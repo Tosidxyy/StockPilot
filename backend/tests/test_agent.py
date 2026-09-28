@@ -89,6 +89,7 @@ def test_agent_without_model_reports_configuration_error(tmp_path, monkeypatch) 
             response = client.post("/api/agent/chat", json={"message": "今天行情？"})
             assert response.status_code == 503
             assert response.json()["detail"] == "Agent model is not configured"
+            assert client.post("/api/agent/chat/stream", json={"message": "今天行情？"}).status_code == 503
     finally:
         get_settings.cache_clear()
 

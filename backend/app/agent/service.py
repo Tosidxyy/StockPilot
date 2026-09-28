@@ -1,10 +1,14 @@
 """PydanticAI orchestration for the P0 market tools."""
 
+import asyncio
 import re
+from collections.abc import AsyncIterator
+from contextlib import suppress
 from dataclasses import replace
 from typing import Literal
 
 from starlette.concurrency import run_in_threadpool
+from anyio import CancelScope
 
 from pydantic_ai import Agent, RunContext
 from pydantic_ai.messages import ModelMessage, ModelRequest, ModelResponse, TextPart, ToolCallPart, UserPromptPart
@@ -33,6 +37,13 @@ MARKET_FACT_TERMS = (
     "今天", "现在", "最新", "最近", "行情", "股票", "股价", "涨", "跌",
     "走势", "K线", "K 线", "指数", "自选股", "成交", "比较",
 )
+NO_MARKET_DATA = "本次未能从行情 Tool 获取数据，暂无法回答行情事实。请重试或提供六位股票代码。"
+
+
+def _wants_market_facts(message: str) -> bool:
+    return any(term in message for term in MARKET_FACT_TERMS) or bool(
+        re.search(r"(?<!\d)[03468]\d{5}(?!\d)", message)
+    )
 
 
 class ModelNotConfiguredError(Exception):
@@ -157,9 +168,7 @@ class StockAgentService:
         answer = result.output.strip()
         if not answer:
             raise AgentExecutionError(active_session_id)
-        wants_market_facts = any(term in message for term in MARKET_FACT_TERMS) or bool(
-            re.search(r"(?<!\d)[03468]\d{5}(?!\d)", message)
-        )
+        wants_market_facts = _wants_market_facts(message)
         used_tool = any(
             isinstance(part, ToolCallPart)
             for model_message in result.new_messages()
@@ -167,9 +176,87 @@ class StockAgentService:
             for part in model_message.parts
         )
         if wants_market_facts and not used_tool:
-            answer = "本次未能从行情 Tool 获取数据，暂无法回答行情事实。请重试或提供六位股票代码。"
+            answer = NO_MARKET_DATA
         await run_in_threadpool(self._chats.save_exchange, active_session_id, message, answer)
         return active_session_id, answer
+
+    async def prepare_stream(self, message: str, session_id: str | None) -> tuple[str, list[ChatTurn]]:
+        if self._agent is None:
+            raise ModelNotConfiguredError
+        turns = await run_in_threadpool(self._chats.messages, session_id) if session_id else []
+        active_id = await run_in_threadpool(self._chats.ensure_session, session_id, message)
+        return active_id, turns
+
+    async def stream_chat(
+        self, message: str, session_id: str, turns: list[ChatTurn]
+    ) -> AsyncIterator[tuple[str, dict]]:
+        # Keep the model context and its cancellation scopes inside one producer task.
+        # The HTTP consumer can then close without suspending those scopes at a yield.
+        queue: asyncio.Queue[tuple[str, dict] | AgentExecutionError] = asyncio.Queue(maxsize=32)
+        worker = asyncio.create_task(self._produce_stream(message, session_id, turns, queue))
+        try:
+            while True:
+                event = await queue.get()
+                if isinstance(event, AgentExecutionError):
+                    raise event
+                yield event
+                if event[0] == "done":
+                    break
+        finally:
+            with CancelScope(shield=True):
+                if not worker.done():
+                    worker.cancel()
+                with suppress(asyncio.CancelledError):
+                    await worker
+
+    async def _produce_stream(
+        self, message: str, session_id: str, turns: list[ChatTurn],
+        queue: asyncio.Queue[tuple[str, dict] | AgentExecutionError],
+    ) -> None:
+        try:
+            await self._run_stream(message, session_id, turns, queue)
+        except AgentExecutionError as error:
+            await queue.put(error)
+        except Exception:
+            await queue.put(AgentExecutionError(session_id))
+
+    async def _run_stream(
+        self, message: str, session_id: str, turns: list[ChatTurn],
+        queue: asyncio.Queue[tuple[str, dict] | AgentExecutionError],
+    ) -> None:
+        assert self._agent is not None
+        dependencies = replace(self._dependencies, trace_steps=[])
+        try:
+            async with self._agent.run_stream(
+                message, deps=dependencies, message_history=_visible_history(turns),
+                usage_limits=UsageLimits(request_limit=8, tool_calls_limit=12),
+            ) as result:
+                # run_stream executes preceding Tools before exposing final text.
+                # Quarantine an unsupported market answer before sending any tokens.
+                allowed = not _wants_market_facts(message) or any(
+                    step.status == "success" for step in dependencies.trace_steps
+                )
+                async for delta in result.stream_text(delta=True):
+                    if allowed and delta:
+                        await queue.put(("delta", {"text": delta}))
+                answer = (await result.get_output()).strip() if allowed else NO_MARKET_DATA
+                if not allowed:
+                    await queue.put(("delta", {"text": answer}))
+                if not answer:
+                    raise AgentExecutionError(session_id)
+            await run_in_threadpool(self._chats.save_exchange, session_id, message, answer)
+        except ProviderTimeoutError as error:
+            raise AgentExecutionError(session_id, 504) from error
+        except DataSourceError as error:
+            raise AgentExecutionError(session_id, 503) from error
+        except AgentExecutionError:
+            raise
+        except Exception as error:
+            raise AgentExecutionError(session_id) from error
+        finally:
+            with CancelScope(shield=True):
+                await run_in_threadpool(self._traces.save_steps, session_id, dependencies.trace_steps)
+        await queue.put(("done", {"session_id": session_id, "answer": answer}))
 
     async def messages(self, session_id: str) -> list[ChatTurn]:
         return await run_in_threadpool(self._chats.messages, session_id)
