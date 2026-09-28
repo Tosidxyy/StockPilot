@@ -95,7 +95,7 @@ MarketService
 WatchlistService
 ```
 
-`StockService` 提供搜索、单只/批量行情和日/周 K 线；`MarketService` 提供三大指数及指数分时；`WatchlistService` 通过 SQLAlchemy Session 增删查自选股。Service 只接收 Provider 内部模型，不接触东方财富原始字段。
+`StockService` 提供搜索、单只/批量行情、个股分时和日/周 K 线；`MarketService` 提供三大指数及指数分时；`WatchlistService` 通过 SQLAlchemy Session 增删查自选股。Service 只接收 Provider 内部模型，不接触东方财富原始字段。
 
 ### Provider
 `MarketDataProvider` 定义统一接口，`EastMoneyProvider` 实现：
@@ -108,7 +108,7 @@ WatchlistService
 
 东方财富 `fX` 字段不得进入 Service、Agent 或前端。
 
-当前 Provider 接口包含 `search_stocks()`、`get_quotes()`、`get_indices()`、`get_index_intraday()` 和 `get_kline()`；均返回内部模型。Provider 使用 `httpx.AsyncClient`，可注入客户端用于测试。行情、指数、指数分时及 K 线均有主备节点，搜索使用单一节点。K 线只在完整解析成功后记住可用节点，连接断开时单个节点最多重试一次，再回退另一节点；返回按日期升序排列的最近 `limit` 根数据。具体节点、网页参数和在线验证见数据源文档。
+当前 Provider 接口包含 `search_stocks()`、`get_quotes()`、`get_indices()`、`get_index_intraday()`、`get_stock_intraday()` 和 `get_kline()`；均返回内部模型。Provider 使用 `httpx.AsyncClient`，可注入客户端用于测试。行情、指数、个股/指数分时及 K 线均有主备节点，搜索使用单一节点。分时和 K 线共享网页参数、动态时间戳与单次断连重试，分时解析复用最新交易日过滤。K 线只在完整解析成功后记住可用节点，返回按日期升序排列的最近 `limit` 根数据。具体节点、网页参数和在线验证见数据源文档。
 
 ## 5. 内部模型
 
@@ -147,7 +147,7 @@ K 线         30～60 秒
 新闻         3～5 分钟
 ```
 
-当前已实现：行情、指数与指数分时 TTL 为 5 秒、K 线 60 秒、搜索 300 秒。每类缓存最多保留 256 个键；最近成功结果额外保留 3600 秒。新请求遇到 `DataSourceError` 且存在未过期的旧结果时，返回 `CachedResult(data=..., stale=True)`；无旧结果则继续抛异常。返回缓存数据时复制模型，避免调用方修改缓存。
+当前已实现：行情、指数与指数/个股分时 TTL 为 5 秒、K 线 60 秒、搜索 300 秒。每类缓存最多保留 256 个键；最近成功结果额外保留 3600 秒。新请求遇到 `DataSourceError` 且存在未过期的旧结果时，返回 `CachedResult(data=..., stale=True)`；无旧结果则继续抛异常。返回缓存数据时复制模型，避免调用方修改缓存。
 
 Provider 短暂失败且存在旧缓存时，可返回：
 
@@ -189,6 +189,7 @@ GET    /api/market/overview               三大指数 + 自选股数量
 GET    /api/stocks/search?q=
 GET    /api/stocks/quotes?codes=600519,000001
 GET    /api/stocks/{code}/quote
+GET    /api/stocks/{code}/intraday
 GET    /api/stocks/{code}/kline?period=daily|weekly&limit=120
 
 GET    /api/watchlist
@@ -203,6 +204,7 @@ DELETE /api/watchlist/{code}
 ```text
 GET    /api/agent/status
 POST   /api/agent/chat
+POST   /api/agent/chat/stream
 GET    /api/agent/sessions/{session_id}
 GET    /api/agent/traces/recent?limit=5
 GET    /api/agent/traces/{session_id}
@@ -216,6 +218,10 @@ GET    /api/stocks/{code}/news
 ```
 
 本地 Next.js 来源通过 `CORS_ORIGINS` 配置允许跨域访问后端。
+
+`GET /api/stocks/{code}/intraday` 经 StockService → Provider 获取最新交易日分钟价格、成交量与成交额，仍返回 `{ data, stale }`。详情默认展示分时，每 10 秒刷新；日/周 K 切换使用原接口。
+
+`POST /api/agent/chat/stream` 接受同一 ChatRequest，返回 `text/event-stream`：`session` 提供会话 ID，`delta` 提供文本增量，`done` 提供完整答案；模型或行情失败发送包含规范化状态码和会话 ID 的 `error` 事件。未配置、未知会话、无效输入在流开始前分别返回 HTTP 503/404/422；开始后的失败以流内事件通知。原 JSON chat 接口保留供现有调用和 Eval 使用。
 
 Web 行情页面使用浏览器端请求访问上述 API，默认后端地址为 `http://localhost:8000`，可由 `NEXT_PUBLIC_API_BASE_URL` 配置。指数分时及日/周 K 线使用 ECharts，页面按 API 的 `stale` 标记提示旧缓存；请求失败时展示错误与重试，不合成行情数值。市场温度、资金流和新闻仍等待 P1 数据能力。
 
@@ -235,6 +241,8 @@ Tool 只做：
 - 参数 Schema
 - Service 调用
 - 结构化返回
+
+流式调用使用 PydanticAI `run_stream` / `stream_text`，模型运行位于独立生产任务，通过有界队列传递可见文本；取消时关闭生产任务并保留 Tool Trace。行情问题在成功 Tool 执行之前不会释放模型文本，无 Tool 的回答替换为固定提示。完整答案才保存为对话；不传输或持久化私有推理。前端使用 `react-markdown` + `remark-gfm` 渲染最终和逐步追加的文本，禁用原始 HTML。
 
 当前四个 P0 Tool 为 `get_stock_quote`、`get_stock_kline`、`get_market_indices`、`get_watchlist`；均经 Service 读取数据。自选股 Tool 用单次批量行情查询。P1 资金流与新闻 Tool 尚未注册。单次对话最多 8 次模型请求、12 次 Tool 调用。对话开始前创建会话；成功后保存用户与助手可见消息，失败的 Tool 步骤仍可按会话查询。续聊仅重建最近 20 条可见消息，不保存模型私有推理。行情事实问题若没有发生 Tool 调用，后端返回固定的无数据提示，不转发模型编出的数值。
 

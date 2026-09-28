@@ -30,6 +30,7 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 - [x] 批量实时行情
 - [x] 三大指数
 - [x] 日 K / 周 K
+- [x] 个股最新交易日分时
 - [x] 主 / 备 Endpoint
 - [x] Timeout / 统一异常
 - [x] Provider 基础测试
@@ -58,6 +59,7 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 
 - [x] Market indices / overview
 - [x] Stock search / quote / kline
+- [x] Stock intraday API + 5 秒缓存 / stale
 - [x] Watchlist GET / POST / DELETE
 - [ ] P1：money-flow
 - [ ] P1：news
@@ -76,7 +78,9 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 - [ ] 市场温度
 - [x] 股票搜索
 - [x] 个股基础行情
+- [x] 个股默认分时 + 成交量 + 10 秒刷新
 - [x] 日 K / 周 K + 成交量
+- [x] 自选股导航锚点选中状态
 - [ ] P1：资金流
 - [ ] P1：新闻
 - [x] Loading / Empty / Error
@@ -97,6 +101,8 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 - [ ] P1：`get_stock_news`
 - [x] `POST /api/agent/chat`
 - [x] Agent Chat 前端
+- [x] Markdown 回复渲染（首页 / 工作台 / 历史）
+- [x] SSE 流式回答与停止 / 中断处理
 - [x] Tool 基础测试
 
 验收：通过 `prd.md` 核心 Agent Case。
@@ -154,3 +160,5 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 - [x] 无真实 API Key
 
 注：2026-09-28 K 线专项修复与复验见 `docs/acceptance.md`。真实日/周 K 及单股 K 线 Agent 已通过，后端 42 测试和前端 lint / Type Check / Build 通过，修复已 Commit 并 Push。其余页面全链路、自选股批量报价和 Agent 核心 Case 尚未完整复验，前两项保持进行中；固定响应测试与 Eval 不替代这些在线验证。
+
+2026-09-28 用户交互增补闭环：个股分时、导航蓝点、Markdown 与流式回答已实现、测试并分别 Commit / Push（`cb34556`、`a06ea9b`、`ab3fa12`）。最新后端 50 passed，前端 lint / Type Check / Build 通过；真实分时与 DeepSeek 流式接口、浏览器中的图表/导航/格式化回答均已验证。已同步 PRD、设计、架构、数据源、验收及 README；本轮未继续其他功能阶段。
