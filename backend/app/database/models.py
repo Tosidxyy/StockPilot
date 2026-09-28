@@ -15,6 +15,29 @@ class Base(DeclarativeBase):
     pass
 
 
+class NewsRecord(Base):
+    __tablename__ = "news_record"
+    id: Mapped[str] = mapped_column(String(80), primary_key=True)
+    published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON)
+
+
+class NewsScopeItem(Base):
+    __tablename__ = "news_scope_item"
+    scope: Mapped[str] = mapped_column(String(10), primary_key=True)
+    news_id: Mapped[str] = mapped_column(ForeignKey("news_record.id", ondelete="CASCADE"), primary_key=True)
+
+
+class NewsFetchState(Base):
+    __tablename__ = "news_fetch_state"
+    scope: Mapped[str] = mapped_column(String(10), primary_key=True)
+    fetched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    attempted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    failed: Mapped[bool] = mapped_column(default=False)
+    partial: Mapped[bool] = mapped_column(default=False)
+    truncated: Mapped[bool] = mapped_column(default=False)
+
+
 class MarketSnapshot(Base):
     __tablename__ = "market_snapshot"
 

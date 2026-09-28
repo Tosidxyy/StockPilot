@@ -5,9 +5,16 @@ from typing import Literal, Sequence
 
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
 from app.providers.exceptions import DataSourceError
+from app.models.news import NewsBatch
 
 
 class MarketDataProvider(ABC):
+    async def get_stock_news(self, symbol: str) -> NewsBatch:
+        raise DataSourceError("Stock news is not supported by this provider")
+
+    async def get_market_news(self) -> NewsBatch:
+        raise DataSourceError("Market news is not supported by this provider")
+
     @abstractmethod
     async def search_stocks(self, query: str, limit: int = 20) -> list[SymbolSearchResult]: ...
 

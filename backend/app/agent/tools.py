@@ -2,7 +2,7 @@
 
 import re
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Literal
 
 from starlette.concurrency import run_in_threadpool
@@ -12,6 +12,8 @@ from app.services.stock import StockService
 from app.services.watchlist import WatchlistService
 from app.services.cache import CachedResult
 from app.services.reads import StockReadService
+from app.services.news import NewsService
+from app.providers.exceptions import DataSourceError
 from app.agent.trace import ToolStep
 
 
@@ -22,6 +24,7 @@ class AgentDependencies:
     watchlist: WatchlistService
     trace_steps: list[ToolStep] = field(default_factory=list)
     reader: StockReadService | None = None
+    news: NewsService | None = None
 
 
 def _symbol(value: str) -> str:
@@ -92,3 +95,24 @@ async def get_watchlist(deps: AgentDependencies) -> dict:
         "quotes": [item.model_dump(mode="json") for item in result.data],
         **_cache_metadata(result),
     }
+
+
+async def get_stock_news(deps: AgentDependencies, symbol: str, days: int = 7, limit: int = 10) -> dict:
+    symbol = _symbol(symbol)
+    if not 1 <= days <= 30 or not 1 <= limit <= 50:
+        raise ValueError("days 需为 1–30，limit 需为 1–50")
+    if deps.news is None:
+        raise DataSourceError("News service unavailable")
+    start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
+    result = await deps.news.get(symbol, start=start, page_size=limit)
+    return {"symbol": symbol, "days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+
+
+async def get_market_news(deps: AgentDependencies, days: int = 7, limit: int = 10) -> dict:
+    if not 1 <= days <= 30 or not 1 <= limit <= 50:
+        raise ValueError("days 需为 1–30，limit 需为 1–50")
+    if deps.news is None:
+        raise DataSourceError("News service unavailable")
+    start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
+    result = await deps.news.get(start=start, page_size=limit)
+    return {"days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}

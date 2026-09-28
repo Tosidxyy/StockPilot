@@ -1,4 +1,13 @@
 export type CollectionState = "warming" | "ready" | "stale" | "partial" | "unavailable";
+
+export type NewsItem = {
+  id: string; title: string; source: string; published_at: string; url: string;
+  excerpt: string | null; content_available: boolean; symbols: string[]; association: string;
+};
+export type NewsPage = {
+  items: NewsItem[]; total: number; page: number; page_size: number; has_more: boolean;
+  source_truncated: boolean; partial: boolean; coverage: string; collection_state: CollectionState;
+};
 export type DataEnvelope<T> = { data: T; stale: boolean; cached_at?: string | null; collection_state?: CollectionState | null };
 export type ResourceCollectionStatus = {
   state: CollectionState;

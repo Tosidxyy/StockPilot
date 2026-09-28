@@ -32,6 +32,8 @@ def _summary(tool_name: str, result: dict) -> str:
         return f"返回 {len(result['indices'])} 条指数" + stale
     if tool_name == "get_watchlist":
         return f"返回 {len(result['entries'])} 只自选股、{len(result['quotes'])} 条报价" + stale
+    if tool_name in ("get_stock_news", "get_market_news"):
+        return f"返回 {len(result['items'])} 条新闻标题/来源片段（非全文）" + stale
     return "Tool 已执行"
 
 

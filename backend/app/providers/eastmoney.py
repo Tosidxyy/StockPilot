@@ -9,6 +9,7 @@ import httpx
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
 from app.providers.base import MarketDataProvider
 from app.providers.exceptions import DataSourceError, InvalidSymbolError, ProviderTimeoutError
+from app.providers.news import EastMoneyNews
 
 _QUOTE_ENDPOINTS = (
     "https://push2.eastmoney.com/api/qt/ulist.np/get",
@@ -59,6 +60,13 @@ def _integer(value: Any, *, required: bool = False) -> int | None:
 
 
 class EastMoneyProvider(MarketDataProvider):
+    async def get_stock_news(self, symbol: str):
+        to_secid(symbol)
+        return await EastMoneyNews(self._client).collect(symbol)
+
+    async def get_market_news(self):
+        return await EastMoneyNews(self._client).collect(None)
+
     def __init__(self, client: httpx.AsyncClient | None = None) -> None:
         self._owns_client = client is None
         self._client = client or httpx.AsyncClient(

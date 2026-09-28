@@ -8,6 +8,7 @@ import type { CollectionOverview, IntradayPoint, KlineItem, StockQuote, Watchlis
 import { useResource } from "../lib/use-resource";
 import { KlineChart, StockIntradayChart } from "./Charts";
 import { CollectionStatus } from "./CollectionStatus";
+import { NewsPanel } from "./NewsPanel";
 
 function exchange(symbol: string): string {
   if (symbol.startsWith("6")) return "上交所";
@@ -110,9 +111,9 @@ export function StockDetail({ code }: { code: string }) {
         {period !== "intraday" && kline.data?.length && <p className="table-note">历史 K 线来源：{kline.data[0].source === "tencent" ? "腾讯财经（备用源，未提供历史成交额）" : "东方财富"} · 数据截至 {kline.data.at(-1)?.date} · 当日/本周尚未收盘的数据可能变化</p>}
       </section>
 
-      <div className="stock-secondary">
+      <div className="stock-secondary stock-news-section">
         <section className="card placeholder-card"><div className="section-head"><div><h2>资金流向</h2><span>P1 数据待接入</span></div></div><div className="section-state">当前暂无资金流接口，接入后展示真实资金数据。</div></section>
-        <section className="card placeholder-card"><div className="section-head"><div><h2>个股新闻</h2><span>P1 数据待接入</span></div></div><div className="section-state">新闻数据源尚未接入。</div></section>
+        <NewsPanel key={code} symbol={code} />
       </div>
       <Link className="card agent-shortcut" href={`/agent?q=${encodeURIComponent(`分析 ${data?.name || code}（${code}）的最新行情与最近五天走势`)}`}><span className="agent-icon">✦</span><div><h2>AI 快捷分析</h2><p>基于这只股票的真实行情与 K 线向 Agent 提问。</p></div><span className="chip">前往对话</span></Link>
       <p className="footnote">StockPilot V0.1 · 行情信息仅供参考，不构成投资建议</p>

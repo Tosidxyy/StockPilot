@@ -8,6 +8,7 @@ import { MarketLineChart } from "./Charts";
 import { AgentChat } from "./AgentChat";
 import { TracePanel } from "./TracePanel";
 import { WatchlistPanel } from "./WatchlistPanel";
+import { NewsPanel } from "./NewsPanel";
 
 const indexNames: Record<string, string> = {
   "000001": "上证指数", "399001": "深证成指", "399006": "创业板指",
@@ -58,6 +59,7 @@ export function MarketDashboard() {
           </section>
 
           <WatchlistPanel />
+          <NewsPanel />
 
           <section className="card temperature-card" aria-labelledby="temperature-title">
             <div className="section-head"><div><h2 id="temperature-title">市场温度</h2><span>全市场 · P1 数据待接入</span></div></div>
