@@ -91,6 +91,8 @@ Agent 对话需在 `backend/.env` 中填写 `MODEL_NAME` 和 `MODEL_API_KEY`；�
 
 行情 Tool 优先复用最近成功缓存，单股报价可直接取自已缓存的自选股批量行情，少量 K 线可从同周期更长缓存中裁剪。仅没有有效缓存时取数；命中保留保存时间并返回缓存年龄、stale 标记，Agent 提示要求注明数据时间。页面取数仍每 2 秒进行，旧快照不冒充实时行情。
 
+自选股点击“涨跌幅”表头，可依次切换从高到低、从低到高、添加顺序；行情自动更新时保持当前排序，缺失报价排在末尾。
+
 2026-09-25 使用真实 DeepSeek 模型验证了指数 Tool 选择；配合固定测试行情完成回答与成功 Trace。2026-09-28 修复行情请求后，真实 DeepSeek 与东方财富联调完成宁德时代最近 5 根日 K 任务，Agent 返回 200，K 线 Tool Trace 为 success；全部核心 Case 的在线验收仍待完成。
 
 更新 K 线修复后，请重启后端（在原终端按 `Ctrl+C`，然后在 `backend/` 执行 `uv run uvicorn app.main:app --reload`），再刷新个股详情页。无需新增 K 线 API Key。可访问 `http://localhost:8000/api/stocks/300750/kline?period=daily&limit=5` 检查真实接口响应。
