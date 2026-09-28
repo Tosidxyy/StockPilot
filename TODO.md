@@ -164,3 +164,5 @@ V0.1 验收进行中：7 项通过；真实日/周 K 线与单股 K 线 Agent �
 2026-09-28 用户交互增补闭环：个股分时、导航蓝点、Markdown 与流式回答已实现、测试并分别 Commit / Push（`cb34556`、`a06ea9b`、`ab3fa12`）。最新后端 50 passed，前端 lint / Type Check / Build 通过；真实分时与 DeepSeek 流式接口、浏览器中的图表/导航/格式化回答均已验证。已同步 PRD、设计、架构、数据源、验收及 README；本轮未继续其他功能阶段。
 
 分时刷新频率补充：个股和指数分时每 2 秒刷新，后端分时独立缓存 1 秒，并防止未完成请求重叠。后端 50 passed，前端 lint / Type Check / Build 通过；修复 `733e705` 已 Commit / Push，相关文档已同步。
+
+2026-09-28 再次断连排查：真实行情主备节点 RemoteProtocolError，API 仍 503，健康检查及前端 200，原因未确证。已增加服务端同键请求合并与最高 30 秒失败退避，保留前端 2 秒刷新和 stale 降级。后端 55 passed，前端 lint / Type Check / Build 通过；修复 `0be4a10` 已 Commit / Push，架构、数据源、验收文档已同步。行情源未恢复，在线验收前两项保持进行中。
