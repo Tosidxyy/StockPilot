@@ -30,7 +30,11 @@ class MarketService:
             snapshots=SnapshotStore(snapshot_sessions, "index_intraday", list[IntradayPoint]) if snapshot_sessions else None,
         )
 
-    async def get_indices(self) -> CachedResult[list[MarketIndex]]:
+    async def get_indices(self, *, prefer_cached: bool = False) -> CachedResult[list[MarketIndex]]:
+        if prefer_cached:
+            cached = await self._indices.peek("indices")
+            if cached is not None:
+                return cached
         return await self._indices.get("indices", self._provider.get_indices)
 
     async def get_index_intraday(self, index_code: str = "000001") -> CachedResult[list[IntradayPoint]]:

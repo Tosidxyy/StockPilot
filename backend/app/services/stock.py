@@ -46,19 +46,37 @@ class StockService:
             (normalized, limit), lambda: self._provider.search_stocks(normalized, limit)
         )
 
-    async def get_quotes(self, symbols: Sequence[str]) -> CachedResult[list[StockQuote]]:
+    async def get_quotes(self, symbols: Sequence[str], *, prefer_cached: bool = False) -> CachedResult[list[StockQuote]]:
         unique = tuple(dict.fromkeys(symbols))
         if not unique:
             return CachedResult([])
+        if prefer_cached:
+            cached = await self._quotes.peek(unique, matches=lambda key: (
+                isinstance(key, (tuple, list)) and set(unique).issubset(key)
+            ), accepts=lambda data: set(unique).issubset(item.symbol for item in data))
+            if cached is not None:
+                by_symbol = {item.symbol: item for item in cached.data}
+                if all(symbol in by_symbol for symbol in unique):
+                    return CachedResult([by_symbol[symbol] for symbol in unique], stale=cached.stale,
+                                        cached_at=cached.cached_at)
         return await self._quotes.get(unique, lambda: self._provider.get_quotes(unique))
 
-    async def get_quote(self, symbol: str) -> CachedResult[StockQuote | None]:
-        result = await self.get_quotes([symbol])
+    async def get_quote(self, symbol: str, *, prefer_cached: bool = False) -> CachedResult[StockQuote | None]:
+        result = await self.get_quotes([symbol], prefer_cached=prefer_cached)
         return CachedResult(result.data[0] if result.data else None, stale=result.stale, cached_at=result.cached_at)
 
     async def get_kline(
-        self, symbol: str, period: Literal["daily", "weekly"] = "daily", limit: int = 120
+        self, symbol: str, period: Literal["daily", "weekly"] = "daily", limit: int = 120,
+        *, prefer_cached: bool = False,
     ) -> CachedResult[list[KlineItem]]:
+        if prefer_cached:
+            cached = await self._klines.peek((symbol, period, limit), matches=lambda key: (
+                isinstance(key, (tuple, list)) and len(key) == 3
+                and key[0] == symbol and key[1] == period
+                and isinstance(key[2], int) and key[2] >= limit
+            ))
+            if cached is not None:
+                return CachedResult(cached.data[-limit:], stale=cached.stale, cached_at=cached.cached_at)
         return await self._klines.get(
             (symbol, period, limit), lambda: self._provider.get_kline(symbol, period, limit)
         )

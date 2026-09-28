@@ -53,7 +53,28 @@ class AsyncTTLStore(Generic[T]):
             maxsize=maxsize, ttl=stale_ttl, **kwargs
         )
         self._timer = timer or monotonic
+        self._ttl = ttl
         self._pending: dict[Hashable, asyncio.Task[CachedResult[T]]] = {}
+
+    async def peek(
+        self, key: Hashable, *, matches: Callable[[object], bool] | None = None,
+        accepts: Callable[[T], bool] | None = None,
+    ) -> CachedResult[T] | None:
+        """Read the newest valid memory/SQLite snapshot without fetching or refreshing its age."""
+        match = matches or (lambda candidate: candidate == key)
+        newest: CachedResult[T] | None = None
+        if self._snapshots is not None:
+            stored = await self._snapshots.read_latest(match, accepts) if matches else await self._snapshots.read(key)
+            if stored is not None:
+                data, saved_at = stored
+                newest = CachedResult(data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl,
+                                      cached_at=saved_at)
+        for candidate, data in list(self._stale.items()):
+            saved_at = self._saved_at.get(candidate)
+            if data and saved_at is not None and match(candidate) and (accepts is None or accepts(data)):
+                if newest is None or saved_at >= newest.cached_at:
+                    newest = CachedResult(data, stale=candidate not in self._fresh, cached_at=saved_at)
+        return CachedResult(deepcopy(newest.data), stale=newest.stale, cached_at=newest.cached_at) if newest else None
 
     async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]]) -> CachedResult[T]:
         if key in self._fresh:

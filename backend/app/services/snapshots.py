@@ -66,18 +66,45 @@ class SnapshotStore(Generic[T]):
     async def read(self, key: Hashable) -> tuple[T, datetime] | None:
         return await asyncio.to_thread(self._read, key)
 
+    async def read_latest(self, matches: Callable[[object], bool],
+                          accepts: Callable[[T], bool] | None = None) -> tuple[T, datetime] | None:
+        return await asyncio.to_thread(self._read_latest, matches, accepts)
+
+    def _read_latest(self, matches: Callable[[object], bool],
+                     accepts: Callable[[T], bool] | None) -> tuple[T, datetime] | None:
+        try:
+            with self._sessions() as session:
+                rows = session.scalars(select(MarketSnapshot).where(
+                    MarketSnapshot.namespace == self._namespace,
+                ).order_by(MarketSnapshot.saved_at.desc()).limit(self._maxsize))
+                for row in rows:
+                    try:
+                        if not matches(json.loads(row.cache_key)):
+                            continue
+                        result = self._decode(row)
+                        if result is not None and (accepts is None or accepts(result[0])):
+                            return result
+                    except (ValueError, TypeError):
+                        continue
+        except SQLAlchemyError:
+            logger.warning("Market snapshot read failed")
+        return None
+
+    def _decode(self, row: MarketSnapshot) -> tuple[T, datetime] | None:
+        saved_at = row.saved_at.replace(tzinfo=timezone.utc)
+        age = self._clock() - saved_at
+        if age < timedelta(0) or age > self._max_age:
+            return None
+        data = self._adapter.validate_python(row.payload)
+        return (data, saved_at) if data else None
+
     def _read(self, key: Hashable) -> tuple[T, datetime] | None:
         try:
             with self._sessions() as session:
                 row = session.get(MarketSnapshot, (self._namespace, json.dumps(key, ensure_ascii=False)))
                 if row is None:
                     return None
-                saved_at = row.saved_at.replace(tzinfo=timezone.utc)
-                age = self._clock() - saved_at
-                if age < timedelta(0) or age > self._max_age:
-                    return None
-                data = self._adapter.validate_python(row.payload)
-                return (data, saved_at) if data else None
+                return self._decode(row)
         except (SQLAlchemyError, ValidationError):
             logger.warning("Market snapshot read failed")
             return None

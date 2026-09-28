@@ -29,6 +29,8 @@ from app.services.trace import TraceService
 SYSTEM_INSTRUCTIONS = """你是 StockPilot 的 A 股行情助手。回答使用中文，简洁、准确。
 涉及当前或历史行情、自选股、指数时，必须先调用对应 Tool，不能依靠记忆补数值。
 Tool 返回的字段才是数据事实；明确区分数据事实与分析。旧缓存必须说明非最新数据。
+Tool 优先读取最近成功缓存；cached_at 是 UTC 保存时间，cache_age_seconds 是缓存年龄。
+回答行情时说明数据截至时间（转换为北京时间）；stale=true 时明确为旧缓存，不能称为当前实时行情。
 Tool 失败、股票不存在或没有数据时明确说明，绝不猜测价格、涨跌幅、原因或走势。
 目前没有资金流和新闻数据 Tool。用户问价格波动原因时不要凭价格推断原因，
 说明需要更多数据验证。不要给出交易指令、收益承诺或涨跌预测。
@@ -72,7 +74,7 @@ def build_agent(model: Model) -> Agent[AgentDependencies, str]:
 
     @agent.tool
     async def get_stock_quote(ctx: RunContext[AgentDependencies], symbol: str) -> dict:
-        """Retrieve a live or marked stale quote by six-digit A-share symbol."""
+        """Read latest cached quote by A-share symbol, fetching only on cache miss."""
         return await record_tool(
             ctx.deps.trace_steps, "get_stock_quote", {"symbol": symbol},
             lambda: tools.get_stock_quote(ctx.deps, symbol),
@@ -85,7 +87,7 @@ def build_agent(model: Model) -> Agent[AgentDependencies, str]:
         period: Literal["daily", "weekly"] = "daily",
         limit: int = 5,
     ) -> dict:
-        """Retrieve recent daily or weekly OHLC candles and volume for one A-share."""
+        """Read cached daily/weekly OHLC candles, fetching only on cache miss."""
         return await record_tool(
             ctx.deps.trace_steps, "get_stock_kline",
             {"symbol": symbol, "period": period, "limit": limit},
@@ -94,7 +96,7 @@ def build_agent(model: Model) -> Agent[AgentDependencies, str]:
 
     @agent.tool
     async def get_market_indices(ctx: RunContext[AgentDependencies]) -> dict:
-        """Retrieve the three major A-share indices and their changes."""
+        """Read the latest cached major A-share indices, fetching only on cache miss."""
         return await record_tool(
             ctx.deps.trace_steps, "get_market_indices", {},
             lambda: tools.get_market_indices(ctx.deps),
@@ -102,7 +104,7 @@ def build_agent(model: Model) -> Agent[AgentDependencies, str]:
 
     @agent.tool
     async def get_watchlist(ctx: RunContext[AgentDependencies]) -> dict:
-        """Retrieve saved symbols with quotes using one batched query."""
+        """Read watchlist and latest cached quotes, fetching a batch only on cache miss."""
         return await record_tool(
             ctx.deps.trace_steps, "get_watchlist", {},
             lambda: tools.get_watchlist(ctx.deps),
