@@ -4,6 +4,7 @@ from abc import ABC, abstractmethod
 from typing import Literal, Sequence
 
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
+from app.providers.exceptions import DataSourceError
 
 
 class MarketDataProvider(ABC):
@@ -18,6 +19,9 @@ class MarketDataProvider(ABC):
 
     @abstractmethod
     async def get_index_intraday(self, index_code: str = "000001") -> list[IntradayPoint]: ...
+
+    async def get_stock_intraday(self, symbol: str) -> list[IntradayPoint]:
+        raise DataSourceError("Stock intraday data is not supported by this provider")
 
     @abstractmethod
     async def get_kline(

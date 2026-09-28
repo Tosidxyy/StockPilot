@@ -44,6 +44,11 @@ class FakeProvider(MarketDataProvider):
         return [IntradayPoint(time=datetime(2026, 9, 25, 9, 30), price=3000.0,
                               volume=100, turnover=2000.0)]
 
+    async def get_stock_intraday(self, symbol) -> list[IntradayPoint]:
+        self._check()
+        return [IntradayPoint(time=datetime(2026, 9, 28, 9, 30), price=12.3,
+                              volume=100, turnover=1230.0)]
+
     async def get_kline(self, symbol: str, period="daily", limit=120) -> list[KlineItem]:
         self.periods.append(period)
         self._check()
@@ -85,6 +90,19 @@ def test_local_frontend_cors_preflight(api) -> None:
     )
     assert response.status_code == 200
     assert response.headers["access-control-allow-origin"] == "http://localhost:3000"
+
+
+def test_stock_intraday_api_and_failure(api) -> None:
+    client, provider, _ = api
+    response = client.get("/api/stocks/300750/intraday")
+    assert response.status_code == 200
+    assert response.json()["data"][0]["price"] == 12.3
+    assert response.json()["stale"] is False
+    assert client.get("/api/stocks/bad/intraday").status_code == 422
+    provider.error = DataSourceError("private upstream error")
+    failed = client.get("/api/stocks/600519/intraday")
+    assert failed.status_code == 503
+    assert "private" not in failed.text
 
 
 def test_stock_search_quote_batch_and_kline(api) -> None:

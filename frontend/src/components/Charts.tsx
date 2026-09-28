@@ -98,3 +98,27 @@ export function KlineChart({ items }: { items: KlineItem[] }) {
 
   return <ChartFrame option={option} label="个股 K 线与成交量图" className="kline-chart" />;
 }
+
+export function StockIntradayChart({ points, name }: { points: IntradayPoint[]; name: string }) {
+  const option = useMemo<EChartsOption>(() => ({
+    animation: false,
+    tooltip: { trigger: "axis", axisPointer: { type: "cross" }, backgroundColor: "#151a22", borderColor: gridColor, textStyle: { color: "#edf2f7" } },
+    axisPointer: { link: [{ xAxisIndex: "all" }] },
+    grid: [{ left: 60, right: 20, top: 20, height: "58%" }, { left: 60, right: 20, top: "76%", height: "13%" }],
+    xAxis: [0, 1].map((index) => ({
+      type: "category" as const, gridIndex: index, boundaryGap: false,
+      data: points.map((point) => point.time.slice(11, 16)),
+      axisLabel: { show: index === 1, color: axisColor, interval: Math.max(0, Math.floor(points.length / 6) - 1) },
+      axisLine: { lineStyle: { color: gridColor } }, axisTick: { show: false },
+    })),
+    yAxis: [
+      { type: "value", scale: true, splitLine: { lineStyle: { color: gridColor } }, axisLabel: { color: axisColor } },
+      { type: "value", gridIndex: 1, splitNumber: 2, splitLine: { show: false }, axisLabel: { color: axisColor, hideOverlap: true, formatter: (value: number) => value >= 10000 ? `${(value / 10000).toFixed(1)}万` : String(Math.round(value)) } },
+    ],
+    series: [
+      { name: "价格", type: "line", showSymbol: false, data: points.map((point) => point.price), lineStyle: { color: "#6ea8fe", width: 2 }, itemStyle: { color: "#6ea8fe" }, areaStyle: { color: "rgba(110,168,254,.12)" } },
+      { name: "成交量", type: "bar", xAxisIndex: 1, yAxisIndex: 1, data: points.map((point, index) => ({ value: point.volume, itemStyle: { color: index > 0 && point.price < points[index - 1].price ? "#22c55e80" : "#f0525280" } })) },
+    ],
+  }), [points]);
+  return <ChartFrame option={option} label={`${name}实时分时与成交量图`} className="kline-chart" />;
+}

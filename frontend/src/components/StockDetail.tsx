@@ -4,9 +4,9 @@ import { useState } from "react";
 import Link from "next/link";
 import { apiRequest, errorText } from "../lib/api";
 import { amount, moveClass, number, signed } from "../lib/format";
-import type { KlineItem, StockQuote, WatchlistEntry } from "../lib/types";
+import type { IntradayPoint, KlineItem, StockQuote, WatchlistEntry } from "../lib/types";
 import { useResource } from "../lib/use-resource";
-import { KlineChart } from "./Charts";
+import { KlineChart, StockIntradayChart } from "./Charts";
 
 function exchange(symbol: string): string {
   if (symbol.startsWith("6")) return "上交所";
@@ -15,11 +15,13 @@ function exchange(symbol: string): string {
 }
 
 export function StockDetail({ code }: { code: string }) {
-  const [period, setPeriod] = useState<"daily" | "weekly">("daily");
+  const [period, setPeriod] = useState<"intraday" | "daily" | "weekly">("intraday");
   const [saving, setSaving] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
-  const quote = useResource<StockQuote>(`/api/stocks/${code}/quote`, 30000);
-  const kline = useResource<KlineItem[]>(`/api/stocks/${code}/kline?period=${period}&limit=120`, 60000);
+  const quote = useResource<StockQuote>(`/api/stocks/${code}/quote`, 10000);
+  const intraday = useResource<IntradayPoint[]>(period === "intraday" ? `/api/stocks/${code}/intraday` : null, 10000);
+  const kline = useResource<KlineItem[]>(period !== "intraday" ? `/api/stocks/${code}/kline?period=${period}&limit=120` : null, 60000);
+  const chart = period === "intraday" ? intraday : kline;
   const watchlist = useResource<WatchlistEntry[]>("/api/watchlist");
   const saved = watchlist.data?.some((entry) => entry.symbol === code) ?? false;
 
@@ -75,12 +77,12 @@ export function StockDetail({ code }: { code: string }) {
       </section>
 
       <section className="card kline-card" aria-labelledby="kline-title">
-        <div className="section-head"><div><h2 id="kline-title">K 线与成交量</h2><span>不复权 · 最近 120 根</span></div><div className="period-tabs" role="group" aria-label="K 线周期"><button className={period === "daily" ? "active" : ""} type="button" onClick={() => setPeriod("daily")}>日 K</button><button className={period === "weekly" ? "active" : ""} type="button" onClick={() => setPeriod("weekly")}>周 K</button></div></div>
-        {kline.loading ? <div className="chart kline-chart skeleton" /> :
-          kline.error && !kline.data ? <div className="section-state error-state">{kline.error}<button onClick={kline.refresh}>重试</button></div> :
-            !kline.data?.length ? <div className="section-state">暂无该周期 K 线数据。</div> :
-              <div className="chart-wrap"><KlineChart items={kline.data} /></div>}
-        {kline.stale && <p className="stale-note">K 线使用最近成功数据，数据源暂时不可用。</p>}
+        <div className="section-head"><div><h2 id="kline-title">{period === "intraday" ? "实时分时与成交量" : "K 线与成交量"}</h2><span>{period === "intraday" ? `最新交易日 · 每 10 秒刷新${intraday.data?.length ? ` · 更新至 ${intraday.data.at(-1)?.time.replace("T", " ")}` : ""}` : "不复权 · 最近 120 根"}</span></div><div className="period-tabs" role="group" aria-label="行情周期"><button className={period === "intraday" ? "active" : ""} type="button" onClick={() => setPeriod("intraday")}>分时</button><button className={period === "daily" ? "active" : ""} type="button" onClick={() => setPeriod("daily")}>日 K</button><button className={period === "weekly" ? "active" : ""} type="button" onClick={() => setPeriod("weekly")}>周 K</button></div></div>
+        {chart.loading ? <div className="chart kline-chart skeleton" /> :
+          chart.error && !chart.data ? <div className="section-state error-state">{chart.error}<button onClick={chart.refresh}>重试</button></div> :
+            !chart.data?.length ? <div className="section-state">暂无该周期行情数据。</div> :
+              <div className="chart-wrap">{period === "intraday" ? <StockIntradayChart points={intraday.data!} name={data?.name || code} /> : <KlineChart items={kline.data!} />}</div>}
+        {chart.stale && <p className="stale-note">正在显示最近成功数据，本次行情更新暂不可用。</p>}
       </section>
 
       <div className="stock-secondary">

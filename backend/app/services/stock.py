@@ -3,7 +3,7 @@
 from collections.abc import Callable, Sequence
 from typing import Literal
 
-from app.models.market import KlineItem, StockQuote, SymbolSearchResult
+from app.models.market import IntradayPoint, KlineItem, StockQuote, SymbolSearchResult
 from app.providers.base import MarketDataProvider
 from app.services.cache import AsyncTTLStore, CachedResult
 
@@ -20,6 +20,9 @@ class StockService:
         timer: Callable[[], float] | None = None,
     ) -> None:
         self._provider = provider
+        self._intraday: AsyncTTLStore[list[IntradayPoint]] = AsyncTTLStore(
+            ttl=quote_ttl, stale_ttl=stale_ttl, timer=timer
+        )
         self._quotes: AsyncTTLStore[list[StockQuote]] = AsyncTTLStore(
             ttl=quote_ttl, stale_ttl=stale_ttl, timer=timer
         )
@@ -52,3 +55,6 @@ class StockService:
         return await self._klines.get(
             (symbol, period, limit), lambda: self._provider.get_kline(symbol, period, limit)
         )
+
+    async def get_intraday(self, symbol: str) -> CachedResult[list[IntradayPoint]]:
+        return await self._intraday.get(symbol, lambda: self._provider.get_stock_intraday(symbol))

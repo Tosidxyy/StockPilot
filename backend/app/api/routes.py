@@ -87,6 +87,12 @@ async def get_stock_kline(
     return DataResponse(data=result.data, stale=result.stale)
 
 
+@router.get("/stocks/{code}/intraday", response_model=DataResponse[list[IntradayPoint]])
+async def get_stock_intraday(stock: Stock, code: Code) -> DataResponse[list[IntradayPoint]]:
+    result = await stock.get_intraday(code)
+    return DataResponse(data=result.data, stale=result.stale)
+
+
 @router.get("/watchlist", response_model=DataResponse[list[WatchlistEntry]])
 def get_watchlist(watchlist: Watchlist) -> DataResponse[list[WatchlistEntry]]:
     return DataResponse(data=watchlist.list_entries())

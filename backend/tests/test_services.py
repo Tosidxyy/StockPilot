@@ -52,6 +52,9 @@ class FakeProvider(MarketDataProvider):
         return [IntradayPoint(time=datetime(2026, 9, 25, 9, 30), price=3000.0,
                               volume=100, turnover=2000.0)]
 
+    async def get_stock_intraday(self, symbol):
+        return await self.get_index_intraday()
+
     async def get_kline(self, symbol, period="daily", limit=120):
         self.kline_calls += 1
         if self.fail:
@@ -127,5 +130,25 @@ def test_stock_search_and_kline_cache_separately() -> None:
         assert provider.kline_calls == 1
         quote = await service.get_quote("600519")
         assert quote.data is not None and quote.data.symbol == "600519"
+
+    asyncio.run(run())
+
+
+def test_stock_intraday_cache_is_per_symbol_and_stale_after_five_seconds():
+    async def run():
+        clock = Clock()
+        provider = FakeProvider()
+        service = StockService(provider, timer=clock, stale_ttl=400)
+        await service.get_intraday("300750")
+        await service.get_intraday("300750")
+        await service.get_intraday("600519")
+        assert provider.intraday_calls == 2
+        clock.now = 6
+        provider.fail = True
+        result = await service.get_intraday("300750")
+        assert result.stale and result.data[0].price == 3000
+        clock.now = 401
+        with pytest.raises(DataSourceError):
+            await service.get_intraday("300750")
 
     asyncio.run(run())

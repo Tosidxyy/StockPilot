@@ -302,3 +302,26 @@ def test_kline_retries_disconnected_socket_once_before_switching_nodes() -> None
         assert all(request.url.params["_"].isdigit() for request in calls)
 
     asyncio.run(run())
+
+
+def test_stock_intraday_converts_symbol_and_keeps_latest_day() -> None:
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.params["secid"] == "0.300750"
+        assert request.url.params["ndays"] == "1"
+        return httpx.Response(200, json={"rc": 0, "data": {"trends": [
+            "2026-09-25 15:00,10,11,12,9,100,1100,11",
+            "2026-09-28 09:30,12,13,14,11,200,2600,13",
+        ]}})
+
+    async def run() -> None:
+        async with _client(handler) as client:
+            provider = EastMoneyProvider(client)
+            points = await provider.get_stock_intraday("300750")
+            assert len(points) == 1
+            assert points[0].price == 13
+            assert points[0].volume == 200
+            assert points[0].time.isoformat() == "2026-09-28T09:30:00"
+            with pytest.raises(InvalidSymbolError):
+                await provider.get_stock_intraday("bad")
+
+    asyncio.run(run())

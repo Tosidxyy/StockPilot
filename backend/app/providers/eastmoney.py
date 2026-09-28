@@ -19,7 +19,7 @@ _KLINE_ENDPOINTS = (
     "https://1.push2his.eastmoney.com/api/qt/stock/kline/get",
 )
 # Public token used by EastMoney's quote chart, not an account API key.
-_KLINE_WEB_TOKEN = "fa5fd1943c7b386f172d6893dbfba10b"
+_CHART_WEB_TOKEN = "fa5fd1943c7b386f172d6893dbfba10b"
 _SEARCH_ENDPOINT = "https://searchapi.eastmoney.com/api/suggest/get"
 _TREND_ENDPOINTS = (
     "https://push2.eastmoney.com/api/qt/stock/trends2/get",
@@ -220,17 +220,24 @@ class EastMoneyProvider(MarketDataProvider):
     async def get_index_intraday(self, index_code: str = "000001") -> list[IntradayPoint]:
         if index_code not in _INDEX_IDS:
             raise InvalidSymbolError(f"Unsupported market index: {index_code!r}")
+        return await self._get_intraday(_INDEX_IDS[index_code])
+
+    async def get_stock_intraday(self, symbol: str) -> list[IntradayPoint]:
+        return await self._get_intraday(to_secid(symbol))
+
+    async def _get_intraday(self, secid: str) -> list[IntradayPoint]:
         preferred = self._preferred_trend_endpoint
         other = next(endpoint for endpoint in _TREND_ENDPOINTS if endpoint != preferred)
         params = {
-            "secid": _INDEX_IDS[index_code], "ndays": 1, "iscr": 0,
+            "secid": secid, "ndays": 1, "iscr": 0,
+            "ut": _CHART_WEB_TOKEN,
             "fields1": "f1,f2,f3,f4,f5,f6,f7,f8,f9,f10,f11,f12,f13",
             "fields2": "f51,f52,f53,f54,f55,f56,f57,f58",
         }
         last_error: DataSourceError | None = None
         for endpoint in (preferred, other):
             try:
-                payload = await self._request_json((endpoint,), params)
+                payload = await self._request_chart(endpoint, params)
                 data = payload.get("data")
                 if not isinstance(data, dict) or not isinstance(data.get("trends"), list) or not data["trends"]:
                     raise DataSourceError("EastMoney intraday response is invalid")
@@ -251,6 +258,7 @@ class EastMoneyProvider(MarketDataProvider):
                     except (TypeError, ValueError) as exc:
                         raise DataSourceError("EastMoney intraday row is invalid") from exc
                 latest_date = max(point.time.date() for point in points)
+                self._preferred_trend_endpoint = endpoint
                 return [point for point in points if point.time.date() == latest_date]
             except DataSourceError as exc:
                 last_error = exc
@@ -268,7 +276,7 @@ class EastMoneyProvider(MarketDataProvider):
         params = {
             "secid": secid, "klt": 101 if period == "daily" else 102,
             "fqt": 0, "lmt": limit,
-            "beg": 0, "end": 20500101, "ut": _KLINE_WEB_TOKEN,
+            "beg": 0, "end": 20500101, "ut": _CHART_WEB_TOKEN,
             "fields1": "f1,f2,f3,f4,f5,f6",
             "fields2": "f51,f52,f53,f54,f55,f56,f57,f58,f59,f60,f61",
         }
@@ -277,7 +285,7 @@ class EastMoneyProvider(MarketDataProvider):
         last_error: DataSourceError | None = None
         for endpoint in (preferred, other):
             try:
-                payload = await self._request_kline(endpoint, params)
+                payload = await self._request_chart(endpoint, params)
                 items = self._parse_kline(payload)
                 self._preferred_kline_endpoint = endpoint
                 # The public endpoint can ignore lmt and return the full history.
@@ -287,7 +295,7 @@ class EastMoneyProvider(MarketDataProvider):
         assert last_error is not None
         raise last_error
 
-    async def _request_kline(self, endpoint: str, params: dict[str, str | int]) -> dict[str, Any]:
+    async def _request_chart(self, endpoint: str, params: dict[str, str | int]) -> dict[str, Any]:
         for attempt in range(2):
             try:
                 # Match the chart's cache-busting requests; Service owns our TTL cache.
@@ -295,7 +303,7 @@ class EastMoneyProvider(MarketDataProvider):
                     (endpoint,), {**params, "_": time_ns() // 1_000_000}
                 )
             except DataSourceError as exc:
-                # Retry a disconnected socket once, then let get_kline try the other node.
+                # Retry a disconnected socket once, then try the other node.
                 if attempt or not isinstance(exc.__cause__, httpx.RemoteProtocolError):
                     raise
         raise AssertionError("unreachable")
