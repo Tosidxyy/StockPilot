@@ -15,7 +15,21 @@ export function WatchlistPanel() {
   const [adding, setAdding] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [changeSort, setChangeSort] = useState<"none" | "descending" | "ascending">("none");
   const quoteMap = new Map(quotes.data?.map((quote) => [quote.symbol, quote]) || []);
+  const sortedEntries = [...(entries.data ?? [])];
+  if (changeSort !== "none") {
+    sortedEntries.sort((a, b) => {
+      const left = quoteMap.get(a.symbol)?.change_percent;
+      const right = quoteMap.get(b.symbol)?.change_percent;
+      const leftMissing = left == null || !Number.isFinite(left);
+      const rightMissing = right == null || !Number.isFinite(right);
+      if (leftMissing || rightMissing) return Number(leftMissing) - Number(rightMissing);
+      return changeSort === "descending" ? right! - left! : left! - right!;
+    });
+  }
+  const nextSort = changeSort === "none" ? "descending" : changeSort === "descending" ? "ascending" : "none";
+  const sortAction = nextSort === "descending" ? "按涨跌幅从高到低排序" : nextSort === "ascending" ? "按涨跌幅从低到高排序" : "恢复添加顺序";
 
   const add = async (item: StockSearchResult) => {
     setBusy(item.symbol);
@@ -60,8 +74,8 @@ export function WatchlistPanel() {
           !entries.data?.length ? <div className="section-state">自选股为空。点击“添加股票”开始关注。</div> :
             <div className="table-scroll">
               <table className="watch-table">
-                <thead><tr><th>股票</th><th>现价</th><th>涨跌幅</th><th>成交额</th><th>换手率</th><th><span className="sr-only">操作</span></th></tr></thead>
-                <tbody>{entries.data.map((entry) => {
+                <thead><tr><th>股票</th><th>现价</th><th aria-sort={changeSort}><button className="table-sort" type="button" onClick={() => setChangeSort(nextSort)} aria-label={`涨跌幅排序：${sortAction}`} title={sortAction}>涨跌幅 <span aria-hidden="true">{changeSort === "descending" ? "↓" : changeSort === "ascending" ? "↑" : "↕"}</span></button></th><th>成交额</th><th>换手率</th><th><span className="sr-only">操作</span></th></tr></thead>
+                <tbody>{sortedEntries.map((entry) => {
                   const quote = quoteMap.get(entry.symbol);
                   return <tr key={entry.symbol}>
                     <td><Link className="stock-name" href={`/stock/${entry.symbol}`}><strong>{quote?.name || entry.symbol}</strong><span>{entry.symbol}</span></Link></td>

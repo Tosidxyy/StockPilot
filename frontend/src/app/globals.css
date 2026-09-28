@@ -92,6 +92,9 @@ a{color:inherit;text-decoration:none}
 .table-scroll{overflow-x:auto}
 .watch-table{width:100%;border-collapse:collapse;text-align:left;white-space:nowrap}
 .watch-table th{padding:10px 8px;border-bottom:1px solid var(--line);color:#718093;font-size:10px;font-weight:500}
+.table-sort{display:inline-flex;align-items:center;gap:4px;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer}
+.table-sort:hover,.watch-table th[aria-sort="ascending"] .table-sort,.watch-table th[aria-sort="descending"] .table-sort{color:var(--accent)}
+.table-sort:focus-visible{outline:2px solid var(--accent);outline-offset:4px;border-radius:2px}
 .watch-table td{padding:12px 8px;border-bottom:1px solid #1c2530;font-size:12px}
 .watch-table tr:last-child td{border-bottom:0}
 .watch-table td:first-child,.watch-table th:first-child{padding-left:0}
