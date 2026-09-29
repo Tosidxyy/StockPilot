@@ -1,0 +1,983 @@
+{
+  "started_at": "2026-09-29T06:18:50.208203+00:00",
+  "finished_at": "2026-09-29T06:21:53.905533+00:00",
+  "mode": "Real sources with isolated SQLite; no detail/API resource reads during first 180 seconds. Later API checks and cached-source model/UI checks are separated.",
+  "initial_watchlist": [
+    "600519",
+    "300750",
+    "600578"
+  ],
+  "change_at_90_seconds": {
+    "remove": "600578",
+    "add": "002414"
+  },
+  "checkpoint_summaries": [
+    {
+      "elapsed": 60,
+      "snapshots": [
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600578\"",
+          "saved_at": "2026-09-29 06:19:50.556207"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"300750\"",
+          "saved_at": "2026-09-29 06:19:48.068247"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": "[\"600519\", \"300750\", \"600578\"]",
+          "saved_at": "2026-09-29 06:19:47.960558"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600519\"",
+          "saved_at": "2026-09-29 06:19:39.403822"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:51.449981"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:52.099574"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:52.520554"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.015921"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:53.129766"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.749548"
+        }
+      ],
+      "news": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:51.450926",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.633407",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:52.868781",
+          "failed": false
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:50.819713",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.066952",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:53.386249",
+          "failed": false
+        }
+      ]
+    },
+    {
+      "elapsed": 90,
+      "snapshots": [
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600578\"",
+          "saved_at": "2026-09-29 06:20:19.431337"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"300750\"",
+          "saved_at": "2026-09-29 06:20:20.285082"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": "[\"600519\", \"300750\", \"600578\"]",
+          "saved_at": "2026-09-29 06:20:19.092410"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600519\"",
+          "saved_at": "2026-09-29 06:20:19.658454"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:51.449981"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:52.099574"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:52.520554"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.015921"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:53.129766"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.749548"
+        }
+      ],
+      "news": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:51.450926",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.633407",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:52.868781",
+          "failed": false
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:50.819713",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.066952",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:53.386249",
+          "failed": false
+        }
+      ]
+    },
+    {
+      "elapsed": 120,
+      "snapshots": [
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600578\"",
+          "saved_at": "2026-09-29 06:20:21.774499"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"300750\"",
+          "saved_at": "2026-09-29 06:20:49.729409"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": "[\"600519\", \"300750\", \"600578\"]",
+          "saved_at": "2026-09-29 06:20:21.132782"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600519\"",
+          "saved_at": "2026-09-29 06:20:48.487203"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:51.449981"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:52.099574"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:52.520554"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.015921"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:53.129766"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.749548"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": "[\"600519\", \"300750\", \"002414\"]",
+          "saved_at": "2026-09-29 06:20:49.675794"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"002414\"",
+          "saved_at": "2026-09-29 06:20:49.689391"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"002414\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:20:23.611844"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"002414\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:20:23.719042"
+        }
+      ],
+      "news": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:51.450926",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.633407",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:52.868781",
+          "failed": false
+        },
+        {
+          "scope": "002414",
+          "saved_at": "2026-09-29 06:20:20.798525",
+          "failed": false
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:50.819713",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.066952",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:53.386249",
+          "failed": false
+        },
+        {
+          "scope": "002414",
+          "saved_at": "2026-09-29 06:20:20.995453",
+          "failed": false
+        }
+      ]
+    },
+    {
+      "elapsed": 180,
+      "snapshots": [
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600578\"",
+          "saved_at": "2026-09-29 06:20:21.774499"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"300750\"",
+          "saved_at": "2026-09-29 06:21:49.430181"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": "[\"600519\", \"300750\", \"600578\"]",
+          "saved_at": "2026-09-29 06:20:21.132782"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"600519\"",
+          "saved_at": "2026-09-29 06:21:50.282677"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:20:51.214671"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600519\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:20:51.546881"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:20:51.964546"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"300750\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:20:52.942663"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:18:53.129766"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"600578\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:18:53.749548"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": "[\"600519\", \"300750\", \"002414\"]",
+          "saved_at": "2026-09-29 06:21:49.403905"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "\"002414\"",
+          "saved_at": "2026-09-29 06:21:49.419224"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"002414\", \"daily\", 120]",
+          "saved_at": "2026-09-29 06:20:23.611844"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": "[\"002414\", \"weekly\", 120]",
+          "saved_at": "2026-09-29 06:20:23.719042"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "\"300750\"",
+          "saved_at": "2026-09-29 06:20:52.205208"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "\"600519\"",
+          "saved_at": "2026-09-29 06:20:52.268256"
+        }
+      ],
+      "news": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:51.450926",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.633407",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:52.868781",
+          "failed": false
+        },
+        {
+          "scope": "002414",
+          "saved_at": "2026-09-29 06:20:20.798525",
+          "failed": false
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "saved_at": "2026-09-29 06:18:50.819713",
+          "failed": false
+        },
+        {
+          "scope": "300750",
+          "saved_at": "2026-09-29 06:18:51.066952",
+          "failed": false
+        },
+        {
+          "scope": "600578",
+          "saved_at": "2026-09-29 06:18:53.386249",
+          "failed": false
+        },
+        {
+          "scope": "002414",
+          "saved_at": "2026-09-29 06:20:20.995453",
+          "failed": false
+        }
+      ]
+    }
+  ],
+  "provider_method_counts": [
+    {
+      "method": "get_announcement_content",
+      "success": true,
+      "count": 107
+    },
+    {
+      "method": "get_indices",
+      "success": false,
+      "count": 1
+    },
+    {
+      "method": "get_kline",
+      "success": true,
+      "count": 12
+    },
+    {
+      "method": "get_market_breadth",
+      "success": true,
+      "count": 1
+    },
+    {
+      "method": "get_market_news",
+      "success": true,
+      "count": 1
+    },
+    {
+      "method": "get_quotes",
+      "success": true,
+      "count": 82
+    },
+    {
+      "method": "get_stock_announcements",
+      "success": true,
+      "count": 4
+    },
+    {
+      "method": "get_stock_comments",
+      "success": false,
+      "count": 13
+    },
+    {
+      "method": "get_stock_intraday",
+      "success": false,
+      "count": 4
+    },
+    {
+      "method": "get_stock_intraday",
+      "success": true,
+      "count": 225
+    },
+    {
+      "method": "get_stock_money_flow",
+      "success": false,
+      "count": 8
+    },
+    {
+      "method": "get_stock_money_flow",
+      "success": true,
+      "count": 3
+    },
+    {
+      "method": "get_stock_news",
+      "success": true,
+      "count": 4
+    }
+  ],
+  "successful_call_cadence": [
+    {
+      "method": "get_stock_intraday",
+      "scope": "600578",
+      "successful_calls": 37,
+      "median_gap_seconds": 2.107,
+      "max_gap_seconds": 4.624
+    },
+    {
+      "method": "get_stock_intraday",
+      "scope": "300750",
+      "successful_calls": 80,
+      "median_gap_seconds": 2.065,
+      "max_gap_seconds": 4.6
+    },
+    {
+      "method": "get_stock_intraday",
+      "scope": "600519",
+      "successful_calls": 64,
+      "median_gap_seconds": 2.064,
+      "max_gap_seconds": 40.464
+    },
+    {
+      "method": "get_quotes",
+      "scope": "('600519', '300750', '600578')",
+      "successful_calls": 38,
+      "median_gap_seconds": 2.068,
+      "max_gap_seconds": 4.589
+    },
+    {
+      "method": "get_quotes",
+      "scope": "('600519', '300750', '002414')",
+      "successful_calls": 44,
+      "median_gap_seconds": 2.064,
+      "max_gap_seconds": 4.159
+    },
+    {
+      "method": "get_stock_intraday",
+      "scope": "002414",
+      "successful_calls": 44,
+      "median_gap_seconds": 2.063,
+      "max_gap_seconds": 4.097
+    }
+  ],
+  "removed_stock_calls_started_after_scheduled_90_seconds": 1,
+  "removal_observation": "One 600578 intraday call started about 91.4 seconds after report start; no further calls after 92 seconds. Exact mutation time was not instrumented, so this is not proof of zero calls after removal.",
+  "online_api_checks": [
+    {
+      "path": "/health",
+      "status": 200,
+      "stale": null,
+      "state": null,
+      "cached_at": null,
+      "rows": null
+    },
+    {
+      "path": "/api/market/indices",
+      "status": 503,
+      "stale": null,
+      "state": null,
+      "cached_at": null,
+      "rows": null
+    },
+    {
+      "path": "/api/market/breadth",
+      "status": 200,
+      "stale": false,
+      "state": null,
+      "cached_at": "2026-09-29T06:21:52.722233Z",
+      "rows": 0
+    },
+    {
+      "path": "/api/market/news",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:53.112342Z",
+      "rows": 10
+    },
+    {
+      "path": "/api/watchlist/status",
+      "status": 200,
+      "stale": false,
+      "state": null,
+      "cached_at": null,
+      "rows": 3
+    },
+    {
+      "path": "/api/stocks/600519/quote",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:51.466800Z",
+      "rows": 0
+    },
+    {
+      "path": "/api/stocks/600519/intraday",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:52.348542Z",
+      "rows": 202
+    },
+    {
+      "path": "/api/stocks/600519/kline",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:20:51.546881Z",
+      "rows": 120
+    },
+    {
+      "path": "/api/stocks/600519/news",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:18:51.450926Z",
+      "rows": 10
+    },
+    {
+      "path": "/api/stocks/600519/announcements",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:18:50.819713Z",
+      "rows": 7
+    },
+    {
+      "path": "/api/stocks/600519/money-flow",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:20:52.268256Z",
+      "rows": 30
+    },
+    {
+      "path": "/api/stocks/600519/sentiment",
+      "status": 503,
+      "stale": null,
+      "state": null,
+      "cached_at": null,
+      "rows": null
+    },
+    {
+      "path": "/api/stocks/300750/quote",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:51.466800Z",
+      "rows": 0
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:51.495247Z",
+      "rows": 202
+    },
+    {
+      "path": "/api/stocks/300750/kline",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:20:51.964546Z",
+      "rows": 120
+    },
+    {
+      "path": "/api/stocks/300750/news",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:18:51.633407Z",
+      "rows": 10
+    },
+    {
+      "path": "/api/stocks/300750/announcements",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:18:51.066952Z",
+      "rows": 10
+    },
+    {
+      "path": "/api/stocks/300750/money-flow",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:52.529931Z",
+      "rows": 30
+    },
+    {
+      "path": "/api/stocks/300750/sentiment",
+      "status": 503,
+      "stale": null,
+      "state": null,
+      "cached_at": null,
+      "rows": null
+    },
+    {
+      "path": "/api/stocks/002414/quote",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:51.466800Z",
+      "rows": 0
+    },
+    {
+      "path": "/api/stocks/002414/intraday",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:21:51.483804Z",
+      "rows": 202
+    },
+    {
+      "path": "/api/stocks/002414/kline",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:20:23.611844Z",
+      "rows": 120
+    },
+    {
+      "path": "/api/stocks/002414/news",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:20:20.798525Z",
+      "rows": 9
+    },
+    {
+      "path": "/api/stocks/002414/announcements",
+      "status": 200,
+      "stale": false,
+      "state": "ready",
+      "cached_at": "2026-09-29T06:20:20.995453Z",
+      "rows": 10
+    },
+    {
+      "path": "/api/stocks/002414/money-flow",
+      "status": 200,
+      "stale": false,
+      "state": "unavailable",
+      "cached_at": null,
+      "rows": 0
+    },
+    {
+      "path": "/api/stocks/002414/sentiment",
+      "status": 503,
+      "stale": null,
+      "state": null,
+      "cached_at": null,
+      "rows": null
+    }
+  ],
+  "offline_restart_before_fix": [
+    {
+      "path": "/api/stocks/300750/quote",
+      "status": 503,
+      "stale": null,
+      "cached_at": null
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "status": 200,
+      "stale": true,
+      "cached_at": "2026-09-29T06:21:53.497961Z"
+    },
+    {
+      "path": "/api/stocks/300750/kline",
+      "status": 200,
+      "stale": true,
+      "cached_at": "2026-09-29T06:20:51.964546Z"
+    },
+    {
+      "path": "/api/stocks/300750/news",
+      "status": 200,
+      "stale": false,
+      "cached_at": "2026-09-29T06:18:51.633407Z"
+    },
+    {
+      "path": "/api/stocks/300750/announcements",
+      "status": 200,
+      "stale": false,
+      "cached_at": "2026-09-29T06:18:51.066952Z"
+    },
+    {
+      "path": "/api/stocks/300750/money-flow",
+      "status": 200,
+      "stale": true,
+      "cached_at": "2026-09-29T06:21:52.529931Z"
+    },
+    {
+      "path": "/api/stocks/300750/sentiment",
+      "status": 503,
+      "stale": null,
+      "cached_at": null
+    },
+    {
+      "path": "/api/market/breadth",
+      "status": 200,
+      "stale": true,
+      "cached_at": "2026-09-29T06:21:52.722233Z"
+    }
+  ],
+  "offline_quote_recheck_after_fix": [
+    {
+      "path": "/api/stocks/300750/quote",
+      "status": 200,
+      "stale": true,
+      "cached_at": "2026-09-29T06:21:53.481697Z",
+      "expected_original_cached_at": "2026-09-29T06:21:53.481697Z",
+      "preserves_original_time": true
+    },
+    {
+      "path": "/api/stocks/quotes?codes=300750,600519",
+      "status": 200,
+      "stale": true,
+      "cached_at": "2026-09-29T06:21:53.481697Z",
+      "expected_original_cached_at": "2026-09-29T06:21:53.481697Z",
+      "preserves_original_time": true
+    }
+  ],
+  "forum_probe": {
+    "symbols": [
+      "300750",
+      "600519"
+    ],
+    "http_status": 200,
+    "bytes_each": 2834,
+    "article_list_present": false,
+    "accepted_as_valid_comments": false
+  },
+  "real_model_over_captured_cache": [
+    {
+      "name": "news",
+      "http_status": 200,
+      "tools": [
+        {
+          "tool_name": "get_stock_news",
+          "tool_input": {
+            "symbol": "300750",
+            "days": 7,
+            "limit": 2
+          },
+          "status": "success",
+          "latency_ms": 98
+        }
+      ],
+      "saved_evidence_ids": [
+        "E1634b4dee76ddbb3952ac8d4",
+        "E9fddc09673a37d68d34fc625"
+      ],
+      "manual_review": "Needs semantic review: headline-level market leverage contraction was inferred to mean lower participation in the individual stock; excerpts do not establish that."
+    },
+    {
+      "name": "announcement_rag",
+      "http_status": 200,
+      "tools": [
+        {
+          "tool_name": "search_stock_documents",
+          "tool_input": {
+            "symbol": "300750",
+            "query": "债券",
+            "kind": "announcement",
+            "start": null,
+            "end": null,
+            "limit": 2
+          },
+          "status": "success",
+          "latency_ms": 463
+        }
+      ],
+      "saved_evidence_ids": [
+        "E264d76b8e75fcf5df804e9f7",
+        "E9ebfc38f29214e6b1f484db2"
+      ],
+      "manual_review": "Checked 50亿元发行额、1.49%利率、400亿元注册额度 against actual cached attachment AN202609281829959110; evidence IDs and saved text correspond."
+    },
+    {
+      "name": "combined",
+      "http_status": 200,
+      "tools": [
+        {
+          "tool_name": "get_stock_quote",
+          "tool_input": {
+            "symbol": "300750"
+          },
+          "status": "success",
+          "latency_ms": 4
+        },
+        {
+          "tool_name": "get_stock_money_flow",
+          "tool_input": {
+            "symbol": "300750",
+            "limit": 2
+          },
+          "status": "success",
+          "latency_ms": 8
+        },
+        {
+          "tool_name": "get_stock_news",
+          "tool_input": {
+            "symbol": "300750",
+            "days": 7,
+            "limit": 2
+          },
+          "status": "success",
+          "latency_ms": 28
+        }
+      ],
+      "saved_evidence_ids": [
+        "E1634b4dee76ddbb3952ac8d4",
+        "E9fddc09673a37d68d34fc625"
+      ],
+      "manual_review": "Not accepted: calls/values/citations/old-cache notices work, but the answer asserts shrinking volume without a comparative volume series."
+    },
+    {
+      "name": "breadth",
+      "http_status": 200,
+      "tools": [
+        {
+          "tool_name": "get_market_breadth",
+          "tool_input": {},
+          "status": "success",
+          "latency_ms": 2
+        }
+      ],
+      "saved_evidence_ids": [],
+      "manual_review": "Counts, times and separate pool scope match; qualitative claims about fear and exchange provenance still need semantic review (provider is EastMoney)."
+    }
+  ],
+  "browser_checks": {
+    "mode": "Production frontend with isolated cached-source backend; data-source HTTP deliberately disabled, actual configured model available.",
+    "passed": [
+      "300750 original quote cache recovered after restart",
+      "Sina intraday chart and historical daily K entry",
+      "news and announcement original cache times",
+      "actual 981-character bond attachment (2/2 pages)",
+      "money flow original date/units",
+      "forum no-cache error distinct from empty sample",
+      "homepage actual market breadth totals/source times/old-cache notices and explicit index failure"
+    ],
+    "real_model_ui": {
+      "transport": "SSE",
+      "passed": [
+        "final response rendered",
+        "50亿元 and 1.49% bold Markdown",
+        "Enter expands actual original-source link and old cache time"
+      ],
+      "semantic_issue": "Additional rating statement said 主体/债项评级AAA, whereas the attachment says 主体/债项 AAA/无. This answer is not accepted as fully faithful."
+    },
+    "new_ui_features": false
+  },
+  "release_gate_met": false,
+  "blocking_or_pending": [
+    "Market indices 503 with no successful cache.",
+    "002414 money-flow returns 200 collection_state=unavailable, not successful data.",
+    "All three active-stock forum APIs 503 without cache; direct public HTML has no comment payload.",
+    "Real-source successful-call cadence can exceed 2 seconds; 180 seconds does not prove sustained refresh or all-stock reliability.",
+    "Real lunch break, cross-day, long-running recovery and all supported watchlist resources still need acceptance.",
+    "Model evaluation has two failed cases; real-cache answer semantic issues including shrinking-volume inference and UI credit-rating misreading remain recorded."
+  ],
+  "tests": {
+    "backend": "300 passed in 35.37s",
+    "frontend": [
+      "lint passed",
+      "tsc --noEmit passed",
+      "production build passed"
+    ],
+    "diff_check": "passed"
+  },
+  "version_action": "No version bump, tag or GitHub Release. V0.2 remains in development; P1 unchanged."
+}
