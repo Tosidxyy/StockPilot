@@ -45,12 +45,15 @@ class EvalProvider(MarketDataProvider):
         if self.scenario == "empty":
             return AnnouncementBatch(items=[])
         identifier = "AN202609290000000001" if symbol == "300750" else "AN202609290000000002"
-        return AnnouncementBatch(items=[AnnouncementItem(id=identifier, title="股份回购进展（评测虚构）",
+        title = "债券评级说明（评测虚构）" if self.scenario == "rating" else "股份回购进展（评测虚构）"
+        return AnnouncementBatch(items=[AnnouncementItem(id=identifier, title=title,
             notice_date=self.day, symbols=[symbol], url=f"https://example.org/ann/{identifier}")])
 
     async def get_announcement_content(self, item: AnnouncementItem, previous=None) -> AnnouncementItem:
         unavailable = self.scenario == "unavailable_body"
         text = None if unavailable else "公司已完成股份回购，累计回购金额100万元。评测虚构文本，不是真实公告。"
+        if self.scenario == "rating":
+            text = "本期债券公告：主体/债项评级 AAA/无。原表未解释无的含义。评测虚构文本，不是真实公告。"
         return item.model_copy(update={"text":text, "text_status":"unavailable" if unavailable else "partial" if self.scenario == "partial_body" else "ready",
             "text_length":len(text or ""), "text_fetched_at":self.stamp,
             "text_reason":"扫描附件无可提取文本" if unavailable else "只提取首一页" if self.scenario == "partial_body" else None,

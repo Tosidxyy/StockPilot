@@ -1,0 +1,104 @@
+{
+  "started_at": "2026-09-29T07:46:47.011562+00:00",
+  "scope": "real configured model / production stream_chat events / fixed fictional corpus / isolated temporary SQLite",
+  "limitations": [
+    "Not browser or live-source acceptance.",
+    "Only two focused streaming cases, not repeated-run reliability."
+  ],
+  "results": [
+    {
+      "name": "v02_volume_without_baseline",
+      "scores": {
+        "tool_selection": true,
+        "argument_accuracy": true,
+        "task_success": true
+      },
+      "stream_events": {
+        "progress": 3,
+        "delta": 12,
+        "done": 1
+      },
+      "answer": "宁德时代（300750）最新报价 251.3 元，涨 1.72%（+4.25 元），日内区间 246.27–256.33，换手率 1.0%，成交额约 25.13 亿元（数据日期 2026-09-29）。\n\n倾向：价格站在昨收之上、盘中已摸高，短线属偏强格局，可继续持有观察；但单点上影较长，追高性价比一般，跌破 246 附近（今日低点）再考虑减仓。\n\n关于缩量：这份单时点报价只有今日成交量 10 万手、成交额 25.13 亿元和换手率 1.0%，没有前一日或历史均值做对照，无法判断是否缩量。判断缩量至少需要可比口径的多日成交量，比如近 5 日或近 10 日均量，且同一口径（同为整日量）才能比较；盘中累计量与历史整日量直接对比也会失真。因此仅凭这份报价，成交量比较依据不充足，不能得出缩量结论。\n\n### 数据时间与限制\n\n- 300750 报价：东方财富，缓存读取；保存于 2026-09-29 15:46:48（北京时间）；源成交时间 2026-09-29 00:00:00（北京时间）。\n\n各类数据的来源时间可能不同，不能视作同一时刻快照；缺失不是零，资讯相关性不能证明涨跌因果。",
+      "tools": [
+        {
+          "name": "get_stock_quote",
+          "args": {
+            "symbol": "300750"
+          },
+          "status": "success"
+        }
+      ],
+      "saved_evidence": []
+    },
+    {
+      "name": "v02_rating_field_alignment",
+      "scores": {
+        "tool_selection": true,
+        "argument_accuracy": true,
+        "task_success": true,
+        "retrieval_hit": true,
+        "citation_consistency": true,
+        "no_evidence_degradation": null
+      },
+      "stream_events": {
+        "progress": 3,
+        "delta": 8,
+        "done": 1
+      },
+      "answer": "已读取该公告（公告日期2026-09-29，正文提取完整，非旧缓存）。\n\n按原表**“主体/债项评级”**的标签顺序逐项对应：主体评级为 **AAA**，债项评级为 **无**；原文同时说明“原表未解释无的含义”[E383be47e9c603c8bc93e86fa]。\n\n需要强调两点：这次只支持主体评级 AAA 这一项确定结论，债项一项只能照录为“无”，不能推断成低评级、未评级或信用差——原文明确写着未作解释。另外，该文本自述为评测虚构内容、并非真实公告，所以上述评级数值只代表这份缓存文本的记载，不构成对宁德时代真实信用状况的判断。\n\n本次窗口内该股仅命中这一条公告，未覆盖其他公告；如需核对债项评级的实际含义，需另找评级报告或募集说明书原文中带解释的版本。\n\n### 证据来源\n\n- [E383be47e9c603c8bc93e86fa] [债券评级说明 评测虚构 ](https://example.org/ann/AN202609290000000001) · 东方财富 · 公司公告 · 2026-09-29 · 文档 AN202609290000000001 · 提取文本片段（ready）\n\n引用已核对片段与来源对应；解读有疑问时可查看原文。\n\n### 数据时间与限制\n\n- 300750 公告：公告 已采集，保存 2026-09-29 15:46:50（北京时间）\n\n各类数据的来源时间可能不同，不能视作同一时刻快照；缺失不是零，资讯相关性不能证明涨跌因果。",
+      "tools": [
+        {
+          "name": "get_stock_announcements",
+          "args": {
+            "symbol": "300750",
+            "days": 30,
+            "limit": 10,
+            "document_id": "AN202609290000000001"
+          },
+          "status": "success"
+        }
+      ],
+      "saved_evidence": [
+        {
+          "message_id": 2,
+          "document_id": "AN202609290000000001",
+          "kind": "announcement",
+          "symbol": "300750",
+          "title": "债券评级说明(评测虚构)",
+          "source": "东方财富 · 公司公告",
+          "url": "https://example.org/ann/AN202609290000000001",
+          "date": "2026-09-29",
+          "published_at": null,
+          "association": "source_security_code",
+          "text_status": "ready",
+          "text_stale": false,
+          "body_available": true,
+          "index_text_truncated": false,
+          "text_reason": null,
+          "text_cached_at": "2026-09-29T00:00:00+08:00",
+          "evidence_id": "E383be47e9c603c8bc93e86fa",
+          "ordinal": 0,
+          "start": 0,
+          "end": 45,
+          "text": "本期债券公告:主体/债项评级 AAA/无。原表未解释无的含义。评测虚构文本,不是真实公告。",
+          "citation_ref": "[S1]",
+          "historical_snapshot": true
+        }
+      ]
+    }
+  ],
+  "finished_at": "2026-09-29T07:46:53.627121+00:00",
+  "evaluated_source_hashes": {
+    "backend/app/agent/service.py": "bb6deeead0be7ce5de3e0779b145b25da44333b49bbfb0eb4ae783b2ce232cf7",
+    "backend/app/agent/citations.py": "5dcb883a28340c8d6b3fe744a01ecc3c0f65de7a0efd106ccbd18cd35c56ae33",
+    "backend/app/agent/tools.py": "a34945697d11fcf2df26c24248ab87fb3b45f2f55ee97cc304c92f673292a435",
+    "evals/run_eval.py": "2c3a56799b118691d3e60fb6cb856637404dc67281f70d8a66ad372f25e7fdf8",
+    "evals/fixtures.py": "8f821dab95d1f2c47a37b956a3c3d7dd2e4b4c29ba628a351fa040d7e39808ac",
+    "evals/datasets/v02.yaml": "d80eda66bd3fb9a65f4ee9de587c3972f5e6d1707ae23f0c3c2ca1fdb2773cee"
+  },
+  "review_notes": [
+    "Stream test ran before the last refinement to external-command summary wording; volume, rating and citation instructions were already the same.",
+    "Volume answer explicitly required a comparable baseline instead of claiming measured contraction. Rating answer mapped subject AAA and debt rating to the literal missing value, without assigning AAA to both.",
+    "Two focused production service streams passed; no claim of full browser/live-market or repeated-run semantic acceptance."
+  ]
+}

@@ -161,6 +161,10 @@ def grade(expected: dict[str, Any], output: dict[str, Any]) -> dict[str, bool | 
     grounded &= all(any(contains(token) for token in group)
         for group in expected.get("answer_any", []))
     grounded &= not any(str(token).lower() in answer for token in expected.get("answer_excludes", []))
+    # Optional literal field alignment checks, not a general semantic judge.
+    plain_body = body.replace("*", "").replace("`", "")
+    grounded &= all(re.search(pattern, plain_body, flags=re.IGNORECASE) is not None
+        for pattern in expected.get("answer_patterns", []))
     retrieved = {e["evidence_id"]: e for e in output.get("retrieved_evidence", [])}
     saved = {e["evidence_id"]: e for e in output.get("saved_evidence", [])}
     references = set(re.findall(r"\[(E[A-Za-z0-9_-]+)\]", body))

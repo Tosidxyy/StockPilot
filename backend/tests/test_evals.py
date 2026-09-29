@@ -11,10 +11,10 @@ import pytest
 
 def test_dataset_has_unique_cases_and_required_workflows() -> None:
     cases = load_cases().cases
-    assert len(cases) == 40
-    assert len({case.name for case in cases}) == 40
+    assert len(cases) == 42
+    assert len({case.name for case in cases}) == 42
     assert len(load_cases("v01").cases) == 24
-    assert len(load_cases("v02").cases) == 16
+    assert len(load_cases("v02").cases) == 18
     assert any(len(case.metadata["tools"]) > 1 for case in cases)
     assert any(case.inputs.get("watchlist") for case in cases)
     assert any(case.name.startswith("compare_") for case in cases)
@@ -126,3 +126,33 @@ def test_fixture_candles_have_correct_periods_and_consistent_quote_numbers():
 def test_eval_context_does_not_turn_empty_watchlist_into_a_document_question():
     from app.agent.citations import wants_documents
     assert not wants_documents(EVAL_CONTEXT + '\n我现在的自选股列表有什么？')
+
+
+@pytest.mark.parametrize('body,passed', [
+    ('主体评级为 **AAA**，债项评级为“无”，原文未解释该字段。', True),
+    ('| 主体评级 | AAA |\n| 债项评级 | 无 |', True),
+    ('主体评级AAA，债项评级AAA；原文包含无字样。', False),
+    ('主体评级无，债项评级AAA。', False),
+    ('主体评级AAA。\n### 证据来源\n债项评级无', False),
+])
+def test_rating_alignment_checks_roles_in_body_not_just_keywords(body, passed):
+    case = next(case for case in load_cases('v02').cases if case.name == 'v02_rating_field_alignment')
+    expected = {'tools': [], 'answer_patterns': case.metadata['answer_patterns']}
+    output = {'tools': [], 'answer': body, 'error_status': None}
+    assert grade(expected, output)['task_success'] is passed
+
+
+@pytest.mark.parametrize('body,passed', [
+    ('251.30元，成交量没有基准，缩量无法由这份报价证明。', True),
+    ('251.3元，成交量只有单点，无法判断是否缩量。', True),
+    ('251.3元，成交量10万手，不能证明缩量。', True),
+    ('251.3元。至于缩量，这份单时点报价证明不了，成交量只有单点。', True),
+    ('251.3元，成交量只有单点，这份报价证明不了缩量。', True),
+    ('251.3元，成交量10万手，已经明显缩量。', False),
+    ('251.3元，成交量明显缩量，无法判断未来价格。', False),
+])
+def test_volume_scoring_accepts_negation_without_accepting_unsupported_claims(body, passed):
+    case = next(case for case in load_cases('v02').cases if case.name == 'v02_volume_without_baseline')
+    expected = {'tools': [], 'answer_contains': case.metadata['answer_contains'],
+                'answer_patterns': case.metadata['answer_patterns']}
+    assert grade(expected, {'tools': [], 'answer': body, 'error_status': None})['task_success'] is passed
