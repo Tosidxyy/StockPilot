@@ -8,6 +8,7 @@ from app.models.market import IntradayPoint, KlineItem, StockQuote, SymbolSearch
 from app.providers.base import MarketDataProvider
 from app.services.cache import AsyncTTLStore, CachedResult
 from app.services.snapshots import SnapshotStore
+from app.providers.exceptions import DataSourceError
 
 
 class StockService:
@@ -60,7 +61,16 @@ class StockService:
                 return CachedResult([cached[symbol].data for symbol in unique],
                                     stale=any(cached[symbol].stale for symbol in unique),
                                     cached_at=min(cached[symbol].cached_at for symbol in unique))
-        return await self._quotes.get(unique, lambda: self._provider.get_quotes(unique))
+        try:
+            return await self._quotes.get(unique, lambda: self._provider.get_quotes(unique))
+        except DataSourceError:
+            # A collector saves batches, while a detail page may request just one
+            # symbol after restart. Preserve the newest covering successful rows.
+            cached = await self.cached_quotes(unique)
+            if not all(symbol in cached for symbol in unique):
+                raise
+            return CachedResult([cached[symbol].data for symbol in unique], stale=True,
+                cached_at=min(cached[symbol].cached_at for symbol in unique))
 
     async def get_quote(self, symbol: str, *, prefer_cached: bool = False) -> CachedResult[StockQuote | None]:
         result = await self.get_quotes([symbol], prefer_cached=prefer_cached)

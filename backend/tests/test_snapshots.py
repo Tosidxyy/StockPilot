@@ -106,3 +106,24 @@ def test_snapshot_storage_failure_does_not_hide_successful_provider_data(tmp_pat
             engine.dispose()
 
     asyncio.run(run())
+
+
+def test_collector_batch_can_restore_single_and_reordered_quotes_offline(tmp_path):
+    url = f"sqlite:///{(tmp_path / 'batch-restart.db').as_posix()}"
+    with TestClient(create_app(provider=FakeProvider(), database_url=url)) as client:
+        batch = client.get('/api/stocks/quotes?codes=300750,600519').json()
+        assert len(batch['data']) == 2
+    provider = FakeProvider()
+    provider.error = DataSourceError('offline')
+    with TestClient(create_app(provider=provider, database_url=url)) as client:
+        single = client.get('/api/stocks/300750/quote')
+        assert single.status_code == 200
+        assert single.json()['data'] == batch['data'][0]
+        assert single.json()['stale'] is True
+        assert single.json()['cached_at'] == batch['cached_at']
+        reversed_batch = client.get('/api/stocks/quotes?codes=600519,300750').json()
+        assert reversed_batch['data'] == batch['data'][::-1]
+        assert reversed_batch['stale'] is True
+        assert reversed_batch['cached_at'] == batch['cached_at']
+        assert client.get('/api/stocks/002594/quote').status_code == 503
+        assert client.get('/api/stocks/quotes?codes=300750,002594').status_code == 503
