@@ -26,3 +26,5 @@ def create_session_factory(engine: Engine) -> sessionmaker[Session]:
 
 def init_db(engine: Engine) -> None:
     Base.metadata.create_all(bind=engine)
+    from app.database.documents import init_document_fts
+    init_document_fts(engine)

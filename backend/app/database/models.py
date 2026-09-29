@@ -15,6 +15,29 @@ class Base(DeclarativeBase):
     pass
 
 
+class DocumentIndex(Base):
+    __tablename__ = "document_index"
+    key: Mapped[str] = mapped_column(String(64), primary_key=True)
+    symbol: Mapped[str] = mapped_column(String(6), index=True)
+    kind: Mapped[str] = mapped_column(String(20))
+    document_id: Mapped[str] = mapped_column(String(100))
+    date: Mapped[date] = mapped_column(Date, index=True)
+    fingerprint: Mapped[str] = mapped_column(String(64))
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON)
+
+
+class DocumentChunk(Base):
+    __tablename__ = "document_chunk"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    document_key: Mapped[str] = mapped_column(ForeignKey("document_index.key", ondelete="CASCADE"), index=True)
+    evidence_id: Mapped[str] = mapped_column(String(25), unique=True)
+    ordinal: Mapped[int] = mapped_column(Integer)
+    start: Mapped[int] = mapped_column(Integer)
+    end: Mapped[int] = mapped_column(Integer)
+    title: Mapped[str] = mapped_column(Text)
+    text: Mapped[str] = mapped_column(Text)
+
+
 class AnnouncementRecord(Base):
     __tablename__ = "announcement_record"
     id: Mapped[str] = mapped_column(String(20), primary_key=True)
@@ -110,3 +133,10 @@ class AgentTrace(Base):
     status: Mapped[str] = mapped_column(String(20), nullable=False)
     latency_ms: Mapped[int] = mapped_column(Integer, nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utc_now, nullable=False)
+
+
+class ChatEvidence(Base):
+    __tablename__ = "chat_evidence"
+    message_id: Mapped[int] = mapped_column(ForeignKey("chat_message.id", ondelete="CASCADE"), primary_key=True)
+    evidence_id: Mapped[str] = mapped_column(String(25), primary_key=True)
+    payload: Mapped[dict[str, Any]] = mapped_column(JSON)

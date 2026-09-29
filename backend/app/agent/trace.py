@@ -36,6 +36,9 @@ def _summary(tool_name: str, result: dict) -> str:
         return f"返回 {len(result['indices'])} 条指数" + stale
     if tool_name == "get_market_breadth":
         return "返回沪深京市场涨跌统计" + ("；部分数据缺失/旧值" if result.get("partial") else "") + stale
+    if tool_name == "search_stock_documents":
+        items = result.get("evidence", [])
+        return f"检索返回 {len(items)} 个证据片段；{result.get('reason')}" + ("；" + ", ".join(i["evidence_id"] for i in items))
     if tool_name == "get_watchlist":
         return f"返回 {len(result['entries'])} 只自选股、{len(result['quotes'])} 条报价" + stale
     if tool_name in ("get_stock_news", "get_market_news"):

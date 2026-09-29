@@ -112,6 +112,14 @@ async def stream_agent_chat(body: ChatRequest, agent: AgentService) -> Streaming
     )
 
 
+@router.get("/sessions/{session_id}/evidence")
+async def session_evidence(session_id: UUID, agent: AgentService):
+    try:
+        return {"data": await agent.evidence(str(session_id))}
+    except ChatNotFoundError:
+        raise HTTPException(status_code=404,detail="Chat session not found") from None
+
+
 @router.get("/traces/recent", response_model=DataResponse[list[TraceEntry]])
 async def recent_traces(
     traces: Traces,

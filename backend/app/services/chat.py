@@ -6,7 +6,7 @@ from uuid import uuid4
 from sqlalchemy import select
 from sqlalchemy.orm import Session, sessionmaker
 
-from app.database.models import ChatMessage, ChatSession
+from app.database.models import ChatMessage, ChatSession, ChatEvidence
 
 
 class ChatNotFoundError(Exception):
@@ -43,11 +43,22 @@ class ChatService:
                 raise ChatNotFoundError(session_id)
         return session_id
 
-    def save_exchange(self, session_id: str, prompt: str, answer: str) -> None:
+    def save_exchange(self, session_id: str, prompt: str, answer: str, evidence: list[dict] | None = None) -> None:
         with self._session_factory.begin() as session:
             if session.get(ChatSession, session_id) is None:
                 raise ChatNotFoundError(session_id)
+            assistant = ChatMessage(session_id=session_id, role="assistant", content=answer)
             session.add_all([
                 ChatMessage(session_id=session_id, role="user", content=prompt),
-                ChatMessage(session_id=session_id, role="assistant", content=answer),
+                assistant,
             ])
+            session.flush()
+            session.add_all([ChatEvidence(message_id=assistant.id,evidence_id=item["evidence_id"],payload=item) for item in (evidence or [])])
+
+    def evidence(self, session_id: str) -> list[dict]:
+        with self._session_factory() as session:
+            if session.get(ChatSession, session_id) is None:
+                raise ChatNotFoundError(session_id)
+            rows = session.execute(select(ChatEvidence).join(ChatMessage).where(
+                ChatMessage.session_id==session_id).order_by(ChatMessage.id,ChatEvidence.evidence_id)).scalars().all()
+            return [{"message_id":row.message_id,**row.payload,"historical_snapshot":True} for row in rows]

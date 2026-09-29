@@ -15,6 +15,7 @@ from app.services.reads import StockReadService
 from app.services.news import NewsService
 from app.services.announcements import AnnouncementService
 from app.services.money_flow import MoneyFlowService
+from app.services.documents import DocumentService
 from app.providers.exceptions import DataSourceError
 from app.agent.trace import ToolStep
 
@@ -29,6 +30,8 @@ class AgentDependencies:
     news: NewsService | None = None
     announcements: AnnouncementService | None = None
     money_flow: MoneyFlowService | None = None
+    documents: DocumentService | None = None
+    document_searches: list[dict] = field(default_factory=list)
 
 
 def _symbol(value: str) -> str:
@@ -90,6 +93,20 @@ async def get_market_indices(deps: AgentDependencies) -> dict:
 async def get_market_breadth(deps: AgentDependencies) -> dict:
     result = await deps.market.get_breadth(prefer_cached=True)
     return {**_cache_metadata(result), **result.data.model_dump(mode="json")}
+
+
+async def search_stock_documents(deps: AgentDependencies, symbol: str, query: str,
+                                 kind: Literal["all", "news", "announcement"] = "all",
+                                 start: str | None = None, end: str | None = None, limit: int = 6) -> dict:
+    """Search collected evidence only; never fetch the source or extend its cache age."""
+    from datetime import date
+    symbol = _symbol(symbol)
+    if deps.documents is None:
+        raise DataSourceError("Document service unavailable")
+    result = await deps.documents.search(symbol, query, kind=kind,
+        start=date.fromisoformat(start) if start else None, end=date.fromisoformat(end) if end else None, limit=limit)
+    deps.document_searches.append(result)
+    return result
 
 
 async def get_watchlist(deps: AgentDependencies) -> dict:

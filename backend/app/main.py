@@ -16,6 +16,7 @@ from app.api.routes import router
 from app.api.news import router as news_router
 from app.api.announcements import router as announcement_router
 from app.api.money_flow import router as money_flow_router
+from app.api.documents import router as document_router
 from app.core.config import get_settings
 from app.database.session import create_database_engine, create_session_factory, init_db
 from app.providers.base import MarketDataProvider
@@ -34,6 +35,7 @@ from app.services.announcements import AnnouncementService
 from app.services.announcement_collector import AnnouncementCollector
 from app.services.money_flow import MoneyFlowService
 from app.services.money_flow_collector import MoneyFlowCollector
+from app.services.documents import DocumentService
 
 
 def create_app(
@@ -67,6 +69,7 @@ def create_app(
             application.state.announcement_service = announcements
             flows = MoneyFlowService(data_provider, session_factory, application.state.watchlist_service, background=enabled)
             application.state.money_flow_service = flows
+            application.state.document_service = DocumentService(session_factory)
             application.state.trace_service = TraceService(session_factory)
             reader = StockReadService(application.state.stock_service, application.state.watchlist_service, None)
             application.state.agent_service = StockAgentService(
@@ -79,6 +82,7 @@ def create_app(
                     news=news,
                     announcements=announcements,
                     money_flow=flows,
+                    documents=application.state.document_service,
                 ),
                 ChatService(session_factory),
                 application.state.trace_service,
@@ -128,6 +132,7 @@ def create_app(
         expose_headers=["X-Agent-Session-ID"],
     )
     application.include_router(router)
+    application.include_router(document_router)
     application.include_router(news_router)
     application.include_router(announcement_router)
     application.include_router(money_flow_router)
