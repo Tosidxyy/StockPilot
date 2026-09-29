@@ -74,7 +74,7 @@ export type IntradayPoint = {
   price: number;
   volume: number | null;
   turnover: number | null;
-  source: "eastmoney" | "tencent";
+  source: "eastmoney" | "tencent" | "sina";
 };
 
 export type StockQuote = {

@@ -1,4 +1,4 @@
-"""Public quote failover and Tencent-first minutes, with successful cache upstream."""
+"""Public quote failover and measured Sina-first minutes, with cached fallback."""
 
 from typing import Literal, Sequence
 from time import monotonic
@@ -11,6 +11,7 @@ from app.providers.exceptions import DataSourceError
 from app.providers.history import TencentHistory
 from app.providers.intraday import TencentIntraday
 from app.providers.quotes import PublicQuotes
+from app.providers.sina_intraday import SinaIntraday
 
 
 class ResilientMarketProvider(MarketDataProvider):
@@ -34,11 +35,16 @@ class ResilientMarketProvider(MarketDataProvider):
 
     def __init__(
         self, primary: MarketDataProvider | None = None, history: TencentHistory | None = None,
-        intraday: TencentIntraday | None = None, *, timer=monotonic, quote_sources=None,
+        intraday: TencentIntraday | None = None, *, timer=monotonic, quote_sources=None, minute_sources=None,
     ) -> None:
         self._primary = primary if primary is not None else EastMoneyProvider()
         self._history = history if history is not None else TencentHistory()
         self._intraday = intraday if intraday is not None else TencentIntraday()
+        # Default order reflects the current live checks. Explicit injections
+        # retain the old two-source contract for isolated tests/custom providers.
+        self._minute_sources = minute_sources if minute_sources is not None else (
+            [SinaIntraday(), self._intraday, self._primary] if primary is None and intraday is None
+            else [self._intraday, self._primary])
         # Do not pay the failed preferred minute source's timeout every refresh.
         # Separate symbols and indices so an individual failure does not disable others.
         self._intraday_retry = TTLCache(maxsize=2048, ttl=30, timer=timer)
@@ -47,6 +53,9 @@ class ResilientMarketProvider(MarketDataProvider):
         self._quote_retry = TTLCache(maxsize=8, ttl=30, timer=timer)
 
     async def aclose(self) -> None:
+        for source in self._minute_sources:
+            if source is not self._primary and source is not self._intraday:
+                await source.aclose()
         for source in self._quote_sources:
             if source is not self._primary:
                 await source.aclose()
@@ -98,19 +107,20 @@ class ResilientMarketProvider(MarketDataProvider):
         return await self._minutes("stock", symbol)
 
     async def _minutes(self, kind, code):
-        key = (kind, code)
-        if key not in self._intraday_retry:
+        last_error = None
+        for position, source in enumerate(self._minute_sources):
+            key = (kind, code, position)
+            if key in self._intraday_retry:
+                continue
             try:
-                points = await (self._intraday.get_stock_intraday(code) if kind == "stock" else self._intraday.get_index_intraday(code))
+                points = await (source.get_stock_intraday(code) if kind == "stock" else source.get_index_intraday(code))
                 if not points:
-                    raise DataSourceError("Preferred minute source returned no points")
+                    raise DataSourceError("Minute source returned no points")
                 return points
-            except DataSourceError:
+            except DataSourceError as error:
                 self._intraday_retry[key] = True
-        points = await (self._primary.get_stock_intraday(code) if kind == "stock" else self._primary.get_index_intraday(code))
-        if not points:
-            raise DataSourceError("Fallback minute source returned no points")
-        return points
+                last_error = error
+        raise last_error or DataSourceError("All minute sources temporarily unavailable")
 
     async def get_kline(
         self, symbol: str, period: Literal["daily", "weekly"] = "daily", limit: int = 120,
