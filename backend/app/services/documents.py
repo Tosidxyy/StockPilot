@@ -60,6 +60,17 @@ class DocumentService:
         async with self._lock:
             return await run_in_threadpool(self._search, symbol, query, kind, start, end, limit)
 
+    async def recent(self, symbol, *, kind="all", start=None, end=None, limit=6, document_id=None, document_ids=None):
+        """Browse actual first chunks for summaries; no keyword or source request."""
+        if (symbol != "market" and re.fullmatch(r"[03468][0-9]{5}", symbol or "") is None) or kind not in ("all","news","announcement"):
+            raise ValueError("资料范围无效")
+        if symbol == "market" and kind != "news" or not 1 <= limit <= 10 or start and end and start > end:
+            raise ValueError("资料筛选无效")
+        if document_ids is not None and len(document_ids) > 50:
+            raise ValueError("资料数量超限")
+        async with self._lock:
+            return await run_in_threadpool(self._search,symbol,"",kind,start,end,limit,document_id,document_ids)
+
     def _sources(self, session, symbol, kind, now):
         documents, states, unavailable, truncated = [], {}, 0, False
         kinds = ("news", "announcement") if kind == "all" else (kind,)
@@ -83,7 +94,7 @@ class DocumentService:
                 if category == "news":
                     body = normalize(p.get("scope_excerpts", {}).get(symbol, p.get("excerpt")))
                     date_value = aware(row.published_at).astimezone(BEIJING).date()
-                    status, association = "excerpt", "keyword_search"
+                    status, association = "excerpt", "market_column" if symbol == "market" else "keyword_search"
                     published = aware(row.published_at).isoformat()
                     body_stale = stale
                 else:
@@ -116,7 +127,7 @@ class DocumentService:
             session.execute(delete(DocumentIndex).where(DocumentIndex.kind == kind,
                 or_(DocumentIndex.date < cutoff, ~associated)))
 
-    def _search(self, symbol, query, kind, start, end, limit):
+    def _search(self, symbol, query, kind, start, end, limit, document_id=None, document_ids=None):
         now = self._clock()
         with self._sessions.begin() as session:
             documents, states, unavailable, truncated = self._sources(session, symbol, kind, now)
@@ -148,11 +159,14 @@ class DocumentService:
             live = {key:(fingerprint,meta) for key,fingerprint,meta,_ in documents}
             terms = query.split()
             fts = bool(session.scalar(text("SELECT count(*) FROM sqlite_master WHERE name='document_fts' AND type='table'")))
-            use_fts = fts and all(len(t) >= 3 for t in terms)
+            use_fts = fts and bool(terms) and all(len(t) >= 3 for t in terms)
             conditions = [DocumentIndex.symbol == symbol]
             if kind != "all": conditions.append(DocumentIndex.kind == kind)
             if start: conditions.append(DocumentIndex.date >= start)
             if end: conditions.append(DocumentIndex.date <= end)
+            if document_id: conditions.append(DocumentIndex.document_id == document_id)
+            if document_ids is not None: conditions.append(DocumentIndex.document_id.in_(document_ids))
+            if not query and not document_id: conditions.append(DocumentChunk.ordinal == 0)
             request = select(DocumentChunk,DocumentIndex).join(DocumentIndex)
             if use_fts:
                 expression = " AND ".join('"'+t.replace('"','""')+'"' for t in terms)
@@ -161,12 +175,15 @@ class DocumentService:
             else:
                 for term in terms:
                     request = request.where(or_(DocumentChunk.text.contains(term,autoescape=True),DocumentChunk.title.contains(term,autoescape=True)))
-            rows = session.execute(request.where(*conditions).order_by(DocumentIndex.date.desc(),DocumentIndex.key,DocumentChunk.ordinal).limit(201)).all()
+            rows = session.execute(request.where(*conditions).order_by(DocumentIndex.date.desc(),
+                DocumentIndex.payload["published_at"].as_string().desc(),DocumentIndex.document_id.desc(),
+                DocumentIndex.key,DocumentChunk.ordinal).limit(201)).all()
             candidates_truncated = len(rows) > 200
             evidence, per_doc, seen_text = [], {}, set()
             for chunk, doc in rows[:200]:
                 if doc.key not in live or live[doc.key][0] != doc.fingerprint: continue
-                if per_doc.get(doc.key,0) >= 2 or digest(chunk.text) in seen_text: continue
+                per_document = 10 if document_id else 1 if not query else 2
+                if per_doc.get(doc.key,0) >= per_document or digest(chunk.text) in seen_text: continue
                 meta = live[doc.key][1]
                 # Exact literal post-filter makes FTS and short-keyword behavior consistent.
                 if not all(t.casefold() in (chunk.title+' '+chunk.text).casefold() for t in terms): continue
@@ -178,6 +195,7 @@ class DocumentService:
             outside = bool(start and start < earliest or end and end < earliest or start and start > now.astimezone(BEIJING).date())
             return {"symbol":symbol,"query":query,"kind":kind,"start":start.isoformat() if start else None,
                 "end":end.isoformat() if end else None,"evidence":evidence,"source_states":states,
+                "document_id": document_id, "limit": limit,
                 "body_unavailable_documents":unavailable,"index_truncated":truncated,
                 "candidates_truncated":candidates_truncated,"outside_window":outside,
                 "search_mode":"fts5_trigram" if use_fts else "literal_keywords",

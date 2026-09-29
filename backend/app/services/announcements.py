@@ -170,11 +170,15 @@ class AnnouncementService:
                     row.body = None
                     row.payload = {**row.payload, "text_status": "unavailable", "text_reason": "正文缓存容量上限，保留原文入口", "text_length": 0}
 
-    async def get(self, symbol, *, page=1, page_size=10, start: date | None = None, end: date | None = None, keyword="", category=""):
+    async def get(self, symbol, *, page=1, page_size=10, start: date | None = None, end: date | None = None, keyword="", category="", prefer_cached=False):
         if not 1 <= page <= 1000 or not 1 <= page_size <= 50 or len(keyword) > 100 or len(category) > 40:
             raise ValueError("Invalid announcement pagination/filter")
         if start and end and start > end:
             raise ValueError("公告起始日期不得晚于结束日期")
+        if prefer_cached:
+            state = await run_in_threadpool(self._state, symbol)
+            if state and state.fetched_at:
+                return await run_in_threadpool(self._read, symbol, page, page_size, start, end, keyword, category)
         watched = self.background and any(item.symbol == symbol for item in await run_in_threadpool(self.watchlist.list_entries))
         if not watched:
             try:

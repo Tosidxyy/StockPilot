@@ -119,12 +119,16 @@ class NewsService:
                 session.execute(delete(NewsFetchState).where(NewsFetchState.scope.in_(stale_scopes)))
 
     async def get(self, symbol: str | None = None, *, page: int = 1, page_size: int = 10,
-                  start: date | None = None, end: date | None = None, keyword: str = ""):
+                  start: date | None = None, end: date | None = None, keyword: str = "", prefer_cached: bool = False):
         if not 1 <= page <= 1000 or not 1 <= page_size <= 50 or len(keyword) > 100:
             raise ValueError("Invalid news pagination/filter")
         if start and end and start > end:
             raise ValueError("News start date must not exceed end date")
         scope = symbol or "market"
+        if prefer_cached:
+            state = await run_in_threadpool(self._state, scope)
+            if state and state.fetched_at:
+                return await run_in_threadpool(self._read, scope, page, page_size, start, end, keyword)
         watched = self.background and symbol and any(
             item.symbol == symbol for item in await run_in_threadpool(self.watchlist.list_entries))
         if not watched:

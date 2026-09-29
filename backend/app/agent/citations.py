@@ -20,12 +20,18 @@ def cited_evidence(answer, searches):
     return [available[i] for i in ids if i in available][:20]
 
 
-def finalize_documents(answer, searches, message):
+def finalize_documents(answer, searches, message, *, allow_without_evidence=False):
     if not searches:
-        return NO_EVIDENCE if wants_documents(message) else answer
+        return NO_EVIDENCE if wants_documents(message) and not allow_without_evidence else answer
     evidence = {e["evidence_id"]: e for result in searches for e in result["evidence"]}
     if not evidence:
+        if allow_without_evidence and not re.search(r"\[E[A-Za-z0-9_-]+\]|https?://|\[[^\]]*\]\s*\(|<\s*[A-Za-z/!]", answer, re.I):
+            return answer + "\n\n资讯检索未取得可引用证据，不能据此确认资讯事实或解释涨跌原因。"
         return NO_EVIDENCE
+    # Some compatible models return complete IDs without brackets. Canonicalize
+    # only the exact versioned-ID format; the same membership check still applies.
+    answer = re.sub(r"(?<![A-Za-z0-9_\[])E[0-9a-f]{24}(?![A-Za-z0-9_\]])",
+        lambda match: "[" + match.group() + "]", answer)
     cited = re.findall(r"\[(E[A-Za-z0-9_-]+)\]", answer)
     # Source URLs are appended by the server. Reject raw HTML or supplied links.
     if not cited or len(set(cited)) > 20 or any(i not in evidence for i in cited) or re.search(

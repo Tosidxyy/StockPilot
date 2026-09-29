@@ -35,7 +35,7 @@ def test_successful_traces_are_queryable_and_monotonic(tmp_path) -> None:
         assert all(step["tool_name"] == "get_market_indices" for step in steps)
         assert all(step["tool_input"] == {} for step in steps)
         assert all(step["status"] == "success" for step in steps)
-        assert all(step["tool_output_summary"] == "返回 1 条指数" for step in steps)
+        assert all(step["tool_output_summary"].startswith("返回 1 条指数") for step in steps)
         assert all(isinstance(step["latency_ms"], int) and step["latency_ms"] >= 0 for step in steps)
         assert all(step["created_at"] for step in steps)
         recent = client.get("/api/agent/traces/recent", params={"limit": 1})

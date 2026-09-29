@@ -59,7 +59,8 @@ def test_agent_chat_saves_and_restores_session(tmp_path) -> None:
         first = client.post("/api/agent/chat", json={"message": "上证指数怎么样？"})
         assert first.status_code == 200, first.text
         session_id = first.json()["session_id"]
-        assert first.json()["answer"] == "测试回答"
+        assert first.json()["answer"].startswith("测试回答")
+        assert "数据时间与限制" in first.json()["answer"]
         second = client.post(
             "/api/agent/chat", json={"session_id": session_id, "message": "继续"}
         )

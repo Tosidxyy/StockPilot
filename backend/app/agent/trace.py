@@ -20,7 +20,7 @@ class ToolStep:
     latency_ms: int = 0
 
 
-def _summary(tool_name: str, result: dict) -> str:
+def _content_summary(tool_name: str, result: dict) -> str:
     stale = "；旧缓存" if result.get("stale") else ""
     state = result.get("collection_state")
     stale += {"warming": "；后台预热中", "unavailable": "；暂无可用缓存", "partial": "；部分数据缺失"}.get(state, "")
@@ -52,6 +52,35 @@ def _summary(tool_name: str, result: dict) -> str:
     return "Tool 已执行"
 
 
+def _summary(tool_name: str, result: dict) -> str:
+    if tool_name == "get_watchlist_insights":
+        base = f"覆盖 {len(result['stocks'])}/{result['watchlist_total']} 只自选股；未覆盖 {result['remaining_count']} 只；部分={result['partial']}"
+    else:
+        base = _content_summary(tool_name, result)
+    evidence = result.get("evidence", [])
+    if evidence and tool_name != "search_stock_documents":
+        base += "；证据 " + ", ".join(i["evidence_id"] for i in evidence[:20])
+    source_names = sorted({e["source"] for e in evidence} | {r["source"] for r in result.get("klines",[]) if r.get("source")})
+    if result.get("source"): source_names.append(result["source"])
+    if source_names: base += "；来源 " + "/".join(dict.fromkeys(source_names))
+    states = result.get("source_states", {})
+    for kind, state in states.items():
+        base += f"；{kind} {state['state']}，保存 {state.get('cached_at') or '无'}"
+    if result.get("cached_at"):
+        base += f"；保存 {result['cached_at']}"
+    if tool_name == "get_watchlist_insights":
+        stamps = sorted({s["cached_at"] for row in result["stocks"] for kind in ("news","announcement")
+            for s in row[kind]["source_states"].values() if s.get("cached_at")})
+        if stamps: base += f"；保存时间 {stamps[0]} 至 {stamps[-1]}"
+    rows = result.get("items", result.get("klines", []))
+    dates = sorted({row["date"] for row in rows + evidence if row.get("date")})
+    if dates:
+        base += f"；日期 {dates[0]} 至 {dates[-1]}"
+    if result.get("evidence_truncated") or result.get("index_truncated") or result.get("candidates_truncated"):
+        base += "；证据覆盖已截断"
+    return base
+
+
 def _error_summary(error: BaseException) -> str:
     if isinstance(error, ProviderTimeoutError):
         return "行情数据源超时"
@@ -69,7 +98,7 @@ async def record_tool(
     call: Callable[[], Awaitable[T]],
 ) -> T:
     safe_inputs = {
-        key: value[:64] if isinstance(value, str) else value
+        key: value[:100] if isinstance(value, str) else value
         for key, value in inputs.items()
     }
     step = ToolStep(step_index=len(steps) + 1, tool_name=name, tool_input=safe_inputs)

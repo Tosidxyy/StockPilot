@@ -32,6 +32,7 @@ class AgentDependencies:
     money_flow: MoneyFlowService | None = None
     documents: DocumentService | None = None
     document_searches: list[dict] = field(default_factory=list)
+    tool_results: list[dict] = field(default_factory=list)
 
 
 def _symbol(value: str) -> str:
@@ -130,8 +131,9 @@ async def get_stock_news(deps: AgentDependencies, symbol: str, days: int = 7, li
     if deps.news is None:
         raise DataSourceError("News service unavailable")
     start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
-    result = await deps.news.get(symbol, start=start, page_size=limit)
-    return {"symbol": symbol, "days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+    result = await deps.news.get(symbol, start=start, page_size=limit, prefer_cached=True)
+    output = {"symbol": symbol, "days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+    return await _attach_recent(deps,output,symbol,"news",start,min(limit,10))
 
 
 async def get_stock_money_flow(deps: AgentDependencies, symbol: str, limit: int = 5) -> dict:
@@ -151,8 +153,9 @@ async def get_market_news(deps: AgentDependencies, days: int = 7, limit: int = 1
     if deps.news is None:
         raise DataSourceError("News service unavailable")
     start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
-    result = await deps.news.get(start=start, page_size=limit)
-    return {"days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+    result = await deps.news.get(start=start, page_size=limit, prefer_cached=True)
+    output = {"days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
+    return await _attach_recent(deps,output,"market","news",start,min(limit,10))
 
 
 async def get_stock_announcements(deps: AgentDependencies, symbol: str, days: int = 30,
@@ -163,7 +166,7 @@ async def get_stock_announcements(deps: AgentDependencies, symbol: str, days: in
     if deps.announcements is None:
         raise DataSourceError("Announcement service unavailable")
     start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days - 1)).date()
-    result = await deps.announcements.get(symbol, start=start, page_size=limit)
+    result = await deps.announcements.get(symbol, start=start, page_size=limit, prefer_cached=True)
     output = {"symbol": symbol, "days": days, **_cache_metadata(result), **result.data.model_dump(mode="json")}
     if document_id:
         if re.fullmatch(r"AN[0-9]{18}", document_id) is None:
@@ -177,4 +180,42 @@ async def get_stock_announcements(deps: AgentDependencies, symbol: str, days: in
             document["text"] = text[:8000] or None
             document["tool_text_truncated"] = len(text) > 8000
         output["document"] = document
+    return await _attach_recent(deps,output,symbol,"announcement",start,10 if document_id else min(limit,10),document_id)
+
+
+async def _attach_recent(deps, output, symbol, kind, start, limit, document_id=None):
+    documents = getattr(deps,"documents",None)
+    if documents is not None:
+        result = await documents.recent(symbol,kind=kind,start=start,limit=limit,document_id=document_id,
+            document_ids=None if document_id else [i["id"] for i in output.get("items",[])])
+        deps.document_searches.append(result)
+        output["evidence"] = result["evidence"]
+        output["source_states"] = result["source_states"]
+        output["evidence_coverage"] = result["coverage"]
+        output["evidence_truncated"] = result["index_truncated"] or result["candidates_truncated"] or (
+            not document_id and len({e["document_id"] for e in result["evidence"]}) < len(output.get("items",[])))
     return output
+
+
+async def get_watchlist_insights(deps: AgentDependencies, days: int = 3, stock_limit: int = 5) -> dict:
+    """Bounded cache-only news/announcement overview; no quote/source fan-out."""
+    if not 1 <= days <= 30 or not 1 <= stock_limit <= 10:
+        raise ValueError("days需1–30，stock_limit需1–10")
+    if deps.documents is None:
+        raise DataSourceError("Document service unavailable")
+    entries = await run_in_threadpool(deps.watchlist.list_entries)
+    start = (datetime.now(timezone(timedelta(hours=8))) - timedelta(days=days-1)).date()
+    stocks, evidence = [], []
+    for entry in entries[:stock_limit]:
+        categories = {}
+        for kind in ("news","announcement"):
+            result = await deps.documents.recent(entry.symbol,kind=kind,start=start,limit=1)
+            deps.document_searches.append(result)
+            evidence.extend(result["evidence"])
+            categories[kind] = result
+        stocks.append({"symbol":entry.symbol,**categories})
+    return {"days":days,"stock_limit":stock_limit,"watchlist_total":len(entries),"stocks":stocks,"evidence":evidence,
+        "remaining_count":max(0,len(entries)-stock_limit),"partial":len(entries)>stock_limit or any(
+            not c["evidence"] or any(s["state"] != "ready" for s in c["source_states"].values()) for row in stocks
+            for c in (row["news"],row["announcement"])),
+        "coverage":"仅自选名单前N只，每股每类最多一个已有片段；不请求资讯源、不读取报价，不保证该时段消息完整。"}

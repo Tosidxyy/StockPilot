@@ -57,6 +57,7 @@ async def agent_chat(body: ChatRequest, agent: AgentService) -> ChatResponse:
         raise HTTPException(status_code=404, detail="Chat session not found") from None
     except AgentExecutionError as error:
         detail = {
+            429: "调用预算已用尽，请缩小股票数量或问题范围后重试。",
             503: "Market data temporarily unavailable",
             504: "Market data provider timed out",
         }.get(error.status_code, "Agent model request failed")
@@ -102,6 +103,7 @@ async def stream_agent_chat(body: ChatRequest, agent: AgentService) -> Streaming
                     yield event(name, data)
         except AgentExecutionError as error:
             detail = {
+                429: "调用预算已用尽，请缩小股票数量或问题范围后重试。",
                 503: "Market data temporarily unavailable", 504: "Market data provider timed out",
             }.get(error.status_code, "Agent model request failed")
             yield event("error", {"status": error.status_code, "detail": detail, "session_id": session_id})
