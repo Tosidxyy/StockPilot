@@ -101,6 +101,7 @@ export function StockDetail({ code }: { code: string }) {
               </div>
             </>}
         {quote.stale && data && <p className="stale-note">行情暂未更新，正在显示旧缓存{cachedTime(quote.cachedAt)}。<button className="text-button" disabled={retrying} onClick={() => void retry()}>重试更新</button></p>}
+        {data && <p className="table-note">报价来源：{data.source === "tencent" ? "腾讯财经" : data.source === "sina" ? "新浪财经" : "东方财富"} · {data.as_of ? `成交时间 ${data.as_of.slice(0, 19).replace("T", " ")}（北京时间）` : "源成交时间未提供"}</p>}
       </section>
 
       <section className="card kline-card" aria-labelledby="kline-title">

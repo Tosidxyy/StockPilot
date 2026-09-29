@@ -38,6 +38,9 @@ def test_stream_deltas_complete_exchange_and_trace(tmp_path):
         assert response.headers["content-type"].startswith("text/event-stream")
         emitted = events(response)
         assert emitted[0][0] == "session" and emitted[-1][0] == "done"
+        progress = [data["text"] for name, data in emitted if name == "progress"]
+        assert "正在读取市场指数…" in progress and "市场指数已读取" in progress
+        assert next(i for i, (name, _) in enumerate(emitted) if name == "progress") < next(i for i, (name, _) in enumerate(emitted) if name == "delta")
         chunks = [data["text"] for name, data in emitted if name == "delta"]
         assert len(chunks) >= 2
         answer = "".join(chunks)
@@ -78,7 +81,7 @@ def test_stream_failure_records_trace_and_never_emits_answer(tmp_path, failure, 
     )) as client:
         response = client.post("/api/agent/chat/stream", json={"message": "今天指数怎么样？"})
         emitted = events(response)
-        assert [name for name, _ in emitted] == ["session", "error"]
+        assert [name for name, _ in emitted if name != "progress"] == ["session", "error"]
         assert emitted[-1][1]["status"] == status
         assert "private" not in response.text
         session_id = emitted[0][1]["session_id"]
@@ -96,6 +99,8 @@ def test_interrupted_stream_does_not_save_partial_exchange(tmp_path):
             session_id, turns = await agent.prepare_stream("今天指数怎么样？", None)
             generator = agent.stream_chat("今天指数怎么样？", session_id, turns)
             name, _ = await anext(generator)
+            while name == "progress":
+                name, _ = await anext(generator)
             assert name == "delta"
             await generator.aclose()
             return session_id

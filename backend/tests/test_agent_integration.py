@@ -169,7 +169,7 @@ def test_budget_exhaustion_visible_no_partial_saved(db,stream):
     with TestClient(create_app(provider=FakeProvider(),database_url=url,prefetch_enabled=False,agent_model=model)) as client:
         r=client.post('/api/agent/chat'+('/stream' if stream else ''),json={'message':'市场指数'})
         if stream:
-            emitted=events(r); assert [name for name,_ in emitted]==['session','error']
+            emitted=events(r); assert [name for name,_ in emitted if name != 'progress']==['session','error']
             assert emitted[-1][1]['status']==429
             sid=emitted[0][1]['session_id']
         else:
@@ -251,3 +251,7 @@ def test_complete_bare_evidence_ids_normalize_but_unknown_ids_still_rejected(db)
     assert '['+identifier+']' in answer and '证据来源' in answer
     assert '[[' not in finalize_documents('已引用 ['+identifier+']。',[data],'新闻摘要')
     assert finalize_documents('记录 '+identifier+'，未知 '+'E'+'0'*24,[data],'新闻摘要')==INVALID_CITATIONS
+    for bad in ('[E13dc…不适用]', '['+identifier+' 不适用]', '[Eshort]'):
+        assert finalize_documents('事实 ['+identifier+']；'+bad,[data],'新闻摘要') == INVALID_CITATIONS
+    assert '['+identifier+']' in finalize_documents('片段记录 [S1]。',[data],'新闻摘要')
+    assert finalize_documents('片段记录 [S1] [S999]。',[data],'新闻摘要') == INVALID_CITATIONS

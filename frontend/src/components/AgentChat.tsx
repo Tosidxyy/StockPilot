@@ -8,7 +8,7 @@ type Message = { role: "user" | "assistant"; content: string; interrupted?: bool
 type StoredSession = { session_id: string; messages: Message[] };
 
 const sessionKey = "stockpilot-agent-session";
-const suggestions = ["今天市场怎么样？", "今天我的自选股怎么样？", "东方财富最近五天走势？"];
+const suggestions = ["我的自选股，哪只值得优先关注？", "结合走势和资金流，分析宁德时代", "总结自选股近三天的重要新闻和公告"];
 
 export function AgentChat({
   compact = false, initialPrompt = "", onSessionChange, onTraceUpdated,
@@ -23,6 +23,7 @@ export function AgentChat({
   const [messages, setMessages] = useState<Message[]>([]);
   const [draft, setDraft] = useState(initialPrompt);
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const stream = useRef<AbortController | null>(null);
@@ -61,6 +62,7 @@ export function AgentChat({
     const message = value.trim();
     if (!message || busy || stream.current || configured !== true) return;
     setBusy(true);
+    setProgress(["正在分析问题…"]);
     setError(null);
     setDraft("");
     followOutput.current = true;
@@ -73,6 +75,8 @@ export function AgentChat({
           setSessionId(event.session_id);
           onSessionChange?.(event.session_id);
           window.localStorage.setItem(sessionKey, event.session_id);
+        } else if (event.event === "progress") {
+          setProgress((current) => [...current.slice(-7), event.text]);
         } else {
           setMessages((current) => current.map((item, index) => index === current.length - 1 ? {
             ...item, content: event.event === "delta" ? item.content + event.text : event.answer,
@@ -107,7 +111,7 @@ export function AgentChat({
   return (
     <div className={`agent-chat ${compact ? "compact" : ""}`}>
       <div className="agent-chat-head">
-        <div className="agent-head"><span className="agent-icon">✦</span><div><h2>Stock Agent</h2><small>行情 Tool 驱动的对话</small></div></div>
+        <div className="agent-head"><span className="agent-icon">✦</span><div><h2>Stock Agent</h2><small>综合行情、资金与资讯，给出有依据的判断</small></div></div>
         {messages.length > 0 && <button className="text-button" type="button" onClick={newChat} disabled={busy}>新对话</button>}
       </div>
       <div className="agent-messages" ref={viewport} onScroll={() => { const element = viewport.current; if (element) followOutput.current = element.scrollHeight - element.scrollTop - element.clientHeight < 60; }} aria-live="polite" aria-busy={busy}>
@@ -115,6 +119,7 @@ export function AgentChat({
           messages.length === 0 ? <div className="agent-empty"><span className="agent-orb">✦</span><h3>从真实行情开始分析</h3><p>可以查询指数、个股行情、K 线或自选股。回答会区分行情事实与分析。</p></div> :
             messages.map((item, index) => <div className={`agent-message ${item.role}`} key={index}><span>{item.role === "user" ? "你" : "Stock Agent"}</span>{item.role === "assistant" ? item.content ? <MarkdownMessage content={item.content} /> : <p>{item.interrupted ? "未收到完整回复。" : "正在读取行情并分析…"}</p> : <p>{item.content}</p>}{item.interrupted && item.content && <small className="stream-note">回复已中断 · 未保存</small>}{busy && index === messages.length - 1 && item.content && <small className="stream-note">正在回复…</small>}</div>)}
       </div>
+      {busy && <div className="agent-progress" role="status" aria-label="分析进度">{progress.map((text, index) => <div key={index}>{text}</div>)}</div>}
       {configured === false && <p className="agent-config-note">模型尚未配置。请在后端设置模型名称与 API Key 后启动对话。</p>}
       {configured === null && <p className="agent-config-note">无法确认模型状态，请检查后端连接。</p>}
       {error && <p className="inline-error" role="alert">{error}</p>}
@@ -123,7 +128,7 @@ export function AgentChat({
         <input aria-label="向 Stock Agent 提问" placeholder="询问行情、K 线或自选股…" value={draft} onChange={(event) => setDraft(event.target.value)} disabled={busy || configured !== true} maxLength={2000} />
         {busy ? <button type="button" onClick={() => stream.current?.abort()}>停止</button> : <button type="submit" disabled={configured !== true || !draft.trim()} aria-label="发送消息">发送</button>}
       </form>
-      <p className="agent-disclaimer">行情信息仅供参考，不构成投资建议。</p>
+      <p className="agent-disclaimer">AI 分析可能有误，请核对关键数据。来源与数据时间可展开查看。</p>
     </div>
   );
 }

@@ -78,6 +78,8 @@ export type IntradayPoint = {
 };
 
 export type StockQuote = {
+  source?: "eastmoney" | "tencent" | "sina";
+  as_of?: string | null;
   symbol: string;
   name: string;
   price: number | null;

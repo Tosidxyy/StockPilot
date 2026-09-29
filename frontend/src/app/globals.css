@@ -242,3 +242,12 @@ a{color:inherit;text-decoration:none}
 .breadth-markets span, .breadth-markets small, .mini small { font-size: 11px; color: var(--muted); line-height: 1.7; }
 .mini .breadth-date { font-size: 15px; }
 @media(max-width:610px) { .breadth-markets { grid-template-columns: 1fr; } }
+
+.agent-page-grid{grid-template-columns:minmax(0,1fr)}
+.right-col{grid-template-columns:minmax(0,1fr)}
+.agent-progress{padding:8px 0;font-size:12px;line-height:1.8;color:#929ca9}
+.answer-sources{margin-top:14px;color:#929ca9;font-size:12px;line-height:1.8;overflow-wrap:anywhere}
+.answer-sources summary{cursor:pointer;padding:8px 0;color:#929ca9}
+.answer-sources h3{font-size:13px;color:#a5aeb9}
+.evidence-reference{display:inline;padding:0 4px;border:0;background:transparent;color:#929ca9;font-size:11px;vertical-align:super;cursor:pointer}
+.evidence-reference:hover{color:var(--blue)}

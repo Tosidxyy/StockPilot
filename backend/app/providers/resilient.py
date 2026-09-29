@@ -1,4 +1,4 @@
-"""Use Tencent minutes first; other data keeps its existing EastMoney routing."""
+"""Public quote failover and Tencent-first minutes, with successful cache upstream."""
 
 from typing import Literal, Sequence
 from time import monotonic
@@ -10,6 +10,7 @@ from app.providers.eastmoney import EastMoneyProvider
 from app.providers.exceptions import DataSourceError
 from app.providers.history import TencentHistory
 from app.providers.intraday import TencentIntraday
+from app.providers.quotes import PublicQuotes
 
 
 class ResilientMarketProvider(MarketDataProvider):
@@ -33,7 +34,7 @@ class ResilientMarketProvider(MarketDataProvider):
 
     def __init__(
         self, primary: MarketDataProvider | None = None, history: TencentHistory | None = None,
-        intraday: TencentIntraday | None = None, *, timer=monotonic,
+        intraday: TencentIntraday | None = None, *, timer=monotonic, quote_sources=None,
     ) -> None:
         self._primary = primary if primary is not None else EastMoneyProvider()
         self._history = history if history is not None else TencentHistory()
@@ -41,8 +42,14 @@ class ResilientMarketProvider(MarketDataProvider):
         # Do not pay the failed preferred minute source's timeout every refresh.
         # Separate symbols and indices so an individual failure does not disable others.
         self._intraday_retry = TTLCache(maxsize=2048, ttl=30, timer=timer)
+        self._quote_sources = quote_sources if quote_sources is not None else (
+            [PublicQuotes("tencent"), PublicQuotes("sina"), self._primary] if primary is None else [self._primary])
+        self._quote_retry = TTLCache(maxsize=8, ttl=30, timer=timer)
 
     async def aclose(self) -> None:
+        for source in self._quote_sources:
+            if source is not self._primary:
+                await source.aclose()
         try:
             await self._primary.aclose()
         finally:
@@ -55,7 +62,31 @@ class ResilientMarketProvider(MarketDataProvider):
         return await self._primary.search_stocks(query, limit)
 
     async def get_quotes(self, symbols: Sequence[str]) -> list[StockQuote]:
-        return await self._primary.get_quotes(symbols)
+        unique = list(dict.fromkeys(symbols))
+        if len(unique) > 50:
+            rows = []
+            for offset in range(0, len(unique), 50):
+                rows.extend(await self.get_quotes(unique[offset:offset+50]))
+            return rows
+        found = {}
+        last_error = None
+        for position, source in enumerate(self._quote_sources):
+            missing = [symbol for symbol in unique if symbol not in found]
+            if not missing:
+                break
+            if position in self._quote_retry:
+                continue
+            try:
+                rows = await source.get_quotes(missing)
+                found.update({row.symbol: row for row in rows if row.symbol in missing})
+            except DataSourceError as error:
+                self._quote_retry[position] = True
+                last_error = error
+        if not found and unique and last_error:
+            raise last_error
+        if not found and unique and len(self._quote_retry) == len(self._quote_sources):
+            raise DataSourceError("All quote sources temporarily unavailable")
+        return [found[symbol] for symbol in unique if symbol in found]
 
     async def get_indices(self) -> list[MarketIndex]:
         return await self._primary.get_indices()

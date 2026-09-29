@@ -20,6 +20,8 @@ class StockQuote(BaseModel):
     previous_close: float | None
     turnover_rate: float | None
     pe_ratio: float | None
+    source: Literal["eastmoney", "tencent", "sina"] = "eastmoney"
+    as_of: datetime | None = None
 
 
 class MarketIndex(BaseModel):

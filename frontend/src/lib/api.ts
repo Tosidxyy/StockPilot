@@ -39,6 +39,7 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
 
 export type ChatStreamEvent =
   | { event: "session"; session_id: string }
+  | { event: "progress"; text: string }
   | { event: "delta"; text: string }
   | { event: "done"; session_id: string; answer: string };
 
@@ -79,7 +80,7 @@ export async function streamChat(
         const payload = JSON.parse(data);
         if (event === "session") activeSession = payload.session_id;
         if (event === "error") throw new ApiError(payload.status, statusMessage(payload.status), payload.session_id || activeSession);
-        if (event === "session" || event === "delta" || event === "done") {
+        if (event === "session" || event === "progress" || event === "delta" || event === "done") {
           onEvent({ ...payload, event } as ChatStreamEvent);
           if (event === "done") completed = true;
         }

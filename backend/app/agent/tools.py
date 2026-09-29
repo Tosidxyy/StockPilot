@@ -4,6 +4,7 @@ import re
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 from typing import Literal
+from collections.abc import Awaitable, Callable
 
 from starlette.concurrency import run_in_threadpool
 
@@ -33,6 +34,7 @@ class AgentDependencies:
     documents: DocumentService | None = None
     document_searches: list[dict] = field(default_factory=list)
     tool_results: list[dict] = field(default_factory=list)
+    progress: Callable[[str], Awaitable[None]] | None = None
 
 
 def _symbol(value: str) -> str:

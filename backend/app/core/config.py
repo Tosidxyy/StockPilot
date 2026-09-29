@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     model_name: str = ""
     model_api_key: str = ""
     model_base_url: str = ""
+    model_thinking_enabled: bool = True
     database_url: str = "sqlite:///./stockpilot.db"
     market_data_provider: str = "eastmoney"
     watchlist_prefetch_enabled: bool = True

@@ -14,6 +14,11 @@ def safe_label(value):
     return re.sub(r"[\[\]()<>`*_\\\r\n]", " ", value)
 
 
+def citation_references(searches):
+    identifiers = dict.fromkeys(e["evidence_id"] for result in searches for e in result["evidence"])
+    return {f"S{index}": identifier for index, identifier in enumerate(identifiers, 1)}
+
+
 def cited_evidence(answer, searches):
     available = {e["evidence_id"]:e for result in searches for e in result["evidence"]}
     ids = dict.fromkeys(re.findall(r"\[(E[A-Za-z0-9_-]+)\]", answer))
@@ -24,6 +29,10 @@ def finalize_documents(answer, searches, message, *, allow_without_evidence=Fals
     if not searches:
         return NO_EVIDENCE if wants_documents(message) and not allow_without_evidence else answer
     evidence = {e["evidence_id"]: e for result in searches for e in result["evidence"]}
+    references = citation_references(searches)
+    answer = re.sub(r"\[(S[0-9]+)\]", lambda match: "[" + references.get(match[1], match[1]) + "]", answer)
+    if re.search(r"\[S[0-9]+\]", answer):
+        return INVALID_CITATIONS
     if not evidence:
         if allow_without_evidence and not re.search(r"\[E[A-Za-z0-9_-]+\]|https?://|\[[^\]]*\]\s*\(|<\s*[A-Za-z/!]", answer, re.I):
             return answer + "\n\n资讯检索未取得可引用证据，不能据此确认资讯事实或解释涨跌原因。"
@@ -33,6 +42,11 @@ def finalize_documents(answer, searches, message, *, allow_without_evidence=Fals
     answer = re.sub(r"(?<![A-Za-z0-9_\[])E[0-9a-f]{24}(?![A-Za-z0-9_\]])",
         lambda match: "[" + match.group() + "]", answer)
     cited = re.findall(r"\[(E[A-Za-z0-9_-]+)\]", answer)
+    # Reject truncated IDs and annotations such as [E... 不适用], even when
+    # other, valid citations occur later in the same answer.
+    without_valid = re.sub(r"\[E[0-9a-f]{24}\]", "", answer)
+    if re.search(r"\[E|(?<![A-Za-z0-9_])E[0-9a-f]{8,}", without_valid):
+        return INVALID_CITATIONS
     # Source URLs are appended by the server. Reject raw HTML or supplied links.
     if not cited or len(set(cited)) > 20 or any(i not in evidence for i in cited) or re.search(
         r"https?://|(?:javascript|data|file):|\[[^\]]*\]\s*\(|<\s*[A-Za-z/!]", answer, re.I):
@@ -48,4 +62,4 @@ def finalize_documents(answer, searches, message, *, allow_without_evidence=Fals
         status = "标题/来源片段，非全文" if item["kind"] == "news" else "仅元信息" if not item["body_available"] else "提取文本片段（"+item["text_status"]+"）"
         status += "，旧缓存/旧正文" if item["text_stale"] else ""
         sources.append(f"- [{identifier}] [{safe_label(item['title'])}]({url}) · {safe_label(item['source'])} · {item['date']} · 文档 {safe_label(item['document_id'])} · {status}")
-    return answer + "\n\n### 证据来源\n\n" + "\n".join(sources) + "\n\n引用仅核验片段标识与来源对应，不保证模型解读无误，请核对原文。行情信息仅供参考，不构成投资建议。"
+    return answer + "\n\n### 证据来源\n\n" + "\n".join(sources) + "\n\n引用已核对片段与来源对应；解读有疑问时可查看原文。"

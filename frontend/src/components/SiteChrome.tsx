@@ -46,13 +46,12 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
           </Link>
           <Link className={`nav-link ${watchlistActive ? "active" : ""}`} href="/#watchlist" aria-current={watchlistActive ? "page" : undefined} onClick={(event) => { if (pathname === "/") { event.preventDefault(); window.location.hash = "watchlist"; } }}><span className="nav-dot" />自选股</Link>
           <Link className={`nav-link ${pathname === "/agent" ? "active" : ""}`} href="/agent" aria-current={pathname === "/agent" ? "page" : undefined}><span className="nav-dot" />AI Agent</Link>
-          <span className="nav-link muted"><span className="nav-dot" />执行追踪 <small>待接入</small></span>
         </nav>
         <div className="sidebar-footer">
           <div className="status-line"><span className={`status-pulse ${apiConnected === false ? "offline" : ""}`} />
             {apiConnected === null ? "检查 API 连接…" : apiConnected ? "API 已连接" : "API 未连接"}
           </div>
-          <small>EastMoney Provider · V0.1</small>
+          <small>多源行情 · V0.2 开发版</small>
         </div>
       </aside>
       <div className="main-shell">
