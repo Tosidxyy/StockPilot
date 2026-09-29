@@ -1,0 +1,720 @@
+{
+  "started_at": "2026-09-29T07:08:54.147731+00:00",
+  "kind": "real public sources / isolated database",
+  "direct_source_batches": [
+    {
+      "source": "tencent",
+      "ok": true,
+      "rows": [
+        {
+          "symbol": "000001",
+          "name": "上证指数",
+          "value": 3830.45,
+          "change_percent": 0.18,
+          "change_amount": 6.83,
+          "volume": 399473391,
+          "turnover": 661704292801.0,
+          "high": 3843.84,
+          "low": 3810.81,
+          "source": "tencent",
+          "as_of": "2026-09-29T15:09:00+08:00"
+        },
+        {
+          "symbol": "399001",
+          "name": "深证成指",
+          "value": 12901.95,
+          "change_percent": 0.34,
+          "change_amount": 43.2,
+          "volume": 482698062,
+          "turnover": 747493244834.0,
+          "high": 12955.25,
+          "low": 12831.87,
+          "source": "tencent",
+          "as_of": "2026-09-29T15:08:03+08:00"
+        },
+        {
+          "symbol": "399006",
+          "name": "创业板指",
+          "value": 3142.56,
+          "change_percent": 0.09,
+          "change_amount": 2.74,
+          "volume": 129058909,
+          "turnover": 356509837180.99994,
+          "high": 3158.91,
+          "low": 3128.48,
+          "source": "tencent",
+          "as_of": "2026-09-29T15:08:18+08:00"
+        }
+      ]
+    },
+    {
+      "source": "sina",
+      "ok": true,
+      "rows": [
+        {
+          "symbol": "000001",
+          "name": "上证指数",
+          "value": 3830.4513,
+          "change_percent": 0.1786,
+          "change_amount": 6.8307,
+          "volume": 399473391,
+          "turnover": 661704292801.0,
+          "high": 3843.8375,
+          "low": 3810.8116,
+          "source": "sina",
+          "as_of": "2026-09-29T15:08:57+08:00"
+        },
+        {
+          "symbol": "399001",
+          "name": "深证成指",
+          "value": 12901.947,
+          "change_percent": 0.3359,
+          "change_amount": 43.194,
+          "volume": 482698062,
+          "turnover": 747493244834.227,
+          "high": 12955.254,
+          "low": 12831.873,
+          "source": "sina",
+          "as_of": "2026-09-29T15:00:03+08:00"
+        },
+        {
+          "symbol": "399006",
+          "name": "创业板指",
+          "value": 3142.563,
+          "change_percent": 0.0872,
+          "change_amount": 2.738,
+          "volume": 129058908,
+          "turnover": 356509837181.19,
+          "high": 3158.91,
+          "low": 3128.479,
+          "source": "sina",
+          "as_of": "2026-09-29T15:00:03+08:00"
+        }
+      ]
+    }
+  ],
+  "api_batches": [
+    {
+      "at": "2026-09-29T07:08:54.947693+00:00",
+      "status": 200,
+      "seconds": 0.139,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:08:55.073349Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:08:57.095628+00:00",
+      "status": 200,
+      "seconds": 0.038,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:08:57.125986Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:08:59.138154+00:00",
+      "status": 200,
+      "seconds": 0.038,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:08:59.168626Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:01.190662+00:00",
+      "status": 200,
+      "seconds": 0.038,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:01.222214Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:03.234821+00:00",
+      "status": 200,
+      "seconds": 0.037,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:03.264982Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:05.275406+00:00",
+      "status": 200,
+      "seconds": 0.037,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:05.305087Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:07.326560+00:00",
+      "status": 200,
+      "seconds": 0.037,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:07.356653Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:09.372405+00:00",
+      "status": 200,
+      "seconds": 0.038,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:09.402849Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:11.410406+00:00",
+      "status": 200,
+      "seconds": 0.037,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:11.440429Z"
+      }
+    },
+    {
+      "at": "2026-09-29T07:09:13.452573+00:00",
+      "status": 200,
+      "seconds": 0.036,
+      "payload": {
+        "data": [
+          {
+            "symbol": "000001",
+            "name": "上证指数",
+            "value": 3830.45,
+            "change_percent": 0.18,
+            "change_amount": 6.83,
+            "volume": 399473391,
+            "turnover": 661704292801.0,
+            "high": 3843.84,
+            "low": 3810.81,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:00+08:00"
+          },
+          {
+            "symbol": "399001",
+            "name": "深证成指",
+            "value": 12901.95,
+            "change_percent": 0.34,
+            "change_amount": 43.2,
+            "volume": 482698062,
+            "turnover": 747493244834.0,
+            "high": 12955.25,
+            "low": 12831.87,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:09:03+08:00"
+          },
+          {
+            "symbol": "399006",
+            "name": "创业板指",
+            "value": 3142.56,
+            "change_percent": 0.09,
+            "change_amount": 2.74,
+            "volume": 129058909,
+            "turnover": 356509837180.99994,
+            "high": 3158.91,
+            "low": 3128.48,
+            "source": "tencent",
+            "as_of": "2026-09-29T15:08:18+08:00"
+          }
+        ],
+        "stale": false,
+        "cached_at": "2026-09-29T07:09:13.482838Z"
+      }
+    }
+  ],
+  "health": 200,
+  "intraday": [
+    {
+      "code": "000001",
+      "status": 200,
+      "stale": false,
+      "points": 239,
+      "source": "sina"
+    },
+    {
+      "code": "399001",
+      "status": 200,
+      "stale": false,
+      "points": 239,
+      "source": "sina"
+    },
+    {
+      "code": "399006",
+      "status": 200,
+      "stale": false,
+      "points": 239,
+      "source": "sina"
+    }
+  ],
+  "tool_cache": {
+    "rows": 3,
+    "stale": false,
+    "cached_at": "2026-09-29T07:09:13.482838+00:00",
+    "same_rows": true,
+    "provider_read": false
+  },
+  "offline_restart": {
+    "status": 200,
+    "stale": true,
+    "same_rows": true,
+    "same_saved_at": true,
+    "cached_at": "2026-09-29T07:09:13.482838Z"
+  },
+  "passed": true,
+  "finished_at": "2026-09-29T07:09:14.043924+00:00",
+  "forced_preferred_failure": {
+    "preferred_failure": "controlled injection, not actual Tencent outage",
+    "fallback": "actual live Sina HTTP",
+    "rows": [
+      {
+        "symbol": "000001",
+        "name": "上证指数",
+        "value": 3830.4513,
+        "change_percent": 0.1786,
+        "change_amount": 6.8307,
+        "volume": 399473391,
+        "turnover": 661704292801.0,
+        "high": 3843.8375,
+        "low": 3810.8116,
+        "source": "sina",
+        "as_of": "2026-09-29T15:11:42+08:00"
+      },
+      {
+        "symbol": "399001",
+        "name": "深证成指",
+        "value": 12901.947,
+        "change_percent": 0.3359,
+        "change_amount": 43.194,
+        "volume": 482698062,
+        "turnover": 747493244834.227,
+        "high": 12955.254,
+        "low": 12831.873,
+        "source": "sina",
+        "as_of": "2026-09-29T15:00:03+08:00"
+      },
+      {
+        "symbol": "399006",
+        "name": "创业板指",
+        "value": 3142.563,
+        "change_percent": 0.0872,
+        "change_amount": 2.738,
+        "volume": 129058908,
+        "turnover": 356509837181.19,
+        "high": 3158.91,
+        "low": 3128.479,
+        "source": "sina",
+        "as_of": "2026-09-29T15:00:03+08:00"
+      }
+    ],
+    "passed": true
+  },
+  "ui_acceptance": {
+    "mode": "production frontend, isolated real-index backend; other data/model disabled; controlled offline switch",
+    "passed": [
+      "three index cards with actual Tencent source times",
+      "Shenzhen selection matches index/intraday",
+      "Sina actual index minute chart",
+      "stale index/intraday data retained after controlled disconnect",
+      "390px mobile cards without page horizontal overflow"
+    ],
+    "measured_client_width": 375,
+    "measured_scroll_width": 375,
+    "offline_preserves_data": true,
+    "offline_preserves_saved_at": true,
+    "cached_at": "2026-09-29T07:13:53.652653Z"
+  },
+  "checks": {
+    "backend": "318 passed in 31.39s",
+    "frontend": [
+      "lint passed",
+      "tsc --noEmit passed",
+      "build passed"
+    ],
+    "diff_check": "passed"
+  },
+  "limitations": [
+    "This is after close (Beijing about 15:09) and 10 batches at 2-second intervals, not intraday long-running reliability or price movement acceptance.",
+    "Default API and direct Tencent/Sina were real successful requests. Preferred-source failure for fallback and subsequent UI disconnect were controlled injections.",
+    "Index source timestamp may advance after close even when index value is unchanged. It is a source timestamp, not proof of new exchange trades.",
+    "Index batch must be complete from one source; failures cool down separately from stock quotes. Existing cache timestamps and bounds remain unchanged.",
+    "Only index availability issue addressed; forum, individual money flow, minute gaps, model semantic issues and V0.2 release gates remain pending. No new model evaluation score claimed."
+  ],
+  "release_gate_met": false,
+  "latency_seconds": {
+    "min": 0.036,
+    "max": 0.139
+  }
+}

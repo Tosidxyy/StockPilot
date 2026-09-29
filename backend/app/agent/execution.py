@@ -85,7 +85,7 @@ def data_notes(outcomes):
             if name == "get_watchlist_insights":
                 note += f"；覆盖 {len(r['stocks'])}/{r['watchlist_total']} 只，未覆盖 {r['remaining_count']} 只；每股每类最多一个片段。"
         else:
-            items=r.get("items",r.get("klines",r.get("quotes",[])))
+            items=r.get("items",r.get("klines",r.get("quotes",r.get("indices",[]))))
             dates=sorted({v["date"] for v in items if v.get("date")})
             quote = r.get("quote") or {}
             source=r.get("source") or quote.get("source") or "/".join(sorted({v["source"] for v in items if v.get("source")})) or "东方财富"
@@ -97,8 +97,10 @@ def data_notes(outcomes):
                 note += "；各市场来源时间 " + "，".join(f"{e.get('market',e.get('exchange','市场'))} {beijing_time(e.get('as_of'))}" for e in r.get("exchanges",[]))
                 note += "；涨跌停股池各自日期 " + "，".join(str(r.get(k, {}).get("date") or "未提供") for k in ("limit_up","limit_down"))
             else:
-                if name == "get_watchlist":
-                    note += "；源成交时间（北京时间） " + "，".join(f"{row['symbol']} {beijing_time(row.get('as_of'))}" for row in r.get("quotes",[]))
+                if name == "get_market_indices":
+                    note += "；来源时间（北京时间） " + "，".join(f"{row['symbol']} {beijing_time(row.get('as_of'))}" for row in items)
+                elif name == "get_watchlist":
+                    note += "；源成交时间（北京时间） " + "，".join(f"{row['symbol']} {beijing_time(row.get('as_of'))}" for row in items)
                 else:
                     note+=f"；资料日期 {dates[0]} 至 {dates[-1]}。" if dates else f"；源成交时间 {beijing_time(quote['as_of'])}（北京时间）。" if quote.get("as_of") else "；源成交时间未提供，保存时间不代表成交时间。"
         if note not in lines: lines.append(note)

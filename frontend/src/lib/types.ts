@@ -44,6 +44,8 @@ export type MarketIndex = {
   turnover: number | null;
   high: number | null;
   low: number | null;
+  source?: "eastmoney" | "tencent" | "sina";
+  as_of?: string | null;
 };
 
 export type MarketBreadth = {

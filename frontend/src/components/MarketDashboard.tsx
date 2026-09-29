@@ -32,6 +32,7 @@ export function MarketDashboard() {
                 <span className="kicker">{index.name}</span>
                 <span className="index-main"><strong>{number(index.value)}</strong><em className={moveClass(index.change_percent)}>{signed(index.change_percent)}</em></span>
                 <span className="index-sub"><span className={moveClass(index.change_amount)}>{signed(index.change_amount, "")}</span><span>成交额 {amount(index.turnover)}</span></span>
+                <span className="table-note">{index.source === "tencent" ? "腾讯财经" : index.source === "sina" ? "新浪财经" : "东方财富"} · {index.as_of ? `来源截至 ${new Date(index.as_of).toLocaleString("zh-CN", { timeZone: "Asia/Shanghai", hour12: false })}` : "来源时间未提供"}</span>
               </button>
             ))}</section>}
       {indices.stale && <p className="stale-note">指数暂未更新，正在显示旧缓存{cachedTime(indices.cachedAt)}。<button className="text-button" onClick={indices.refresh}>重试更新</button></p>}

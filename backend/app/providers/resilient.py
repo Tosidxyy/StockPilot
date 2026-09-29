@@ -2,6 +2,7 @@
 
 from typing import Literal, Sequence
 from time import monotonic
+from math import isfinite
 from cachetools import TTLCache
 
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
@@ -10,7 +11,7 @@ from app.providers.eastmoney import EastMoneyProvider
 from app.providers.exceptions import DataSourceError
 from app.providers.history import TencentHistory
 from app.providers.intraday import TencentIntraday
-from app.providers.quotes import PublicQuotes
+from app.providers.quotes import INDEX_CODES, PublicQuotes
 from app.providers.sina_intraday import SinaIntraday
 
 
@@ -39,6 +40,7 @@ class ResilientMarketProvider(MarketDataProvider):
     def __init__(
         self, primary: MarketDataProvider | None = None, history: TencentHistory | None = None,
         intraday: TencentIntraday | None = None, *, timer=monotonic, quote_sources=None, minute_sources=None,
+        index_sources=None,
     ) -> None:
         self._primary = primary if primary is not None else EastMoneyProvider()
         self._history = history if history is not None else TencentHistory()
@@ -54,6 +56,10 @@ class ResilientMarketProvider(MarketDataProvider):
         self._quote_sources = quote_sources if quote_sources is not None else (
             [PublicQuotes("tencent"), PublicQuotes("sina"), self._primary] if primary is None else [self._primary])
         self._quote_retry = TTLCache(maxsize=8, ttl=30, timer=timer)
+        self._index_sources = index_sources if index_sources is not None else (
+            self._quote_sources if primary is None else [self._primary])
+        # Index failures must not disable stock quotes, or vice versa.
+        self._index_retry = TTLCache(maxsize=8, ttl=30, timer=timer)
 
     async def aclose(self) -> None:
         for source in self._minute_sources:
@@ -61,6 +67,9 @@ class ResilientMarketProvider(MarketDataProvider):
                 await source.aclose()
         for source in self._quote_sources:
             if source is not self._primary:
+                await source.aclose()
+        for source in self._index_sources:
+            if source is not self._primary and all(source is not other for other in self._quote_sources + self._minute_sources):
                 await source.aclose()
         try:
             await self._primary.aclose()
@@ -101,7 +110,22 @@ class ResilientMarketProvider(MarketDataProvider):
         return [found[symbol] for symbol in unique if symbol in found]
 
     async def get_indices(self) -> list[MarketIndex]:
-        return await self._primary.get_indices()
+        last_error = None
+        for position, source in enumerate(self._index_sources):
+            if position in self._index_retry:
+                continue
+            try:
+                rows = await source.get_indices()
+                found = {row.symbol: row for row in rows}
+                if len(rows) != 3 or set(found) != set(INDEX_CODES.values()) or any(
+                    row.value is None or not isfinite(row.value) or row.value <= 0 for row in rows
+                ):
+                    raise DataSourceError("Index source returned incomplete or invalid indices")
+                return [found[symbol] for symbol in INDEX_CODES.values()]
+            except DataSourceError as error:
+                self._index_retry[position] = True
+                last_error = error
+        raise last_error or DataSourceError("All index sources temporarily unavailable")
 
     async def get_index_intraday(self, index_code: str = "000001") -> list[IntradayPoint]:
         return await self._minutes("index", index_code)

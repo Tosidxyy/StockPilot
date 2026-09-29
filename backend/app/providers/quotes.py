@@ -6,9 +6,11 @@ from typing import Literal, Sequence
 
 import httpx
 
-from app.models.market import StockQuote
+from app.models.market import MarketIndex, StockQuote
 from app.providers.eastmoney import to_secid
 from app.providers.exceptions import DataSourceError, ProviderTimeoutError
+
+INDEX_CODES = {"sh000001": "000001", "sz399001": "399001", "sz399006": "399006"}
 
 
 def quote_code(symbol: str) -> str:
@@ -38,6 +40,18 @@ class PublicQuotes:
 
     async def get_quotes(self, symbols: Sequence[str]) -> list[StockQuote]:
         codes = {quote_code(symbol): symbol for symbol in dict.fromkeys(symbols)}
+        return await self._fetch(codes)
+
+    async def get_indices(self) -> list[MarketIndex]:
+        quotes = await self._fetch(INDEX_CODES, indices=True)
+        if len(quotes) != len(INDEX_CODES) or any(quote.price is None for quote in quotes):
+            raise DataSourceError("Public index source returned incomplete indices")
+        return [MarketIndex(symbol=q.symbol, name=q.name, value=q.price,
+            change_percent=q.change_percent, change_amount=q.change_amount,
+            volume=q.volume, turnover=q.turnover, high=q.high, low=q.low,
+            source=q.source, as_of=q.as_of) for q in quotes]
+
+    async def _fetch(self, codes: dict[str, str], *, indices: bool = False) -> list[StockQuote]:
         if not codes:
             return []
         if len(codes) > 50:
@@ -54,7 +68,7 @@ class PublicQuotes:
                 if code not in codes or not body:
                     continue
                 try:
-                    quote = self._parse(codes[code], body)
+                    quote = self._parse(codes[code], body, index=indices)
                     rows[quote.symbol] = quote
                 except (ValueError, IndexError):
                     # One malformed/missing symbol must not discard the successful batch.
@@ -67,7 +81,7 @@ class PublicQuotes:
         except (httpx.HTTPError, UnicodeError, ValueError) as error:
             raise DataSourceError("Public quote source unavailable") from error
 
-    def _parse(self, symbol: str, body: str) -> StockQuote:
+    def _parse(self, symbol: str, body: str, *, index: bool = False) -> StockQuote:
         fields = body.split("~" if self.source == "tencent" else ",")
         if self.source == "tencent":
             if len(fields) < 40 or fields[2] != symbol:
@@ -86,7 +100,9 @@ class PublicQuotes:
             name = fields[0]
             opening, previous, price, high, low = (number(fields[i]) for i in (1,2,3,4,5))
             shares = number(fields[8])
-            volume = shares / 100 if shares is not None else None
+            # Sina's Shanghai index volume is already in hands; Shenzhen index
+            # and stock volumes are in shares. Verified against Tencent totals.
+            volume = shares / (1 if index and symbol == "000001" else 100) if shares is not None else None
             turnover = number(fields[9])
             change = round(price - previous, 4) if price is not None and previous else None
             percent = round(change / previous * 100, 4) if change is not None else None

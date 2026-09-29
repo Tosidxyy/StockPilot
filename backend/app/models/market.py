@@ -34,6 +34,8 @@ class MarketIndex(BaseModel):
     turnover: float | None
     high: float | None = None
     low: float | None = None
+    source: Literal["eastmoney", "tencent", "sina"] = "eastmoney"
+    as_of: datetime | None = None
 
 
 class IntradayPoint(BaseModel):
