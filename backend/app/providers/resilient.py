@@ -1,6 +1,7 @@
 """Public quote failover and measured Sina-first minutes, with cached fallback."""
 
 from typing import Literal, Sequence
+from dataclasses import dataclass
 from time import monotonic
 from math import isfinite
 from cachetools import TTLCache
@@ -13,6 +14,12 @@ from app.providers.history import TencentHistory
 from app.providers.intraday import TencentIntraday
 from app.providers.quotes import INDEX_CODES, PublicQuotes
 from app.providers.sina_intraday import SinaIntraday
+
+
+@dataclass(frozen=True)
+class MinuteRetry:
+    attempts: int
+    retry_at: float
 
 
 class ResilientMarketProvider(MarketDataProvider):
@@ -53,6 +60,10 @@ class ResilientMarketProvider(MarketDataProvider):
         # Do not pay the failed preferred minute source's timeout every refresh.
         # Separate symbols and indices so an individual failure does not disable others.
         self._intraday_retry = TTLCache(maxsize=2048, ttl=30, timer=timer)
+        # Sina usually recovers quickly. Retain bounded failure history for
+        # repeated outages, but let a single transient failure retry in 2s.
+        self._timer = timer
+        self._sina_retry = TTLCache(maxsize=2048, ttl=300, timer=timer)
         self._quote_sources = quote_sources if quote_sources is not None else (
             [PublicQuotes("tencent"), PublicQuotes("sina"), self._primary] if primary is None else [self._primary])
         self._quote_retry = TTLCache(maxsize=8, ttl=30, timer=timer)
@@ -137,15 +148,22 @@ class ResilientMarketProvider(MarketDataProvider):
         last_error = None
         for position, source in enumerate(self._minute_sources):
             key = (kind, code, position)
-            if key in self._intraday_retry:
+            sina = isinstance(source, SinaIntraday)
+            retry = self._sina_retry.get(key) if sina else None
+            if (retry is not None and self._timer() < retry.retry_at) or key in self._intraday_retry:
                 continue
             try:
                 points = await (source.get_stock_intraday(code) if kind == "stock" else source.get_index_intraday(code))
                 if not points:
                     raise DataSourceError("Minute source returned no points")
+                self._sina_retry.pop(key, None)
                 return points
             except DataSourceError as error:
-                self._intraday_retry[key] = True
+                if sina:
+                    attempts = min(retry.attempts + 1 if retry else 1, 5)
+                    self._sina_retry[key] = MinuteRetry(attempts, self._timer() + min(2 ** attempts, 30))
+                else:
+                    self._intraday_retry[key] = True
                 last_error = error
         raise last_error or DataSourceError("All minute sources temporarily unavailable")
 

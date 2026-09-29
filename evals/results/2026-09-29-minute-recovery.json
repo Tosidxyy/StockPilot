@@ -1,0 +1,188 @@
+{
+  "started_at": "2026-09-29T07:31:49.164880+00:00",
+  "scope": "after-close real public Sina HTTP; one controlled connection failure; no model/user database",
+  "limitations": [
+    "Not a continuous intraday, lunch or cross-day acceptance.",
+    "Injected failure is not an observed public-source outage.",
+    "Two-second retry eligibility is not a guarantee of new trades every two seconds."
+  ],
+  "direct_minutes": [
+    {
+      "kind": "stock",
+      "code": "600519",
+      "ok": true,
+      "elapsed_seconds": 0.1792,
+      "points": 238,
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 1235.58,
+        "volume": 438.85,
+        "turnover": 54223426.4121,
+        "source": "sina"
+      }
+    },
+    {
+      "kind": "stock",
+      "code": "300750",
+      "ok": true,
+      "elapsed_seconds": 0.0582,
+      "points": 238,
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 286.8,
+        "volume": 5234.03,
+        "turnover": 150111974.4143,
+        "source": "sina"
+      }
+    },
+    {
+      "kind": "stock",
+      "code": "002414",
+      "ok": true,
+      "elapsed_seconds": 0.0466,
+      "points": 238,
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 11.27,
+        "volume": 4353.0,
+        "turnover": 4905831.1196,
+        "source": "sina"
+      }
+    },
+    {
+      "kind": "index",
+      "code": "000001",
+      "ok": true,
+      "elapsed_seconds": 0.049,
+      "points": 239,
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 3830.451,
+        "volume": 5195979.0,
+        "turnover": 7632453632.0,
+        "source": "sina"
+      }
+    },
+    {
+      "kind": "index",
+      "code": "399001",
+      "ok": true,
+      "elapsed_seconds": 0.0497,
+      "points": 239,
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 12901.947,
+        "volume": 1605086.79,
+        "turnover": 4226285568.0,
+        "source": "sina"
+      }
+    },
+    {
+      "kind": "index",
+      "code": "399006",
+      "ok": true,
+      "elapsed_seconds": 0.046,
+      "points": 239,
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 3142.563,
+        "volume": 1781614.58,
+        "turnover": 4575133696.0,
+        "source": "sina"
+      }
+    }
+  ],
+  "controlled_recovery": {
+    "ok": true,
+    "seed": {
+      "stale": false,
+      "cached_at": "2026-09-29T07:31:49.826757+00:00",
+      "points": 238,
+      "source": "sina",
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 1235.58,
+        "volume": 438.85,
+        "turnover": 54223426.4121,
+        "source": "sina"
+      }
+    },
+    "failed_refresh": {
+      "stale": true,
+      "cached_at": "2026-09-29T07:31:49.826757+00:00",
+      "points": 238,
+      "source": "sina",
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 1235.58,
+        "volume": 438.85,
+        "turnover": 54223426.4121,
+        "source": "sina"
+      }
+    },
+    "next_eligible_refresh": {
+      "stale": false,
+      "cached_at": "2026-09-29T07:31:53.948690+00:00",
+      "points": 238,
+      "source": "sina",
+      "last_point": {
+        "time": "2026-09-29T15:00:00",
+        "price": 1235.58,
+        "volume": 438.85,
+        "turnover": 54223426.4121,
+        "source": "sina"
+      }
+    },
+    "failure_to_recovery_seconds": 2.1169,
+    "immediate_read_did_not_request_source": true,
+    "old_data_and_original_timestamp_preserved": true
+  },
+  "requests": [
+    {
+      "at": "2026-09-29T07:31:49.359954+00:00",
+      "symbol": "sh600519",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:49.539233+00:00",
+      "symbol": "sz300750",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:49.597358+00:00",
+      "symbol": "sz002414",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:49.644026+00:00",
+      "symbol": "sh000001",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:49.693077+00:00",
+      "symbol": "sz399001",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:49.742832+00:00",
+      "symbol": "sz399006",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:49.788912+00:00",
+      "symbol": "sh600519",
+      "injected": false
+    },
+    {
+      "at": "2026-09-29T07:31:51.839204+00:00",
+      "symbol": "sh600519",
+      "injected": true
+    },
+    {
+      "at": "2026-09-29T07:31:53.909978+00:00",
+      "symbol": "sh600519",
+      "injected": false
+    }
+  ],
+  "finished_at": "2026-09-29T07:31:53.956194+00:00"
+}

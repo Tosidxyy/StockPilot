@@ -11,6 +11,7 @@ from app.models.market import IntradayPoint
 from app.providers.exceptions import DataSourceError, InvalidSymbolError
 from app.providers.sina_intraday import SinaIntraday, parse_sina_minutes
 from app.providers.resilient import ResilientMarketProvider
+from app.services.stock import StockService
 from test_api import FakeProvider
 from test_services import Clock
 
@@ -118,3 +119,123 @@ def test_sina_persistent_cache_retains_actual_source_after_restart_outage(tmp_pa
         result=client.get('/api/stocks/600519/intraday').json()
         assert result['stale'] and result['data']==saved['data'] and result['cached_at']==saved['cached_at']
     asyncio.run(second.aclose())
+
+
+class OfflineMinutes(FakeProvider):
+    async def get_stock_intraday(self, symbol):
+        raise DataSourceError("offline")
+
+    async def get_index_intraday(self, symbol="000001"):
+        raise DataSourceError("offline")
+
+    async def aclose(self):
+        pass
+
+
+@pytest.mark.parametrize("failure", ["timeout", "empty"])
+def test_transient_sina_failure_preserves_service_cache_and_recovers_next_poll(failure):
+    clock = Clock()
+    calls = []
+    def handler(request):
+        calls.append(clock.now)
+        if clock.now == 2:
+            if failure == "timeout":
+                raise httpx.ReadTimeout("temporary outage", request=request)
+            return httpx.Response(200, text=wrapper([]))
+        return httpx.Response(200, text=wrapper([
+            dict(candle("2026-09-29 09:31:00"), close="5.3" if clock.now >= 4 else "5.2")]))
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            offline = OfflineMinutes()
+            provider = ResilientMarketProvider(offline, intraday=offline,
+                minute_sources=[SinaIntraday(client), offline], timer=clock)
+            service = StockService(provider, timer=clock)
+            try:
+                first = await service.get_intraday("600519")
+                clock.now = 2
+                stale = await service.get_intraday("600519")
+                assert stale.stale and stale.data == first.data and stale.cached_at == first.cached_at
+                clock.now = 3.9
+                assert (await service.get_intraday("600519")).stale
+                assert calls == [0, 2]
+                clock.now = 4
+                recovered = await asyncio.gather(*(service.get_intraday("600519") for _ in range(5)))
+                assert calls == [0, 2, 4]  # Concurrent readers share one retry.
+                assert all(not item.stale and item.data[0].price == 5.3 for item in recovered)
+                assert all(item.data[0].source == "sina" for item in recovered)
+                assert recovered[0].cached_at > first.cached_at
+            finally:
+                await service.aclose()
+                await provider.aclose()
+    asyncio.run(run())
+
+
+def test_sina_repeated_outage_backs_off_caps_and_resets_after_success():
+    clock = Clock()
+    failed = [True]
+    calls = []
+    def handler(request):
+        calls.append(clock.now)
+        if failed[0]:
+            raise httpx.RemoteProtocolError("offline", request=request)
+        return httpx.Response(200, text=wrapper([candle("2026-09-29 09:31:00")]))
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            offline = OfflineMinutes()
+            provider = ResilientMarketProvider(offline, intraday=offline,
+                minute_sources=[SinaIntraday(client), offline], timer=clock)
+            try:
+                for attempt, next_attempt in zip([0, 2, 6, 14, 30, 60], [2, 6, 14, 30, 60, 90]):
+                    clock.now = attempt
+                    with pytest.raises(DataSourceError):
+                        await provider.get_stock_intraday("600519")
+                    clock.now = next_attempt - .01
+                    with pytest.raises(DataSourceError):
+                        await provider.get_stock_intraday("600519")
+                    assert calls[-1] == attempt
+                assert calls == [0, 2, 6, 14, 30, 60]
+                clock.now = 90
+                failed[0] = False
+                assert (await provider.get_stock_intraday("600519"))[0].source == "sina"
+                failed[0] = True
+                clock.now = 92
+                with pytest.raises(DataSourceError):
+                    await provider.get_stock_intraday("600519")
+                clock.now = 94
+                failed[0] = False
+                assert (await provider.get_stock_intraday("600519"))[0].source == "sina"
+                assert calls[-3:] == [90, 92, 94]
+            finally:
+                await provider.aclose()
+    asyncio.run(run())
+
+
+def test_sina_retry_isolated_between_symbols_and_same_code_stock_index():
+    clock = Clock()
+    calls = []
+    def handler(request):
+        symbol = request.url.params["symbol"]
+        calls.append(symbol)
+        if symbol == "sz000001":
+            raise httpx.ReadTimeout("offline", request=request)
+        return httpx.Response(200, text=wrapper([candle("2026-09-29 09:31:00")]))
+
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:
+            offline = OfflineMinutes()
+            provider = ResilientMarketProvider(offline, intraday=offline,
+                minute_sources=[SinaIntraday(client), offline], timer=clock)
+            try:
+                with pytest.raises(DataSourceError):
+                    await provider.get_stock_intraday("000001")
+                assert (await provider.get_index_intraday("000001"))[0].source == "sina"
+                assert (await provider.get_stock_intraday("600519"))[0].source == "sina"
+                clock.now = 1
+                with pytest.raises(DataSourceError):
+                    await provider.get_stock_intraday("000001")
+                assert calls == ["sz000001", "sh000001", "sh600519"]
+            finally:
+                await provider.aclose()
+    asyncio.run(run())
