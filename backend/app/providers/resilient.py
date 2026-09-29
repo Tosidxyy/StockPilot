@@ -1,4 +1,4 @@
-"""Prefer EastMoney, with independent Tencent candle and minute fallbacks."""
+"""Use Tencent minutes first; other data keeps its existing EastMoney routing."""
 
 from typing import Literal, Sequence
 from time import monotonic
@@ -38,7 +38,7 @@ class ResilientMarketProvider(MarketDataProvider):
         self._primary = primary if primary is not None else EastMoneyProvider()
         self._history = history if history is not None else TencentHistory()
         self._intraday = intraday if intraday is not None else TencentIntraday()
-        # Do not pay the failed primary's timeout on every 2-second refresh.
+        # Do not pay the failed preferred minute source's timeout every refresh.
         # Separate symbols and indices so an individual failure does not disable others.
         self._intraday_retry = TTLCache(maxsize=2048, ttl=30, timer=timer)
 
@@ -70,13 +70,16 @@ class ResilientMarketProvider(MarketDataProvider):
         key = (kind, code)
         if key not in self._intraday_retry:
             try:
-                points = await (self._primary.get_stock_intraday(code) if kind == "stock" else self._primary.get_index_intraday(code))
+                points = await (self._intraday.get_stock_intraday(code) if kind == "stock" else self._intraday.get_index_intraday(code))
                 if not points:
-                    raise DataSourceError("Primary minute source returned no points")
+                    raise DataSourceError("Preferred minute source returned no points")
                 return points
             except DataSourceError:
                 self._intraday_retry[key] = True
-        return await (self._intraday.get_stock_intraday(code) if kind == "stock" else self._intraday.get_index_intraday(code))
+        points = await (self._primary.get_stock_intraday(code) if kind == "stock" else self._primary.get_index_intraday(code))
+        if not points:
+            raise DataSourceError("Fallback minute source returned no points")
+        return points
 
     async def get_kline(
         self, symbol: str, period: Literal["daily", "weekly"] = "daily", limit: int = 120,

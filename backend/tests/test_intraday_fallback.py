@@ -88,57 +88,80 @@ def test_timeout_and_invalid_codes_do_not_request_wrong_market():
     asyncio.run(run())
 
 
-def test_primary_preference_cooldown_recovery_and_stock_index_isolation():
-    class Primary(FakeProvider):
-        def __init__(self):
-            super().__init__(); self.calls=[]; self.failed=set()
+def test_tencent_preference_cooldown_recovery_and_stock_index_isolation():
+    class EastMoney(FakeProvider):
+        def __init__(self): super().__init__(); self.calls=[]
+        async def get_stock_intraday(self, symbol):
+            self.calls.append(("stock",symbol))
+            return [IntradayPoint(time=datetime(2026,9,28,9,30),price=5,volume=1,turnover=500)]
+        async def get_index_intraday(self,code):
+            self.calls.append(("index",code))
+            return [IntradayPoint(time=datetime(2026,9,28,9,30),price=3000,volume=1,turnover=500)]
         async def aclose(self): pass
+    class Tencent:
+        def __init__(self): self.calls=[]; self.failed=set()
         async def get_stock_intraday(self, symbol):
-            self.calls.append(("stock", symbol))
-            if ("stock", symbol) in self.failed:
-                raise ProviderTimeoutError("offline")
-            return await super().get_stock_intraday(symbol)
-        async def get_index_intraday(self, code="000001"):
-            self.calls.append(("index", code))
-            if ("index", code) in self.failed:
-                return []
-            return await super().get_index_intraday(code)
-    class Secondary:
-        def __init__(self): self.calls=[]
-        async def get_stock_intraday(self, symbol):
-            self.calls.append(("stock", symbol))
-            return [IntradayPoint(time=datetime(2026, 9, 28, 9, 30), price=5, volume=1, turnover=500, source="tencent")]
+            return await self.read("stock",symbol)
         async def get_index_intraday(self, code):
-            self.calls.append(("index", code))
-            return await self.get_stock_intraday(code)
+            return await self.read("index",code)
+        async def read(self,kind,code):
+            self.calls.append((kind,code))
+            if (kind,code) in self.failed:
+                if kind=="index": return []
+                raise ProviderTimeoutError("offline")
+            return [IntradayPoint(time=datetime(2026,9,28,9,30),price=5,volume=1,turnover=500,source="tencent")]
         async def aclose(self): pass
     async def run():
-        primary, secondary, timer = Primary(), Secondary(), Clock()
-        # Avoid FakeProvider's virtual index call counting as a stock source request.
-        async def stock_success(symbol):
-            primary.calls.append(("stock", symbol))
-            if ("stock", symbol) in primary.failed: raise ProviderTimeoutError("offline")
-            return [IntradayPoint(time=datetime(2026, 9, 28, 9, 30), price=5, volume=1, turnover=500)]
-        primary.get_stock_intraday = stock_success
-        provider = ResilientMarketProvider(primary, intraday=secondary, timer=timer)
+        eastmoney,tencent,timer=EastMoney(),Tencent(),Clock()
+        provider=ResilientMarketProvider(eastmoney,intraday=tencent,timer=timer)
         try:
-            assert (await provider.get_stock_intraday("600578"))[0].source == "eastmoney" and not secondary.calls
-            primary.failed.add(("stock", "600578"))
-            assert (await provider.get_stock_intraday("600578"))[0].source == "tencent"
-            count = len(primary.calls)
-            for seconds in (2, 4, 28):
-                timer.now = seconds
-                assert (await provider.get_stock_intraday("600578"))[0].source == "tencent"
-            assert len(primary.calls) == count
-            assert (await provider.get_stock_intraday("300750"))[0].source == "eastmoney"
-            assert (await provider.get_index_intraday("000001"))[0].source == "eastmoney"
-            primary.failed.add(("index", "000001"))
-            assert (await provider.get_index_intraday("000001"))[0].source == "tencent"
-            assert (await provider.get_stock_intraday("000001"))[0].source == "eastmoney"
-            primary.failed.clear(); timer.now = 31
-            assert (await provider.get_stock_intraday("600578"))[0].source == "eastmoney"
-        finally:
-            await provider.aclose()
+            assert (await provider.get_stock_intraday("600578"))[0].source=="tencent" and not eastmoney.calls
+            tencent.failed.add(("stock","600578"))
+            assert (await provider.get_stock_intraday("600578"))[0].source=="eastmoney"
+            count=len(tencent.calls)
+            for seconds in (2,4,28):
+                timer.now=seconds
+                assert (await provider.get_stock_intraday("600578"))[0].source=="eastmoney"
+            assert len(tencent.calls)==count
+            assert (await provider.get_stock_intraday("300750"))[0].source=="tencent"
+            assert (await provider.get_index_intraday("000001"))[0].source=="tencent"
+            tencent.failed.add(("index","000001"))
+            assert (await provider.get_index_intraday("000001"))[0].source=="eastmoney"
+            assert (await provider.get_stock_intraday("000001"))[0].source=="tencent"
+            tencent.failed.clear();timer.now=31
+            assert (await provider.get_stock_intraday("600578"))[0].source=="tencent"
+        finally: await provider.aclose()
+    asyncio.run(run())
+
+
+def test_both_empty_sources_are_failure_not_successful_empty():
+    class Empty(FakeProvider):
+        async def get_stock_intraday(self,symbol): return []
+        async def get_index_intraday(self,code): return []
+        async def aclose(self): pass
+    async def run():
+        provider=ResilientMarketProvider(Empty(),intraday=Empty())
+        try:
+            with pytest.raises(DataSourceError): await provider.get_stock_intraday("600578")
+            with pytest.raises(DataSourceError): await provider.get_index_intraday("000001")
+        finally: await provider.aclose()
+    asyncio.run(run())
+
+
+@pytest.mark.parametrize("status", [501, 503])
+def test_tencent_http_failure_uses_eastmoney_fallback(status):
+    class EastMoney(FakeProvider):
+        async def aclose(self): pass
+    async def run():
+        async with httpx.AsyncClient(transport=httpx.MockTransport(
+            lambda _: httpx.Response(status,text="unavailable"))) as client:
+            provider=ResilientMarketProvider(EastMoney(),intraday=TencentIntraday(client))
+            try:
+                stock=await provider.get_stock_intraday("600578")
+                index=await provider.get_index_intraday("000001")
+                assert stock and index
+                assert all(point.source=="eastmoney" for point in stock+index)
+            finally: await provider.aclose()
     asyncio.run(run())
 
 
@@ -163,7 +186,7 @@ def test_actual_provider_api_snapshot_restart_and_both_sources_failed(tmp_path):
         assert stock.status_code == index.status_code == 200
         saved = stock.json()
         assert not saved["stale"] and saved["data"][0]["source"] == "tencent"
-        assert "push2.eastmoney.com" in calls and "push2delay.eastmoney.com" in calls
+        assert calls == ["web.ifzq.gtimg.cn", "web.ifzq.gtimg.cn"]
         count = len(calls)
         assert client.get("/api/stocks/600578/intraday").json() == saved and len(calls) == count
         asyncio.run(first.aclose())
