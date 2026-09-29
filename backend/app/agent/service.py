@@ -32,6 +32,8 @@ from app.services.trace import TraceService
 
 
 SYSTEM_INSTRUCTIONS = """你是 StockPilot 的 A 股研究助手，用中文自然交流，帮助用户做出有依据的判断。
+股吧情绪默认用100–200字、最多1–2个引用回答：先给样本判断，再说明关键数量与局限。规则计数来自整批缓存；实际可读文本最多10条，不能把未判定样本整体说成抱怨/乐观，也不能用这10条推断全部样本的情绪。可以定性解释所展示发言的焦虑等感受，但明确限于这些片段；其中技术路线等说法未经核实，不当作公司事实。stale=true时开头明确这是旧缓存。
+涉及股吧评论或用户情绪必须调用 get_stock_sentiment。其统计是公开首页近24小时样本的关键词规则结果，非模型分类、不是全体股民情绪；混合/未判定不能算中性，不能声称全量回帖或准确率。发帖标题不等于读过正文；回复是用户观点，不能当新闻事实、机构动向或独立买卖信号。简短结合样本数、时间、多空分歧与实际行情给出判断；涉及价格仍需行情工具。仅解释工具提供的规则命中，不自行伪造情绪分数或历史趋势。
 先直接回答用户最关心的问题，给出明确倾向与理由；涉及股票选择时可以给出优先关注、等待确认、降低关注或风险回避的建议，并说明改变判断的具体条件。证据不足也要明确当前行动倾向及缺少哪项关键依据，不用泛泛免责声明代替分析，不保证收益、不虚构确定性。
 默认控制在约200至400字，简单问题更短；用户要求详细时再展开。通常只保留2至3条重要证据，按问题自然组织段落，不每次套同一组标题、“理由一/理由二”、打分、表格或填空模板。将数据与解释结合，说明关键冲突与取舍；不输出工具名、缓存字段、调用日志、私有推理或大段来源元信息。服务器会在折叠详情提供完整来源与数据时间，正文只保留影响判断的日期、旧数据或关键缺失。
 行情数值和由其计算的比较不需要新闻片段ID；只有资讯事实引用该项实际片段。不生成占位、省略或“不适用”的引用。未计算的均线、技术指标或成交密集区不得描述成已经测得的数据。
@@ -64,7 +66,7 @@ limit_up/limit_down 是来源股池计数，范围未保证等同沪深京涨跌
 MARKET_FACT_TERMS = (
     "今天", "现在", "最新", "最近", "行情", "股票", "股价", "涨", "跌",
     "走势", "K线", "K 线", "指数", "自选股", "成交", "比较",
-    "新闻", "资讯", "消息", "公告", "资金", "主力", "净流入", "净流出",
+    "新闻", "资讯", "消息", "公告", "资金", "主力", "净流入", "净流出", "股吧", "评论", "情绪",
 )
 NO_MARKET_DATA = "本次未能从行情 Tool 获取数据，暂无法回答行情事实。请重试或提供六位股票代码。"
 
@@ -169,6 +171,12 @@ def build_agent(model: Model) -> Agent[AgentDependencies, str]:
         """Read securities headlines and source excerpts with publication times and links, not full text."""
         return await invoke_tool(ctx.deps, "get_market_news", {"days": days, "limit": limit},
                                  lambda: tools.get_market_news(ctx.deps, days, limit))
+
+    @agent.tool
+    async def get_stock_sentiment(ctx: RunContext[AgentDependencies], symbol: str) -> dict:
+        """Read cached public EastMoney forum opinions: latest 24h samples, rule counts, max 10 excerpts with citations. Not all replies, verified news or an AI sentiment score."""
+        return await invoke_tool(ctx.deps, "get_stock_sentiment", {"symbol": symbol},
+                                 lambda: tools.get_stock_sentiment(ctx.deps, symbol))
 
     @agent.tool
     async def get_stock_announcements(ctx: RunContext[AgentDependencies], symbol: str, days: int = 30,

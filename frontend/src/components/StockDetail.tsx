@@ -11,6 +11,7 @@ import { CollectionStatus } from "./CollectionStatus";
 import { NewsPanel } from "./NewsPanel";
 import { AnnouncementPanel } from "./AnnouncementPanel";
 import { MoneyFlowPanel } from "./MoneyFlowPanel";
+import { SentimentPanel } from "./SentimentPanel";
 
 function exchange(symbol: string): string {
   if (symbol.startsWith("6")) return "上交所";
@@ -118,6 +119,7 @@ export function StockDetail({ code }: { code: string }) {
 
       <div className="stock-secondary stock-news-section">
         <MoneyFlowPanel key={`flows-${code}`} symbol={code} />
+        <SentimentPanel key={`sentiment-${code}`} symbol={code} />
         <NewsPanel key={code} symbol={code} />
         <AnnouncementPanel key={`announcements-${code}`} symbol={code} />
       </div>

@@ -36,6 +36,8 @@ from app.services.announcement_collector import AnnouncementCollector
 from app.services.money_flow import MoneyFlowService
 from app.services.money_flow_collector import MoneyFlowCollector
 from app.services.documents import DocumentService
+from app.services.sentiment import SentimentService, SentimentCollector
+from app.api.sentiment import router as sentiment_router
 
 
 def create_app(
@@ -54,6 +56,7 @@ def create_app(
         news_collector = None
         announcement_collector = None
         money_flow_collector = None
+        sentiment_collector = None
         try:
             init_db(engine)
             session_factory = create_session_factory(engine)
@@ -69,6 +72,8 @@ def create_app(
             application.state.announcement_service = announcements
             flows = MoneyFlowService(data_provider, session_factory, application.state.watchlist_service, background=enabled)
             application.state.money_flow_service = flows
+            sentiment = SentimentService(data_provider, session_factory, application.state.watchlist_service)
+            application.state.sentiment_service = sentiment
             application.state.document_service = DocumentService(session_factory)
             application.state.trace_service = TraceService(session_factory)
             reader = StockReadService(application.state.stock_service, application.state.watchlist_service, None)
@@ -83,6 +88,7 @@ def create_app(
                     announcements=announcements,
                     money_flow=flows,
                     documents=application.state.document_service,
+                    sentiment=sentiment,
                 ),
                 ChatService(session_factory),
                 application.state.trace_service,
@@ -103,10 +109,14 @@ def create_app(
                 money_flow_collector = MoneyFlowCollector(flows)
                 flows.collector = money_flow_collector
                 money_flow_collector.start()
+                sentiment_collector = SentimentCollector(sentiment)
+                sentiment_collector.start()
             application.state.watchlist_collector = collector
             reader.collector = collector
             yield
         finally:
+            if sentiment_collector is not None:
+                await sentiment_collector.stop()
             if money_flow_collector is not None:
                 await money_flow_collector.stop()
             if announcement_collector is not None:
@@ -115,7 +125,7 @@ def create_app(
                 await news_collector.stop()
             if collector is not None:
                 await collector.stop()
-            for name in ("stock_service", "market_service", "news_service", "announcement_service", "money_flow_service"):
+            for name in ("stock_service", "market_service", "news_service", "announcement_service", "money_flow_service", "sentiment_service"):
                 service = getattr(application.state, name, None)
                 if service is not None:
                     await service.aclose()
@@ -136,6 +146,7 @@ def create_app(
     application.include_router(news_router)
     application.include_router(announcement_router)
     application.include_router(money_flow_router)
+    application.include_router(sentiment_router)
     application.include_router(agent_router)
 
     @application.exception_handler(ProviderTimeoutError)

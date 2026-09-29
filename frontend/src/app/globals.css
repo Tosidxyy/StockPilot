@@ -251,3 +251,14 @@ a{color:inherit;text-decoration:none}
 .answer-sources h3{font-size:13px;color:#a5aeb9}
 .evidence-reference{display:inline;padding:0 4px;border:0;background:transparent;color:#929ca9;font-size:11px;vertical-align:super;cursor:pointer}
 .evidence-reference:hover{color:var(--blue)}
+/* Public forum samples retain the existing dark card and A-share colour scheme. */
+.sentiment-counts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin: 16px 0; }
+.sentiment-counts > div { display: flex; flex-direction: column; gap: 6px; padding: 12px; background: #141b26; border-radius: 8px; }
+.sentiment-counts strong { font-size: 24px; }
+.sentiment-counts span, .sentiment-counts small { color: #929ca9; font-size: 12px; }
+.sentiment-bullish strong { color: #ff596d; }
+.sentiment-bearish strong { color: #38d6a0; }
+.sentiment-method { margin: 12px 0; color: #929ca9; font-size: 12px; line-height: 1.7; }
+.sentiment-method summary { cursor: pointer; }
+.sentiment-card .news-list a { overflow-wrap: anywhere; }
+@media (max-width: 520px) { .sentiment-counts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

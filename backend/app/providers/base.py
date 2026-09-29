@@ -12,6 +12,9 @@ from app.models.breadth import MarketBreadth
 
 
 class MarketDataProvider(ABC):
+    async def get_stock_comments(self, symbol: str):
+        raise DataSourceError("Public forum samples are not supported by this provider")
+
     async def get_market_breadth(self) -> MarketBreadth:
         raise DataSourceError("Market breadth is not supported by this provider")
 

@@ -15,6 +15,9 @@ from app.providers.sina_intraday import SinaIntraday
 
 
 class ResilientMarketProvider(MarketDataProvider):
+    async def get_stock_comments(self, symbol: str):
+        return await self._primary.get_stock_comments(symbol)
+
     async def get_market_breadth(self):
         return await self._primary.get_market_breadth()
 

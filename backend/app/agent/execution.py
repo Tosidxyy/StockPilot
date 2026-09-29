@@ -11,7 +11,7 @@ TOOL_LIMIT = 12
 LABELS = {"get_stock_quote":"报价","get_stock_kline":"K线","get_market_indices":"市场指数",
     "get_market_breadth":"市场涨跌统计","get_stock_money_flow":"资金流","get_stock_news":"新闻",
     "get_market_news":"市场新闻","get_stock_announcements":"公告","get_watchlist":"自选股行情",
-    "search_stock_documents":"资料检索","get_watchlist_insights":"自选股资讯"}
+    "search_stock_documents":"资料检索","get_watchlist_insights":"自选股资讯","get_stock_sentiment":"股吧情绪"}
 
 
 async def invoke_tool(deps,name,inputs,call):
@@ -70,6 +70,9 @@ def data_notes(outcomes):
         label = (symbol + " " if isinstance(symbol, str) and re.fullmatch(r"[03468][0-9]{5}", symbol) else "") + LABELS.get(name,"数据")
         if r.get("available") is False:
             note=label.strip()+"：本次不可用，未取得本项数据。"
+        elif name == "get_stock_sentiment":
+            note = label.strip() + f"：东方财富股吧，{'旧缓存' if r.get('stale') else '缓存读取'}；保存 {beijing_time(r.get('cached_at'))}（北京时间）；样本 {r['sample_count']} 条，发帖标题 {r['post_count']} 条、回复 {r['reply_count']} 条；发言时间 {beijing_time(r.get('sample_start'))} 至 {beijing_time(r.get('sample_end'))}；关键词规则，不代表全体投资者或买卖信号。"
+            if r.get("partial"): note += " 部分样本无法解析。"
         elif name in ("get_stock_news","get_market_news","get_stock_announcements","search_stock_documents","get_watchlist_insights"):
             states = r.get("source_states", {})
             if not states and name == "get_watchlist_insights":

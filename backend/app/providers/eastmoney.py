@@ -13,6 +13,7 @@ from app.providers.news import EastMoneyNews
 from app.providers.announcements import EastMoneyAnnouncements
 from app.providers.money_flow import EastMoneyFlows
 from app.providers.breadth import EastMoneyBreadth
+from app.providers.comments import EastMoneyComments
 
 _QUOTE_ENDPOINTS = (
     "https://push2.eastmoney.com/api/qt/ulist.np/get",
@@ -63,6 +64,10 @@ def _integer(value: Any, *, required: bool = False) -> int | None:
 
 
 class EastMoneyProvider(MarketDataProvider):
+    async def get_stock_comments(self, symbol: str):
+        to_secid(symbol)
+        return await EastMoneyComments(self._client).collect(symbol)
+
     async def get_market_breadth(self):
         return await EastMoneyBreadth(self._client).collect()
 

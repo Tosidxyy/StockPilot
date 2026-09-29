@@ -59,7 +59,7 @@ def finalize_documents(answer, searches, message, *, allow_without_evidence=Fals
         if parsed.scheme not in ("http", "https") or not parsed.netloc or any(c in url for c in "\n\r<>\" "):
             return INVALID_CITATIONS
         url = url.replace("(", "%28").replace(")", "%29")
-        status = "标题/来源片段，非全文" if item["kind"] == "news" else "仅元信息" if not item["body_available"] else "提取文本片段（"+item["text_status"]+"）"
+        status = ("用户回复片段" if item["body_available"] else "用户发帖标题，非正文") if item["kind"] == "comment" else "标题/来源片段，非全文" if item["kind"] == "news" else "仅元信息" if not item["body_available"] else "提取文本片段（"+item["text_status"]+"）"
         status += "，旧缓存/旧正文" if item["text_stale"] else ""
         sources.append(f"- [{identifier}] [{safe_label(item['title'])}]({url}) · {safe_label(item['source'])} · {item['date']} · 文档 {safe_label(item['document_id'])} · {status}")
     return answer + "\n\n### 证据来源\n\n" + "\n".join(sources) + "\n\n引用已核对片段与来源对应；解读有疑问时可查看原文。"
