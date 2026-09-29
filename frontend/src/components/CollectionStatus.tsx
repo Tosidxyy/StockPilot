@@ -19,7 +19,7 @@ export function CollectionStatus({ status, retry, busy }: {
       const item = status.resources[resource];
       return <div key={resource}><strong>{labels[resource]}</strong><CollectionBadge state={item.state} />
         <small>{item.cached_at ? cachedTime(item.cached_at).replace(/^\s*·\s*/, "") : "暂无成功缓存"}</small>
-        {item.source && <small>来源：{item.source === "tencent" ? "腾讯财经" : "东方财富"}</small>}
+        {item.source && <small>来源：{item.source === "tencent" ? "腾讯财经" : item.source === "sina" ? "新浪财经" : "东方财富"}</small>}
       </div>;
     })}</div>
   </section>;

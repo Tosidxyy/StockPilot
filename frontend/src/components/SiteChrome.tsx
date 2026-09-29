@@ -60,6 +60,11 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
           <StockSearch />
           <div className="top-actions"><span className="chip">A 股行情</span><span className="chip subtle">数据以接口为准</span></div>
         </header>
+        <nav className="mobile-nav" aria-label="手机导航">
+          <Link href="/" aria-current={overviewActive ? "page" : undefined} onClick={(event) => { if (pathname === "/" && hash) { event.preventDefault(); window.location.hash = ""; } }}>市场概览</Link>
+          <Link href="/#watchlist" aria-current={watchlistActive ? "page" : undefined} onClick={(event) => { if (pathname === "/") { event.preventDefault(); window.location.hash = "watchlist"; } }}>自选股</Link>
+          <Link href="/agent" aria-current={pathname === "/agent" ? "page" : undefined}>AI Agent</Link>
+        </nav>
         {children}
       </div>
     </div>
