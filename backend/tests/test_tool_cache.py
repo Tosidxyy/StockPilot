@@ -161,7 +161,7 @@ def test_tools_use_persistent_cache_after_restart_and_reject_expired_snapshots(t
             assert (await get_stock_quote(deps, "600519"))["stale"]
             with sessions.begin() as session:
                 for row in session.scalars(select(MarketSnapshot)):
-                    row.saved_at = datetime.now(timezone.utc) - timedelta(days=8)
+                    row.saved_at = datetime.now(timezone.utc) - timedelta(days=15)
             with pytest.raises(DataSourceError):
                 await get_stock_quote(deps, "600519")
             assert offline.quote_batches == [("600519",)]

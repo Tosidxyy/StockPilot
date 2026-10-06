@@ -2,6 +2,7 @@ import asyncio
 from datetime import datetime, timedelta, timezone
 
 from fastapi.testclient import TestClient
+from sqlalchemy import select
 
 from app.database.models import MarketSnapshot
 from app.database.session import create_database_engine, create_session_factory, init_db
@@ -53,6 +54,34 @@ def test_market_snapshots_survive_restart_and_are_replaced_by_live_data(tmp_path
         assert recovered["cached_at"] > saved[paths[0]]["cached_at"]
 
 
+def test_old_market_snapshots_survive_long_holiday_and_keep_original_time(tmp_path):
+    url = f"sqlite:///{(tmp_path / 'holiday-restart.db').as_posix()}"
+    paths = ["/api/stocks/300750/quote", "/api/stocks/300750/intraday",
+             "/api/market/indices"]
+    with TestClient(create_app(provider=FakeProvider(), database_url=url, prefetch_enabled=False)) as client:
+        saved = {path: client.get(path).json()["data"] for path in paths}
+
+    engine = create_database_engine(url)
+    sessions = create_session_factory(engine)
+    original_time = datetime.now(timezone.utc) - timedelta(days=8)
+    with sessions.begin() as session:
+        for row in session.scalars(select(MarketSnapshot)):
+            row.saved_at = original_time
+    engine.dispose()
+
+    offline = FakeProvider()
+    offline.error = DataSourceError("offline")
+    with TestClient(create_app(provider=offline, database_url=url, prefetch_enabled=False)) as client:
+        for path in paths:
+            response = client.get(path)
+            assert response.status_code == 200
+            payload = response.json()
+            assert payload["stale"] is True
+            assert payload["data"] == saved[path]
+            assert datetime.fromisoformat(payload["cached_at"]) == original_time
+        assert client.get("/api/stocks/600519/quote").status_code == 503
+
+
 def test_snapshot_age_validation_capacity_and_empty_results(tmp_path):
     async def run():
         engine = create_database_engine(f"sqlite:///{(tmp_path / 'snapshots.db').as_posix()}")
@@ -75,7 +104,9 @@ def test_snapshot_age_validation_capacity_and_empty_results(tmp_path):
             with sessions.begin() as session:
                 session.get(MarketSnapshot, ("test", '"b"')).payload = [{"invalid": True}]
             assert await store.read("b") is None
-            now += timedelta(days=7, seconds=1)
+            now += timedelta(days=8)
+            assert (await store.read("c"))[1] == before[1]
+            now += timedelta(days=6, seconds=1)
             assert await store.read("c") is None
             await store.save("d", data)
             with sessions() as session:

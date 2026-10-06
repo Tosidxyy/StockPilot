@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 class SnapshotStore(Generic[T]):
     def __init__(self, sessions: sessionmaker[Session], namespace: str, schema: object,
-                 *, maxsize: int = 256, max_age: timedelta = timedelta(days=7),
+                 *, maxsize: int = 256, max_age: timedelta = timedelta(days=14),
                  clock: Callable[[], datetime] = utc_now):
         self._sessions = sessions
         self._namespace = namespace

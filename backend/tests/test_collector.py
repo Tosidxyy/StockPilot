@@ -63,6 +63,43 @@ def test_session_heuristic(weekday, hour, minute, active):
     assert is_market_session(datetime(2026, 9, weekday, hour, minute, tzinfo=BEIJING)) is active
 
 
+@pytest.mark.parametrize("month,day,active", [
+    (1, 1, False), (2, 23, False), (4, 6, False), (5, 4, False),
+    (6, 19, False), (9, 25, False), (9, 30, True),
+    (10, 1, False), (10, 6, False), (10, 7, False), (10, 8, True),
+])
+def test_published_2026_exchange_closures(month, day, active):
+    assert is_market_session(datetime(2026, month, day, 10, tzinfo=BEIJING)) is active
+
+
+def test_holiday_collector_slows_and_reopening_restores_two_second_target(tmp_path):
+    async def run():
+        clock = Clock()
+        wall = [datetime(2026, 10, 6, 10, tzinfo=BEIJING)]
+        engine, _, provider, stocks, watch, collector = setup(tmp_path, clock=clock, wall=lambda: wall[0])
+        watch.add("600519")
+        try:
+            assert collector.interval("quote") == 300
+            await settle(collector)
+            assert len(provider.quote_batches) == len(provider.intraday) == 1
+            clock.now = 2
+            await settle(collector)
+            assert len(provider.quote_batches) == len(provider.intraday) == 1
+            clock.now = 300
+            await settle(collector)
+            assert len(provider.quote_batches) == len(provider.intraday) == 2
+            wall[0] = datetime(2026, 10, 8, 9, 15, tzinfo=BEIJING)
+            assert collector.interval("quote") == 2
+            clock.now = 302
+            await settle(collector)
+            assert len(provider.quote_batches) == len(provider.intraday) == 3
+        finally:
+            await collector.stop()
+            await stocks.aclose()
+            engine.dispose()
+    asyncio.run(run())
+
+
 def test_unopened_stocks_warm_all_snapshots_and_restart_offline(tmp_path):
     async def run():
         engine, sessions, provider, stocks, watch, collector = setup(tmp_path)

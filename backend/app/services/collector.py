@@ -3,7 +3,7 @@
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
-from datetime import datetime, time, timedelta, timezone
+from datetime import date, datetime, time, timedelta, timezone
 from dataclasses import dataclass
 from time import monotonic
 
@@ -16,6 +16,21 @@ from app.services.watchlist import WatchlistService
 
 logger = logging.getLogger(__name__)
 BEIJING = timezone(timedelta(hours=8))
+# SSE 2026 A-share closure notice (2025-12-22, SSE announcement 45).
+# Other years retain the weekday heuristic until their schedules are published.
+MARKET_CLOSURES_2026 = frozenset(
+    date(2026, month, day)
+    for month, days in (
+        (1, (1, 2, 3)),
+        (2, tuple(range(15, 24))),
+        (4, (4, 5, 6)),
+        (5, (1, 2, 3, 4, 5)),
+        (6, (19, 20, 21)),
+        (9, (25, 26, 27)),
+        (10, tuple(range(1, 8))),
+    )
+    for day in days
+)
 JobKey = tuple[str, str | tuple[str, ...]]
 
 
@@ -28,9 +43,9 @@ class CollectionAttempt:
 
 
 def is_market_session(now: datetime) -> bool:
-    """Weekday session heuristic; this does not include a holiday calendar."""
+    """A-share session hours with published 2026 exchange closures."""
     local = now.astimezone(BEIJING)
-    return local.weekday() < 5 and (
+    return local.weekday() < 5 and local.date() not in MARKET_CLOSURES_2026 and (
         time(9, 15) <= local.time() < time(11, 30)
         or time(13) <= local.time() < time(15, 5)
     )
