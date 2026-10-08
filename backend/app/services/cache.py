@@ -56,6 +56,7 @@ class AsyncTTLStore(Generic[T]):
         )
         self._timer = timer or monotonic
         self._ttl = ttl
+        self._restored = TTLCache(maxsize=maxsize, ttl=stale_ttl, **kwargs)
         self._pending: dict[Hashable, asyncio.Task[CachedResult[T]]] = {}
 
     def _known_failure(self, matches: Callable[[object], bool], saved_at: datetime) -> bool:
@@ -84,8 +85,9 @@ class AsyncTTLStore(Generic[T]):
             saved_at = self._saved_at.get(candidate)
             if data and saved_at is not None and match(candidate) and (accepts is None or accepts(data)):
                 if newest is None or saved_at >= newest.cached_at:
-                    newest = CachedResult(data, stale=candidate not in self._fresh
-                                          or self._known_failure(match, saved_at), cached_at=saved_at)
+                    stale = candidate not in self._fresh and (candidate not in self._restored or
+                        (utc_now() - saved_at).total_seconds() >= self._ttl)
+                    newest = CachedResult(data, stale=stale or self._known_failure(match, saved_at), cached_at=saved_at)
         return CachedResult(deepcopy(newest.data), stale=newest.stale, cached_at=newest.cached_at) if newest else None
 
     async def aclose(self) -> None:
@@ -96,23 +98,32 @@ class AsyncTTLStore(Generic[T]):
         await asyncio.gather(*tasks, return_exceptions=True)
         self._pending.clear()
 
-    async def peek_all(self, matches: Callable[[object], bool]) -> list[tuple[object, CachedResult[T]]]:
+    async def peek_all(self, matches: Callable[[object], bool], *, prefer_memory: bool = False,
+                       project: Callable[[T], object] | None = None) -> list[tuple[object, CachedResult]]:
         """Read covering snapshots without refreshing timestamps or invoking loaders."""
         results = {}
-        if self._snapshots is not None:
-            for key, data, saved_at in await self._snapshots.read_all(matches):
-                results[json.dumps(key)] = (key, CachedResult(
-                    data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl or self._known_failure(
-                        lambda candidate: json.dumps(candidate) == json.dumps(key), saved_at), cached_at=saved_at,
-                ))
         for key, data in list(self._stale.items()):
             saved_at = self._saved_at.get(key)
             if data and saved_at is not None and matches(key):
                 encoded = json.dumps(key)
+                stale = key not in self._fresh and (key not in self._restored or
+                    (utc_now() - saved_at).total_seconds() >= self._ttl)
+                results[encoded] = (key, CachedResult(project(data) if project else data,
+                    stale=stale or self._known_failure(lambda candidate: json.dumps(candidate) == encoded, saved_at),
+                    cached_at=saved_at))
+        if self._snapshots is not None and (not prefer_memory or not results):
+            for key, data, saved_at in await self._snapshots.read_all(matches):
+                encoded = json.dumps(key)
                 previous = results.get(encoded)
-                if previous is None or saved_at >= previous[1].cached_at:
-                    results[encoded] = (key, CachedResult(data, stale=key not in self._fresh or self._known_failure(
-                        lambda candidate: json.dumps(candidate) == encoded, saved_at), cached_at=saved_at))
+                if previous is None or saved_at > previous[1].cached_at:
+                    results[encoded] = (key, CachedResult(project(data) if project else data,
+                        stale=(utc_now() - saved_at).total_seconds() >= self._ttl or self._known_failure(
+                            lambda candidate: json.dumps(candidate) == encoded, saved_at), cached_at=saved_at))
+                if prefer_memory:
+                    normalized = tuple(key) if isinstance(key, list) else key
+                    self._stale[normalized] = data
+                    self._saved_at[normalized] = saved_at
+                    self._restored[normalized] = True
         return deepcopy(list(results.values()))
 
     async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]], *, revalidate: bool = False) -> CachedResult[T]:
@@ -165,6 +176,7 @@ class AsyncTTLStore(Generic[T]):
                 return fallback
             raise
         self._failures.pop(key, None)
+        self._restored.pop(key, None)
         saved_at = utc_now()
         if self._snapshots is not None:
             saved_at = await self._snapshots.save(key, data) or saved_at

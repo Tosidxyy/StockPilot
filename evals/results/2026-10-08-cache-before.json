@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-08T05:51:35.560790+00:00",
+  "mode": "Controlled synthetic cached data, single-process ASGI requests; no source/model calls during measurement.",
+  "watchlist_count": 40,
+  "intraday_points": 300,
+  "kline_points_per_period": 120,
+  "source_calls_during_measurement": 0,
+  "source_sha256": {
+    "evals\\benchmark_cache.py": "7b7fd44487f73a7dd16b4d1c83cfd6b41c399741e4b143b532a6acf9075d441a",
+    "backend\\app\\services\\cache.py": "e62443eb047cb3d2b87a31c4e71a366d9ff7034b1da398ad7ec32355fc2f3128",
+    "backend\\app\\services\\stock.py": "faf9b36b1805b4e6b2ef81ce3b66ee68336f936a8ea1d1832bc8428fcf9c8ac5"
+  },
+  "results": {
+    "/api/watchlist/status": {
+      "iterations": 20,
+      "median_ms": 487.812,
+      "p95_ms": 549.964,
+      "sql_statements": 80
+    },
+    "/api/watchlist/quotes": {
+      "iterations": 20,
+      "median_ms": 6.993,
+      "p95_ms": 7.994,
+      "sql_statements": 60
+    },
+    "/api/stocks/600001/intraday": {
+      "iterations": 20,
+      "median_ms": 8.761,
+      "p95_ms": 11.386,
+      "sql_statements": 40
+    }
+  }
+}

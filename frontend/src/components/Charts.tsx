@@ -15,7 +15,7 @@ function ChartFrame({ option, label, className = "" }: { option: EChartsOption; 
   useEffect(() => {
     let disposed = false;
     let observer: ResizeObserver | null = null;
-    void import("echarts").then((echarts) => {
+    void import("../lib/chart-engine").then((echarts) => {
       if (disposed || !element.current) return;
       const instance = echarts.init(element.current, undefined, { renderer: "canvas" });
       chart.current = instance;

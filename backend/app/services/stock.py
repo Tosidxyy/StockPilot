@@ -2,6 +2,7 @@
 
 from collections.abc import Callable, Sequence
 from typing import Literal
+from dataclasses import dataclass
 from sqlalchemy.orm import Session, sessionmaker
 
 from app.models.market import IntradayPoint, KlineItem, StockQuote, SymbolSearchResult
@@ -9,6 +10,15 @@ from app.providers.base import MarketDataProvider
 from app.services.cache import AsyncTTLStore, CachedResult
 from app.services.snapshots import SnapshotStore
 from app.providers.exceptions import DataSourceError
+
+
+@dataclass(frozen=True)
+class SeriesMetadata:
+    source: str
+
+
+def series_metadata(data):
+    return [SeriesMetadata(data[-1].source)] if data else []
 
 
 class StockService:
@@ -112,15 +122,30 @@ class StockService:
         ))
         return CachedResult(cached.data[-limit:], stale=cached.stale, cached_at=cached.cached_at) if cached else None
 
-    async def cached_resources(self, symbols: Sequence[str]) -> dict[tuple[str, str], CachedResult]:
+    async def cached_resources(self, symbols: Sequence[str], *, metadata_only: bool = False) -> dict[tuple[str, str], CachedResult]:
         wanted = set(symbols)
         result = {(symbol, "quote"): value for symbol, value in (await self.cached_quotes(symbols)).items()}
-        for key, cached in await self._intraday.peek_all(lambda key: isinstance(key, str) and key in wanted):
+        project = series_metadata if metadata_only else None
+        intraday = await self._intraday.peek_all(lambda key: isinstance(key, str) and key in wanted,
+                                               prefer_memory=metadata_only, project=project)
+        missing = wanted - {key for key, _ in intraday}
+        if metadata_only and missing:
+            intraday.extend(await self._intraday.peek_all(lambda key: isinstance(key, str) and key in missing,
+                                                         prefer_memory=True, project=project))
+        for key, cached in intraday:
             result[(key, "intraday")] = cached
-        for key, cached in await self._klines.peek_all(lambda key: (
+        def matches(key):
+            return (
             isinstance(key, (tuple, list)) and len(key) == 3 and key[0] in wanted
             and key[1] in ("daily", "weekly") and isinstance(key[2], int) and key[2] >= 120
-        )):
+            )
+        klines = await self._klines.peek_all(matches, prefer_memory=metadata_only, project=project)
+        missing = {(symbol, period) for symbol in wanted for period in ("daily", "weekly")} - {
+            (key[0], key[1]) for key, _ in klines}
+        if metadata_only and missing:
+            klines.extend(await self._klines.peek_all(lambda key: matches(key) and (key[0], key[1]) in missing,
+                                                     prefer_memory=True, project=project))
+        for key, cached in klines:
             identity = (key[0], key[1])
             previous = result.get(identity)
             if previous is None or cached.cached_at > previous.cached_at:

@@ -93,7 +93,7 @@ class StockReadService:
 
     async def overview(self) -> CollectionOverview:
         symbols = await self.symbols()
-        cached = await self.stocks.cached_resources(symbols) if symbols else {}
+        cached = await self.stocks.cached_resources(symbols, metadata_only=True) if symbols else {}
         items = []
         for symbol in symbols:
             resources = {resource: self.resource_status(symbol, resource, cached.get((symbol, resource)))

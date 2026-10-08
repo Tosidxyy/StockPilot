@@ -1,0 +1,16 @@
+{
+  "mode": "Same synthetic 40-stock cached benchmark; no source/model calls. Raw JS bytes, not gzip transfer or full-page network timing.",
+  "status_p95_before_ms": 549.964,
+  "status_p95_after_ms": 16.097,
+  "status_p95_reduction_percent": 97.07,
+  "status_sql_per_request_before": 4.0,
+  "status_sql_per_request_after": 2.0,
+  "chart_chunk_before_bytes": 1142050,
+  "chart_chunk_after_bytes": 580974,
+  "chart_raw_byte_reduction_percent": 49.13,
+  "redis_decision": "Evaluated; not installed or required in this release. Dominant cost was copying full series for metadata; hot APIs are now below 20ms in this controlled test. Shared cache remains optional future work.",
+  "source_sha256": {
+    "frontend\\src\\lib\\chart-engine.ts": "69508b54eeba6e326caa33336040f7049ee6885f9476bfdacd196170d922888f",
+    "frontend\\src\\components\\Charts.tsx": "46eec3b49f9d0369c55035ee6dd277e0dbd3b86b8ec8b24e66627a17940394f1"
+  }
+}
