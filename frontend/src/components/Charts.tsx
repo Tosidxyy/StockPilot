@@ -65,6 +65,25 @@ export function MarketLineChart({ points, name }: { points: IntradayPoint[]; nam
   return <ChartFrame option={option} label={`${name}分时走势图`} />;
 }
 
+export function SentimentPieChart({ counts }: { counts: Record<"positive" | "negative" | "neutral", number> }) {
+  const total = counts.positive + counts.negative + counts.neutral;
+  const option = useMemo<EChartsOption>(() => ({
+    animation: false,
+    tooltip: { trigger: "item", backgroundColor: "#151a22", borderColor: gridColor,
+      textStyle: { color: "#edf2f7" }, formatter: "{b}：{c} 条（{d}%）" },
+    series: [{ type: "pie", radius: "76%", center: ["50%", "50%"],
+      label: { show: false }, labelLine: { show: false },
+      data: [
+        { name: "积极", value: counts.positive, itemStyle: { color: "#ff596d" } },
+        { name: "消极", value: counts.negative, itemStyle: { color: "#38d6a0" } },
+        { name: "中立", value: counts.neutral, itemStyle: { color: "#929ca9" } },
+      ],
+    }],
+  }), [counts]);
+  return <ChartFrame option={option} className="sentiment-pie"
+    label={`股民情绪占比饼图，积极${counts.positive}条，消极${counts.negative}条，中立${counts.neutral}条，共${total}条`} />;
+}
+
 export function KlineChart({ items }: { items: KlineItem[] }) {
   const option = useMemo<EChartsOption>(() => ({
     animation: false,

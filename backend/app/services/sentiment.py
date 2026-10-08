@@ -34,7 +34,8 @@ def classify(text):
 def summarize(symbol, items, *, partial=False):
     unique, duplicates = {}, 0
     for item in sorted(items, key=lambda item: (item.published_at, item.id), reverse=True):
-        normalized = "".join(c for c in item.text if not c.isspace() and not unicodedata.category(c).startswith("P"))
+        # Full-width variants deduplicate, but a question and an assertion differ.
+        normalized = "".join(c for c in unicodedata.normalize("NFKC", item.text) if not c.isspace())
         if normalized in unique: duplicates += 1; continue
         unique[normalized] = item.model_copy(update={"sentiment": classify(item.text)})
     sample = list(unique.values())[:200]

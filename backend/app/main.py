@@ -37,6 +37,8 @@ from app.services.money_flow import MoneyFlowService
 from app.services.money_flow_collector import MoneyFlowCollector
 from app.services.documents import DocumentService
 from app.services.sentiment import SentimentService, SentimentCollector
+from app.services.sentiment_classifier import DeepSeekSentimentClassifier
+from app.services.sentiment_analysis import SentimentAnalysisService
 from app.api.sentiment import router as sentiment_router
 
 
@@ -74,6 +76,9 @@ def create_app(
             application.state.money_flow_service = flows
             sentiment = SentimentService(data_provider, session_factory, application.state.watchlist_service)
             application.state.sentiment_service = sentiment
+            application.state.sentiment_analysis_service = SentimentAnalysisService(
+                sentiment, session_factory, DeepSeekSentimentClassifier(get_settings()))
+            sentiment.analysis_service = application.state.sentiment_analysis_service
             application.state.document_service = DocumentService(session_factory)
             application.state.trace_service = TraceService(session_factory)
             reader = StockReadService(application.state.stock_service, application.state.watchlist_service, None)
@@ -115,6 +120,8 @@ def create_app(
             reader.collector = collector
             yield
         finally:
+            if hasattr(application.state, "sentiment_analysis_service"):
+                await application.state.sentiment_analysis_service.aclose()
             if sentiment_collector is not None:
                 await sentiment_collector.stop()
             if money_flow_collector is not None:

@@ -7,7 +7,7 @@ import type { CollectionState } from "./types";
 type Snapshot<T> = { path: string; data: T; stale: boolean; cachedAt: string | null; collectionState: CollectionState | null };
 type Failure = { path: string; message: string };
 
-export function useResource<T>(path: string | null, refreshMs = 0) {
+export function useResource<T>(path: string | null, refreshMs: number | ((data: T | null) => number) = 0) {
   const [snapshot, setSnapshot] = useState<Snapshot<T> | null>(null);
   const [failure, setFailure] = useState<Failure | null>(null);
   const [retryKey, setRetryKey] = useState(0);
@@ -16,12 +16,15 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
     if (!path) return;
     let active = true;
     let pending = false;
+    let latestData: T | null = null;
+    let timer: number | null = null;
     const controller = new AbortController();
     const load = async () => {
       if (pending) return;
       pending = true;
       try {
         const result = await getData<T>(path, controller.signal);
+        latestData = result.data;
         if (active) {
           setSnapshot((previous) => ({
             path,
@@ -40,10 +43,14 @@ export function useResource<T>(path: string | null, refreshMs = 0) {
         }
       } finally {
         pending = false;
+        if (active && typeof refreshMs === "function") {
+          const delay = refreshMs(latestData);
+          if (delay > 0) timer = window.setTimeout(() => void load(), delay);
+        }
       }
     };
     void load();
-    const timer = refreshMs > 0 ? window.setInterval(() => void load(), refreshMs) : null;
+    if (typeof refreshMs === "number" && refreshMs > 0) timer = window.setInterval(() => void load(), refreshMs);
     return () => {
       active = false;
       controller.abort();

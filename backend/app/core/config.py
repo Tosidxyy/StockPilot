@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     model_api_key: str = ""
     model_base_url: str = ""
     model_thinking_enabled: bool = True
+    sentiment_model_name: str = "deepseek-flash"
     database_url: str = "sqlite:///./stockpilot.db"
     market_data_provider: str = "eastmoney"
     watchlist_prefetch_enabled: bool = True

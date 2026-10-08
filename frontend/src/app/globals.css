@@ -261,6 +261,16 @@ a{color:inherit;text-decoration:none}
 .sentiment-method { margin: 12px 0; color: #929ca9; font-size: 12px; line-height: 1.7; }
 .sentiment-method summary { cursor: pointer; }
 .sentiment-card .news-list a { overflow-wrap: anywhere; }
+.sentiment-action { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 18px 0; }
+.sentiment-summary { display: grid; grid-template-columns: minmax(0, 1fr) minmax(140px, .6fr); align-items: center; gap: 16px; }
+.chart.sentiment-pie { height: 240px; min-height: 200px; }
+.sentiment-legend { display: grid; gap: 14px; }
+.sentiment-legend > div { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; font-size: 13px; }
+.sentiment-legend small { color: var(--muted); }
+.sentiment-positive strong { color: #ff596d; }
+.sentiment-negative strong { color: #38d6a0; }
+.sentiment-neutral strong { color: #929ca9; }
+@media (max-width: 520px) { .sentiment-summary { grid-template-columns: minmax(0, 1fr); } .sentiment-legend { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; } .sentiment-legend > div { flex-direction: column; gap: 6px; } }
 @media (max-width: 520px) { .sentiment-counts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 /* Consistent states, keyboard focus and constrained widths across V0.2 cards. */
 .resource-status { min-width: 0; }

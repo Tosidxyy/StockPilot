@@ -62,6 +62,25 @@ async def get_stock_sentiment(deps: AgentDependencies, symbol: str) -> dict:
     if deps.sentiment is None: raise DataSourceError("Forum sentiment is unavailable")
     result = await deps.sentiment.get(symbol, prefer_cached=True)
     data = result.data.model_dump(mode="json")
+    analysis_service = getattr(deps.sentiment, "analysis_service", None)
+    if analysis_service is not None:
+        view = await analysis_service.view(symbol)
+        analysis = view.result
+        data["classification_status"] = view.status
+        data["analysis"] = analysis.model_dump(mode="json") if analysis else None
+        data["counts"] = analysis.counts if analysis else {"positive": 0, "negative": 0, "neutral": 0}
+        data["classified_count"] = analysis.sample_count if analysis else 0
+        data["method"] = (f"用户手动触发 {analysis.model} 三类分类；统计截至{analysis.sample_end.isoformat()}。"
+                          if analysis else "用户尚未完成模型情绪统计，请在个股页面点击统计按钮；缺失分类不等于中立。")
+        if analysis:
+            data["current_raw_sample_count"] = data["sample_count"]
+            data["sample_count"] = analysis.sample_count
+            data["items"] = [item.model_dump(mode="json") for item in analysis.preview]
+            result = CachedResult(result.data, stale=result.stale or analysis.source_stale or
+                                  result.cached_at != analysis.source_cached_at, cached_at=analysis.source_cached_at)
+        else:
+            for item in data["items"]:
+                item["sentiment"] = None
     # Keep the tool context bounded, while counts refer to the full cached sample.
     data["items"] = data["items"][:10]
     evidence = []
