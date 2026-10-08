@@ -40,6 +40,45 @@ class CountingProvider(FakeProvider):
                 for day in range(1, 21)][-limit:]
 
 
+def test_tools_mark_recent_sqlite_snapshots_stale_after_known_refresh_failure(tmp_path):
+    async def run():
+        engine = create_database_engine(f"sqlite:///{(tmp_path / 'failed-refresh.db').as_posix()}")
+        init_db(engine)
+        sessions = create_session_factory(engine)
+        provider = CountingProvider()
+        clock = Clock()
+        stocks = StockService(provider, timer=clock, snapshot_sessions=sessions)
+        market = MarketService(provider, timer=clock, snapshot_sessions=sessions)
+        deps = AgentDependencies(stocks, market, WatchlistService(sessions))
+        try:
+            quotes = await stocks.get_quotes(["600519", "300750"])
+            history = await stocks.get_kline("600519", "daily", 120)
+            provider.error = DataSourceError("offline")
+            # A detail request fails, but its fallback came from a different batch key.
+            assert (await stocks.get_quote("600519")).stale
+            assert (await stocks.get_kline("600519", "daily", 120, revalidate=True)).stale
+            quote_calls, history_calls = len(provider.quote_batches), len(provider.periods)
+            quote = await get_stock_quote(deps, "600519")
+            kline = await get_stock_kline(deps, "600519", "daily", 5)
+            assert quote["stale"] and kline["stale"]
+            assert not (await get_stock_quote(deps, "300750"))["stale"]
+            assert quote["cached_at"] == quotes.cached_at.isoformat()
+            assert kline["cached_at"] == history.cached_at.isoformat()
+            assert len(provider.quote_batches) == quote_calls and len(provider.periods) == history_calls
+            # A new successful snapshot clears the old failure mark.
+            provider.error = None
+            clock.now = 2
+            await stocks.get_quotes(["600519", "300750"], revalidate=True)
+            await stocks.get_kline("600519", "daily", 120, revalidate=True)
+            assert not (await get_stock_quote(deps, "600519"))["stale"]
+            assert not (await get_stock_kline(deps, "600519", "daily", 5))["stale"]
+        finally:
+            await stocks.aclose()
+            await market.aclose()
+            engine.dispose()
+    asyncio.run(run())
+
+
 def test_tools_reuse_ui_batch_and_kline_cache_without_refreshing_age(tmp_path):
     async def run():
         engine = create_database_engine(f"sqlite:///{(tmp_path / 'memory.db').as_posix()}")

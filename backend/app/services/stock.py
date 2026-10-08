@@ -51,7 +51,8 @@ class StockService:
         for store in (self._quotes, self._intraday, self._klines, self._search):
             await store.aclose()
 
-    async def get_quotes(self, symbols: Sequence[str], *, prefer_cached: bool = False) -> CachedResult[list[StockQuote]]:
+    async def get_quotes(self, symbols: Sequence[str], *, prefer_cached: bool = False,
+                         revalidate: bool = False) -> CachedResult[list[StockQuote]]:
         unique = tuple(dict.fromkeys(symbols))
         if not unique:
             return CachedResult([])
@@ -62,7 +63,7 @@ class StockService:
                                     stale=any(cached[symbol].stale for symbol in unique),
                                     cached_at=min(cached[symbol].cached_at for symbol in unique))
         try:
-            return await self._quotes.get(unique, lambda: self._provider.get_quotes(unique))
+            return await self._quotes.get(unique, lambda: self._provider.get_quotes(unique), revalidate=revalidate)
         except DataSourceError:
             # A collector saves batches, while a detail page may request just one
             # symbol after restart. Preserve the newest covering successful rows.
@@ -78,14 +79,14 @@ class StockService:
 
     async def get_kline(
         self, symbol: str, period: Literal["daily", "weekly"] = "daily", limit: int = 120,
-        *, prefer_cached: bool = False,
+        *, prefer_cached: bool = False, revalidate: bool = False,
     ) -> CachedResult[list[KlineItem]]:
         if prefer_cached:
             cached = await self.cached_kline(symbol, period, limit)
             if cached is not None:
                 return CachedResult(cached.data[-limit:], stale=cached.stale, cached_at=cached.cached_at)
         return await self._klines.get(
-            (symbol, period, limit), lambda: self._provider.get_kline(symbol, period, limit)
+            (symbol, period, limit), lambda: self._provider.get_kline(symbol, period, limit), revalidate=revalidate
         )
 
     async def cached_quotes(self, symbols: Sequence[str]) -> dict[str, CachedResult[StockQuote]]:
@@ -98,7 +99,10 @@ class StockService:
             for quote in cached.data:
                 previous = result.get(quote.symbol)
                 if quote.symbol in wanted and (previous is None or cached.cached_at > previous.cached_at):
-                    result[quote.symbol] = CachedResult(quote, stale=cached.stale, cached_at=cached.cached_at)
+                    failed = self._quotes.failed_since(cached.cached_at, lambda key: (
+                        isinstance(key, (tuple, list)) and quote.symbol in key
+                    ))
+                    result[quote.symbol] = CachedResult(quote, stale=cached.stale or failed, cached_at=cached.cached_at)
         return result
 
     async def cached_kline(self, symbol: str, period: str, limit: int):
@@ -123,12 +127,13 @@ class StockService:
                 result[identity] = cached
         return result
 
-    async def get_intraday(self, symbol: str, *, prefer_cached: bool = False) -> CachedResult[list[IntradayPoint]]:
+    async def get_intraday(self, symbol: str, *, prefer_cached: bool = False,
+                           revalidate: bool = False) -> CachedResult[list[IntradayPoint]]:
         if prefer_cached:
             cached = await self.cached_intraday(symbol)
             if cached is not None:
                 return cached
-        return await self._intraday.get(symbol, lambda: self._provider.get_stock_intraday(symbol))
+        return await self._intraday.get(symbol, lambda: self._provider.get_stock_intraday(symbol), revalidate=revalidate)
 
     async def cached_intraday(self, symbol: str):
         return await self._intraday.peek(symbol)

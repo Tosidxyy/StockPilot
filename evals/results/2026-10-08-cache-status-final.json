@@ -1,0 +1,3240 @@
+{
+  "started_at": "2026-10-08T03:25:51.874177+00:00",
+  "beijing_date": "2026-10-08",
+  "market_session_at_start": true,
+  "duration_requested_seconds": 60,
+  "mode": "Real HTTP sources; isolated temporary SQLite; no detail reads during collection; no model calls.",
+  "limitations": [
+    "Bounded three-stock sample, not all user watchlist stocks or long-term stability.",
+    "Source timestamps and repeated prices do not prove a new trade every two seconds.",
+    "Offline restart below is controlled source failure, not a naturally observed outage."
+  ],
+  "source_sha256": {
+    "evals\\run_online.py": "a8c4ac0309b1c108d48c1ab6ac40c1ddc3ef202102a403dd1faecad357e4b1b2",
+    "backend\\app\\providers\\resilient.py": "b7626d89cc4668e85c11c55546275f6c0c208860e0d88832fbaefb795a7bbd39",
+    "backend\\app\\services\\collector.py": "9bbf7d54bd0d3b843b6841936590f9164ae88ff78bc3ad2926eea947e929fb1d",
+    "backend\\app\\services\\cache.py": "e62443eb047cb3d2b87a31c4e71a366d9ff7034b1da398ad7ec32355fc2f3128",
+    "backend\\app\\services\\stock.py": "faf9b36b1805b4e6b2ef81ce3b66ee68336f936a8ea1d1832bc8428fcf9c8ac5",
+    "backend\\app\\services\\snapshots.py": "957a6ebaa04d8b03e77af45ac813a2ab57b6814233098532c843868a23eb8527"
+  },
+  "initial_watchlist": [
+    "600519",
+    "300750",
+    "600578"
+  ],
+  "checkpoints": [
+    {
+      "elapsed_seconds": 30.217,
+      "market": [
+        {
+          "namespace": "stock_intraday",
+          "key": "300750",
+          "saved_at": "2026-10-08T03:26:21.570410"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "600578"
+          ],
+          "saved_at": "2026-10-08T03:26:21.118412"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600519",
+          "saved_at": "2026-10-08T03:26:21.285558"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600578",
+          "saved_at": "2026-10-08T03:26:21.402415"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T03:25:53.264859"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T03:25:53.309055"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T03:25:58.514446"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T03:25:59.354105"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T03:25:59.593752"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T03:25:59.770330"
+        }
+      ],
+      "news": [
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T03:25:52.747633"
+        },
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T03:25:52.840412"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T03:25:59.459095"
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T03:25:52.484276"
+        },
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T03:25:53.231536"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T03:25:59.289420"
+        }
+      ]
+    }
+  ],
+  "membership_change": {
+    "elapsed_seconds": 30.217,
+    "remove": "600578",
+    "add": "002414"
+  },
+  "collection_finished_at": "2026-10-08T03:26:51.882926+00:00",
+  "background_events": [
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.496,
+      "success": true,
+      "count": 7,
+      "source": "东方财富 · 公司公告",
+      "finished_seconds": 0.592,
+      "duration_seconds": 0.097
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.475,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 0.62,
+      "duration_seconds": 0.145
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.482,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 0.632,
+      "duration_seconds": 0.149
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.482,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 0.633,
+      "duration_seconds": 0.151
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 0.474,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:25:53+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:25:53+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:25:54+08:00",
+          "price": 288.52
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:25:53+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 0.64,
+      "duration_seconds": 0.166
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.474,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 0.652,
+      "duration_seconds": 0.177
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 0.476,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 0.668,
+      "duration_seconds": 0.192
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.482,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 0.831,
+      "duration_seconds": 0.349
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.482,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 0.842,
+      "duration_seconds": 0.36
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.497,
+      "success": true,
+      "count": 100,
+      "source": "证券时报网",
+      "finished_seconds": 0.873,
+      "duration_seconds": 0.377
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.496,
+      "success": true,
+      "count": 100,
+      "source": "证券时报网",
+      "finished_seconds": 0.905,
+      "duration_seconds": 0.409
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.497,
+      "success": true,
+      "count": 65,
+      "source": "东方财富 · 公司公告",
+      "finished_seconds": 1.237,
+      "duration_seconds": 0.74
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600519",
+        "weekly",
+        120
+      ],
+      "started_seconds": 0.475,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 1.391,
+      "duration_seconds": 0.916
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600519",
+        "daily",
+        120
+      ],
+      "started_seconds": 0.475,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 1.435,
+      "duration_seconds": 0.96
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 3.107,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:25:59+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:25:59+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:25:57+08:00",
+          "price": 288.44
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:25:59+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 4.304,
+      "duration_seconds": 1.197
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 3.108,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 4.501,
+      "duration_seconds": 1.393
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 3.156,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 5.212,
+      "duration_seconds": 2.056
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 3.701,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 5.265,
+      "duration_seconds": 1.564
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 3.19,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 5.673,
+      "duration_seconds": 2.484
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "300750",
+        "weekly",
+        120
+      ],
+      "started_seconds": 1.616,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 6.64,
+      "duration_seconds": 5.024
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 6.184,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:02+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:02+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:00+08:00",
+          "price": 288.47
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:02+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 7.308,
+      "duration_seconds": 1.125
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 6.184,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 7.317,
+      "duration_seconds": 1.133
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 7.054,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 7.356,
+      "duration_seconds": 0.302
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 7.321,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 7.366,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 4.745,
+      "success": true,
+      "count": 32,
+      "source": "东方财富 · 公司公告",
+      "finished_seconds": 7.374,
+      "duration_seconds": 2.63
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 7.417,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:02+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:02+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:00+08:00",
+          "price": 288.47
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:02+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 7.449,
+      "duration_seconds": 0.032
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 7.418,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 7.476,
+      "duration_seconds": 0.058
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "300750",
+        "daily",
+        120
+      ],
+      "started_seconds": 1.436,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 7.479,
+      "duration_seconds": 6.043
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 4.598,
+      "success": true,
+      "count": 100,
+      "source": "21世纪经济报道",
+      "finished_seconds": 7.584,
+      "duration_seconds": 2.986
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 3.315,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 7.675,
+      "duration_seconds": 4.36
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600578",
+        "daily",
+        120
+      ],
+      "started_seconds": 7.321,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 7.719,
+      "duration_seconds": 0.399
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600578",
+        "weekly",
+        120
+      ],
+      "started_seconds": 7.519,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 7.896,
+      "duration_seconds": 0.376
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 8.711,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 8.763,
+      "duration_seconds": 0.052
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 9.892,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 10.425,
+      "duration_seconds": 0.533
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 9.95,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:05+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:05+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:03+08:00",
+          "price": 288.47
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:05+08:00",
+          "price": 5.32
+        }
+      ],
+      "finished_seconds": 10.457,
+      "duration_seconds": 0.507
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 9.959,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 10.589,
+      "duration_seconds": 0.63
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 10.829,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 11.108,
+      "duration_seconds": 0.279
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 12.243,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:08+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:08+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:06+08:00",
+          "price": 288.46
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:08+08:00",
+          "price": 5.32
+        }
+      ],
+      "finished_seconds": 12.287,
+      "duration_seconds": 0.044
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 12.244,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 12.305,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 12.244,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 12.332,
+      "duration_seconds": 0.088
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 12.906,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 12.965,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 13.995,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:08+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:08+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:06+08:00",
+          "price": 288.46
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:08+08:00",
+          "price": 5.32
+        }
+      ],
+      "finished_seconds": 14.241,
+      "duration_seconds": 0.246
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 13.996,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 14.25,
+      "duration_seconds": 0.254
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 13.996,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 14.257,
+      "duration_seconds": 0.261
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 14.964,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 15.294,
+      "duration_seconds": 0.331
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 16.129,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:11+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:11+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:12+08:00",
+          "price": 288.46
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:11+08:00",
+          "price": 5.3
+        }
+      ],
+      "finished_seconds": 16.221,
+      "duration_seconds": 0.093
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 16.144,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 16.235,
+      "duration_seconds": 0.092
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 16.159,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 16.243,
+      "duration_seconds": 0.083
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 16.972,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 17.248,
+      "duration_seconds": 0.276
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 18.219,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:14+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:14+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:09+08:00",
+          "price": 288.39
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:14+08:00",
+          "price": 5.3
+        }
+      ],
+      "finished_seconds": 18.251,
+      "duration_seconds": 0.032
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 18.22,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 18.261,
+      "duration_seconds": 0.041
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 18.22,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 18.269,
+      "duration_seconds": 0.049
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 18.931,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 19.002,
+      "duration_seconds": 0.072
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 20.414,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:14+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:14+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:15+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:14+08:00",
+          "price": 5.3
+        }
+      ],
+      "finished_seconds": 20.518,
+      "duration_seconds": 0.104
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 20.415,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 20.526,
+      "duration_seconds": 0.111
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 20.414,
+      "success": true,
+      "count": 116,
+      "source": "sina",
+      "source_time": "2026-10-08T11:26:00",
+      "finished_seconds": 20.534,
+      "duration_seconds": 0.12
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 21.002,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 21.149,
+      "duration_seconds": 0.148
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 22.751,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:17+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:17+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:15+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:17+08:00",
+          "price": 5.3
+        }
+      ],
+      "finished_seconds": 23.354,
+      "duration_seconds": 0.603
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 22.751,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 23.443,
+      "duration_seconds": 0.692
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 22.771,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 23.582,
+      "duration_seconds": 0.811
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 23.11,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 24.141,
+      "duration_seconds": 1.031
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 24.924,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:20+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:20+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:18+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:20+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 25.561,
+      "duration_seconds": 0.637
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 24.924,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 25.644,
+      "duration_seconds": 0.719
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 24.982,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 26.047,
+      "duration_seconds": 1.065
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 25.283,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 26.36,
+      "duration_seconds": 1.077
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 26.76,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:23+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:23+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:21+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:23+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 27.146,
+      "duration_seconds": 0.386
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 26.768,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 27.226,
+      "duration_seconds": 0.458
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 26.822,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 27.338,
+      "duration_seconds": 0.516
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 27.338,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 27.651,
+      "duration_seconds": 0.313
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 28.872,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:23+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:23+08:00",
+          "price": 1255.0
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:24+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "600578",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:23+08:00",
+          "price": 5.31
+        }
+      ],
+      "finished_seconds": 29.229,
+      "duration_seconds": 0.357
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 28.886,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 29.37,
+      "duration_seconds": 0.484
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 28.887,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 29.528,
+      "duration_seconds": 0.641
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 29.491,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 29.696,
+      "duration_seconds": 0.205
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 31.349,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:27+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:26+08:00",
+          "price": 1254.96
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:27+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:27+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 32.336,
+      "duration_seconds": 0.987
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 31.508,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 32.345,
+      "duration_seconds": 0.836
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 31.365,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 33.005,
+      "duration_seconds": 1.64
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 31.141,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 34.037,
+      "duration_seconds": 2.896
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 30.685,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 34.89,
+      "duration_seconds": 4.205
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 34.038,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:30+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:29+08:00",
+          "price": 1255.01
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:30+08:00",
+          "price": 288.49
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:30+08:00",
+          "price": 11.2
+        }
+      ],
+      "finished_seconds": 35.601,
+      "duration_seconds": 1.563
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 34.062,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 35.876,
+      "duration_seconds": 1.814
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 35.108,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 36.419,
+      "duration_seconds": 1.312
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 32.781,
+      "success": true,
+      "count": 15,
+      "source": "东方财富 · 公司公告",
+      "finished_seconds": 37.442,
+      "duration_seconds": 4.661
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 36.786,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:33+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:32+08:00",
+          "price": 1255.31
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:30+08:00",
+          "price": 288.49
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:33+08:00",
+          "price": 11.2
+        }
+      ],
+      "finished_seconds": 37.877,
+      "duration_seconds": 1.091
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 32.077,
+      "success": true,
+      "count": 118,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 38.111,
+      "duration_seconds": 6.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 37.25,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 38.379,
+      "duration_seconds": 1.129
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 38.406,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 39.049,
+      "duration_seconds": 0.643
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 32.358,
+      "success": true,
+      "count": 100,
+      "source": "证券时报网",
+      "finished_seconds": 39.073,
+      "duration_seconds": 6.714
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 39.119,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:33+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:32+08:00",
+          "price": 1255.31
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:33+08:00",
+          "price": 288.48
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:33+08:00",
+          "price": 11.2
+        }
+      ],
+      "finished_seconds": 39.207,
+      "duration_seconds": 0.088
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 39.231,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 39.473,
+      "duration_seconds": 0.242
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 39.23,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 39.563,
+      "duration_seconds": 0.333
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "002414",
+        "weekly",
+        120
+      ],
+      "started_seconds": 31.471,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 39.568,
+      "duration_seconds": 8.096
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "002414",
+        "daily",
+        120
+      ],
+      "started_seconds": 31.426,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 39.628,
+      "duration_seconds": 8.202
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 39.98,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 40.025,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 41.18,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:36+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:35+08:00",
+          "price": 1255.02
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:36+08:00",
+          "price": 288.53
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:36+08:00",
+          "price": 11.2
+        }
+      ],
+      "finished_seconds": 41.321,
+      "duration_seconds": 0.141
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 41.321,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 41.717,
+      "duration_seconds": 0.396
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 41.399,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 41.835,
+      "duration_seconds": 0.437
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 41.982,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 42.172,
+      "duration_seconds": 0.19
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 43.35,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:39+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:38+08:00",
+          "price": 1255.02
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:36+08:00",
+          "price": 288.53
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:39+08:00",
+          "price": 11.2
+        }
+      ],
+      "finished_seconds": 43.954,
+      "duration_seconds": 0.604
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 43.822,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 44.524,
+      "duration_seconds": 0.701
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 43.862,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 44.833,
+      "duration_seconds": 0.971
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 44.609,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 44.928,
+      "duration_seconds": 0.319
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 45.429,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:39+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:41+08:00",
+          "price": 1255.02
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:39+08:00",
+          "price": 288.52
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:39+08:00",
+          "price": 11.2
+        }
+      ],
+      "finished_seconds": 45.725,
+      "duration_seconds": 0.295
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 45.725,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 46.328,
+      "duration_seconds": 0.603
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 45.784,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 46.376,
+      "duration_seconds": 0.593
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 46.474,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 46.592,
+      "duration_seconds": 0.119
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 47.653,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:42+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:41+08:00",
+          "price": 1255.02
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:42+08:00",
+          "price": 288.5
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:42+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 47.838,
+      "duration_seconds": 0.185
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 47.748,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 47.956,
+      "duration_seconds": 0.208
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 47.748,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 48.022,
+      "duration_seconds": 0.274
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 48.364,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 48.723,
+      "duration_seconds": 0.359
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 49.64,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:42+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:44+08:00",
+          "price": 1254.91
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:42+08:00",
+          "price": 288.5
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:42+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 49.755,
+      "duration_seconds": 0.115
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 49.755,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 50.049,
+      "duration_seconds": 0.294
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 49.785,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 50.118,
+      "duration_seconds": 0.333
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 50.338,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 50.398,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 51.676,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:45+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:47+08:00",
+          "price": 1254.91
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:45+08:00",
+          "price": 288.5
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:45+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 51.847,
+      "duration_seconds": 0.171
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 51.848,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 52.025,
+      "duration_seconds": 0.177
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 51.848,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 52.032,
+      "duration_seconds": 0.184
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 52.456,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 52.514,
+      "duration_seconds": 0.058
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 53.803,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:48+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:47+08:00",
+          "price": 1254.91
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:45+08:00",
+          "price": 288.5
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:48+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 53.97,
+      "duration_seconds": 0.167
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 53.886,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 53.979,
+      "duration_seconds": 0.092
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 53.887,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 53.986,
+      "duration_seconds": 0.099
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 54.533,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 54.723,
+      "duration_seconds": 0.19
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 55.786,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:51+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:50+08:00",
+          "price": 1254.91
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:51+08:00",
+          "price": 288.54
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:51+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 55.884,
+      "duration_seconds": 0.098
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 55.929,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 56.033,
+      "duration_seconds": 0.104
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 55.9,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 56.04,
+      "duration_seconds": 0.141
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 56.703,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 57.017,
+      "duration_seconds": 0.314
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 57.956,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T11:26:54+08:00",
+      "quotes": [
+        {
+          "symbol": "600519",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:53+08:00",
+          "price": 1253.89
+        },
+        {
+          "symbol": "300750",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:51+08:00",
+          "price": 288.54
+        },
+        {
+          "symbol": "002414",
+          "source": "tencent",
+          "as_of": "2026-10-08T11:26:54+08:00",
+          "price": 11.21
+        }
+      ],
+      "finished_seconds": 58.219,
+      "duration_seconds": 0.263
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 57.956,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 58.349,
+      "duration_seconds": 0.393
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 57.969,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 58.534,
+      "duration_seconds": 0.565
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 58.81,
+      "success": true,
+      "count": 117,
+      "source": "sina",
+      "source_time": "2026-10-08T11:27:00",
+      "finished_seconds": 59.079,
+      "duration_seconds": 0.268
+    }
+  ],
+  "background_summary": {
+    "get_stock_announcements:[\"600519\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_intraday:[\"300750\"]": {
+      "attempts": 25,
+      "successes": 25,
+      "failures": 0,
+      "median_success_gap_seconds": 2.144,
+      "max_success_gap_seconds": 8.415,
+      "last_source_time": "2026-10-08T11:27:00"
+    },
+    "get_stock_comments:[\"600519\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_comments:[\"300750\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_quotes:[[\"600519\", \"300750\", \"600578\"]]": {
+      "attempts": 14,
+      "successes": 14,
+      "failures": 0,
+      "median_success_gap_seconds": 2.083,
+      "max_success_gap_seconds": 3.664,
+      "last_source_time": "2026-10-08T11:26:23+08:00"
+    },
+    "get_stock_intraday:[\"600519\"]": {
+      "attempts": 27,
+      "successes": 27,
+      "failures": 0,
+      "median_success_gap_seconds": 2.144,
+      "max_success_gap_seconds": 3.849,
+      "last_source_time": "2026-10-08T11:27:00"
+    },
+    "get_stock_intraday:[\"600578\"]": {
+      "attempts": 13,
+      "successes": 13,
+      "failures": 0,
+      "median_success_gap_seconds": 2.19,
+      "max_success_gap_seconds": 5.005,
+      "last_source_time": "2026-10-08T11:27:00"
+    },
+    "get_stock_money_flow:[\"600519\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_money_flow:[\"300750\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"300750\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"600519\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_announcements:[\"300750\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_kline:[\"600519\", \"weekly\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"600519\", \"daily\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_stock_comments:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_kline:[\"300750\", \"weekly\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_stock_announcements:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_kline:[\"300750\", \"daily\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_stock_news:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_money_flow:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_kline:[\"600578\", \"daily\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"600578\", \"weekly\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_quotes:[[\"600519\", \"300750\", \"002414\"]]": {
+      "attempts": 13,
+      "successes": 13,
+      "failures": 0,
+      "median_success_gap_seconds": 2.114,
+      "max_success_gap_seconds": 3.265,
+      "last_source_time": "2026-10-08T11:26:54+08:00"
+    },
+    "get_stock_intraday:[\"002414\"]": {
+      "attempts": 13,
+      "successes": 13,
+      "failures": 0,
+      "median_success_gap_seconds": 2.147,
+      "max_success_gap_seconds": 3.414,
+      "last_source_time": "2026-10-08T11:27:00"
+    },
+    "get_stock_comments:[\"002414\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_money_flow:[\"002414\"]": {
+      "attempts": 1,
+      "successes": 0,
+      "failures": 1,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_announcements:[\"002414\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"002414\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_kline:[\"002414\", \"weekly\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"002414\", \"daily\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "median_success_gap_seconds": null,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    }
+  },
+  "final_snapshots": {
+    "market": [
+      {
+        "namespace": "stock_intraday",
+        "key": "300750",
+        "saved_at": "2026-10-08T03:26:50.416788"
+      },
+      {
+        "namespace": "stock_quotes",
+        "key": [
+          "600519",
+          "300750",
+          "600578"
+        ],
+        "saved_at": "2026-10-08T03:26:21.118412"
+      },
+      {
+        "namespace": "stock_intraday",
+        "key": "600519",
+        "saved_at": "2026-10-08T03:26:50.223629"
+      },
+      {
+        "namespace": "stock_intraday",
+        "key": "600578",
+        "saved_at": "2026-10-08T03:26:21.402415"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600519",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T03:25:53.264859"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600519",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T03:25:53.309055"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "300750",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T03:25:58.514446"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "300750",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T03:25:59.354105"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600578",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T03:25:59.593752"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600578",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T03:25:59.770330"
+      },
+      {
+        "namespace": "stock_quotes",
+        "key": [
+          "600519",
+          "300750",
+          "002414"
+        ],
+        "saved_at": "2026-10-08T03:26:50.093304"
+      },
+      {
+        "namespace": "stock_intraday",
+        "key": "002414",
+        "saved_at": "2026-10-08T03:26:50.953065"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "002414",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T03:26:31.442000"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "002414",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T03:26:31.501888"
+      }
+    ],
+    "news": [
+      {
+        "scope": "300750",
+        "failed": false,
+        "saved_at": "2026-10-08T03:25:52.747633"
+      },
+      {
+        "scope": "600519",
+        "failed": false,
+        "saved_at": "2026-10-08T03:25:52.840412"
+      },
+      {
+        "scope": "600578",
+        "failed": false,
+        "saved_at": "2026-10-08T03:25:59.459095"
+      },
+      {
+        "scope": "002414",
+        "failed": false,
+        "saved_at": "2026-10-08T03:26:30.946853"
+      }
+    ],
+    "announcements": [
+      {
+        "scope": "600519",
+        "failed": false,
+        "saved_at": "2026-10-08T03:25:52.484276"
+      },
+      {
+        "scope": "300750",
+        "failed": false,
+        "saved_at": "2026-10-08T03:25:53.231536"
+      },
+      {
+        "scope": "600578",
+        "failed": false,
+        "saved_at": "2026-10-08T03:25:59.289420"
+      },
+      {
+        "scope": "002414",
+        "failed": false,
+        "saved_at": "2026-10-08T03:26:30.889943"
+      }
+    ]
+  },
+  "api_checks": [
+    {
+      "path": "/health",
+      "http_status": 200,
+      "stale": null,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": false,
+      "item_count": null
+    },
+    {
+      "path": "/api/watchlist/status",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": true,
+      "item_count": 3
+    },
+    {
+      "path": "/api/watchlist/quotes",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:52.767632Z",
+      "has_data": true,
+      "item_count": 3
+    },
+    {
+      "path": "/api/market/indices",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": "2026-10-08T03:26:53.785536Z",
+      "has_data": true,
+      "item_count": 3
+    },
+    {
+      "path": "/api/market/breadth",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": "2026-10-08T03:26:54.230467Z",
+      "has_data": true,
+      "item_count": null
+    },
+    {
+      "path": "/api/market/indices/000001/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": "2026-10-08T03:26:54.303442Z",
+      "has_data": true,
+      "item_count": 117
+    },
+    {
+      "path": "/api/market/indices/399001/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": "2026-10-08T03:26:54.369126Z",
+      "has_data": true,
+      "item_count": 117
+    },
+    {
+      "path": "/api/market/indices/399006/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": "2026-10-08T03:26:54.433325Z",
+      "has_data": true,
+      "item_count": 117
+    },
+    {
+      "path": "/api/stocks/600519/quote",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:53.930202Z",
+      "has_data": true,
+      "item_count": null
+    },
+    {
+      "path": "/api/stocks/600519/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:53.952091Z",
+      "has_data": true,
+      "item_count": 117
+    },
+    {
+      "path": "/api/stocks/600519/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:25:53.309055Z",
+      "has_data": true,
+      "item_count": 120
+    },
+    {
+      "path": "/api/stocks/600519/money-flow",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:54.085116Z",
+      "has_data": true,
+      "item_count": 30
+    },
+    {
+      "path": "/api/stocks/600519/sentiment",
+      "http_status": 503,
+      "stale": null,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": false,
+      "item_count": null
+    },
+    {
+      "path": "/api/stocks/300750/quote",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:53.930202Z",
+      "has_data": true,
+      "item_count": null
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:53.944489Z",
+      "has_data": true,
+      "item_count": 117
+    },
+    {
+      "path": "/api/stocks/300750/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:25:59.354105Z",
+      "has_data": true,
+      "item_count": 120
+    },
+    {
+      "path": "/api/stocks/300750/money-flow",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "unavailable",
+      "cached_at": null,
+      "has_data": false,
+      "item_count": 0
+    },
+    {
+      "path": "/api/stocks/300750/sentiment",
+      "http_status": 503,
+      "stale": null,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": false,
+      "item_count": null
+    },
+    {
+      "path": "/api/stocks/002414/quote",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:53.930202Z",
+      "has_data": true,
+      "item_count": null
+    },
+    {
+      "path": "/api/stocks/002414/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:53.691667Z",
+      "has_data": true,
+      "item_count": 117
+    },
+    {
+      "path": "/api/stocks/002414/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T03:26:31.501888Z",
+      "has_data": true,
+      "item_count": 120
+    },
+    {
+      "path": "/api/stocks/002414/money-flow",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "unavailable",
+      "cached_at": null,
+      "has_data": false,
+      "item_count": 0
+    },
+    {
+      "path": "/api/stocks/002414/sentiment",
+      "http_status": 503,
+      "stale": null,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": false,
+      "item_count": null
+    }
+  ],
+  "offline_baseline": "Immutable SQLite backup after full application shutdown. Earlier live API responses may precede the final background write.",
+  "controlled_offline_restart": [
+    {
+      "path": "/api/market/indices",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.785536+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.785536Z"
+    },
+    {
+      "path": "/api/market/breadth",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:54.230467+00:00",
+      "actual_cached_at": "2026-10-08T03:26:54.230467Z"
+    },
+    {
+      "path": "/api/market/indices/000001/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:54.303442+00:00",
+      "actual_cached_at": "2026-10-08T03:26:54.303442Z"
+    },
+    {
+      "path": "/api/market/indices/399001/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:54.369126+00:00",
+      "actual_cached_at": "2026-10-08T03:26:54.369126Z"
+    },
+    {
+      "path": "/api/market/indices/399006/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:54.433325+00:00",
+      "actual_cached_at": "2026-10-08T03:26:54.433325Z"
+    },
+    {
+      "path": "/api/stocks/600519/quote",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.930202+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.930202Z"
+    },
+    {
+      "path": "/api/stocks/600519/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.952091+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.952091Z"
+    },
+    {
+      "path": "/api/stocks/600519/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:25:53.309055+00:00",
+      "actual_cached_at": "2026-10-08T03:25:53.309055Z"
+    },
+    {
+      "path": "/api/stocks/600519/money-flow",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:54.085116+00:00",
+      "actual_cached_at": "2026-10-08T03:26:54.085116Z"
+    },
+    {
+      "path": "/api/stocks/300750/quote",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.930202+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.930202Z"
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.944489+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.944489Z"
+    },
+    {
+      "path": "/api/stocks/300750/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:25:59.354105+00:00",
+      "actual_cached_at": "2026-10-08T03:25:59.354105Z"
+    },
+    {
+      "path": "/api/stocks/002414/quote",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.930202+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.930202Z"
+    },
+    {
+      "path": "/api/stocks/002414/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:53.691667+00:00",
+      "actual_cached_at": "2026-10-08T03:26:53.691667Z"
+    },
+    {
+      "path": "/api/stocks/002414/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true,
+      "expected_cached_at": "2026-10-08T03:26:31.501888+00:00",
+      "actual_cached_at": "2026-10-08T03:26:31.501888Z"
+    }
+  ],
+  "cache_only_tools": [
+    {
+      "tool": "get_stock_quote",
+      "success": true,
+      "new_provider_calls": 0,
+      "stale": true,
+      "cached_at": "2026-10-08T03:26:53.930202+00:00"
+    },
+    {
+      "tool": "get_stock_kline",
+      "success": true,
+      "new_provider_calls": 0,
+      "stale": true,
+      "cached_at": "2026-10-08T03:25:59.354105+00:00"
+    },
+    {
+      "tool": "get_market_indices",
+      "success": true,
+      "new_provider_calls": 0,
+      "stale": true,
+      "cached_at": "2026-10-08T03:26:53.785536+00:00"
+    }
+  ],
+  "finished_at": "2026-10-08T03:26:55.020450+00:00"
+}

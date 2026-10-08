@@ -31,6 +31,7 @@ class RetryState:
     retry_at: float
     error_type: type[DataSourceError]
     message: str
+    failed_at: datetime
 
 
 class AsyncTTLStore(Generic[T]):
@@ -57,6 +58,14 @@ class AsyncTTLStore(Generic[T]):
         self._ttl = ttl
         self._pending: dict[Hashable, asyncio.Task[CachedResult[T]]] = {}
 
+    def _known_failure(self, matches: Callable[[object], bool], saved_at: datetime) -> bool:
+        return any(matches(key) and saved_at <= failure.failed_at
+                   for key, failure in list(self._failures.items()))
+
+    def failed_since(self, saved_at: datetime, matches: Callable[[object], bool]) -> bool:
+        """Let projections of a batched snapshot check failures for their own resource."""
+        return self._known_failure(matches, saved_at)
+
     async def peek(
         self, key: Hashable, *, matches: Callable[[object], bool] | None = None,
         accepts: Callable[[T], bool] | None = None,
@@ -68,13 +77,15 @@ class AsyncTTLStore(Generic[T]):
             stored = await self._snapshots.read_latest(match, accepts) if matches else await self._snapshots.read(key)
             if stored is not None:
                 data, saved_at = stored
-                newest = CachedResult(data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl,
+                newest = CachedResult(data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl
+                                      or self._known_failure(match, saved_at),
                                       cached_at=saved_at)
         for candidate, data in list(self._stale.items()):
             saved_at = self._saved_at.get(candidate)
             if data and saved_at is not None and match(candidate) and (accepts is None or accepts(data)):
                 if newest is None or saved_at >= newest.cached_at:
-                    newest = CachedResult(data, stale=candidate not in self._fresh, cached_at=saved_at)
+                    newest = CachedResult(data, stale=candidate not in self._fresh
+                                          or self._known_failure(match, saved_at), cached_at=saved_at)
         return CachedResult(deepcopy(newest.data), stale=newest.stale, cached_at=newest.cached_at) if newest else None
 
     async def aclose(self) -> None:
@@ -91,7 +102,8 @@ class AsyncTTLStore(Generic[T]):
         if self._snapshots is not None:
             for key, data, saved_at in await self._snapshots.read_all(matches):
                 results[json.dumps(key)] = (key, CachedResult(
-                    data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl, cached_at=saved_at,
+                    data, stale=(utc_now() - saved_at).total_seconds() >= self._ttl or self._known_failure(
+                        lambda candidate: json.dumps(candidate) == json.dumps(key), saved_at), cached_at=saved_at,
                 ))
         for key, data in list(self._stale.items()):
             saved_at = self._saved_at.get(key)
@@ -99,11 +111,13 @@ class AsyncTTLStore(Generic[T]):
                 encoded = json.dumps(key)
                 previous = results.get(encoded)
                 if previous is None or saved_at >= previous[1].cached_at:
-                    results[encoded] = (key, CachedResult(data, stale=key not in self._fresh, cached_at=saved_at))
+                    results[encoded] = (key, CachedResult(data, stale=key not in self._fresh or self._known_failure(
+                        lambda candidate: json.dumps(candidate) == encoded, saved_at), cached_at=saved_at))
         return deepcopy(list(results.values()))
 
-    async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]]) -> CachedResult[T]:
-        if key in self._fresh:
+    async def get(self, key: Hashable, loader: Callable[[], Awaitable[T]], *, revalidate: bool = False) -> CachedResult[T]:
+        """Scheduled revalidation bypasses fresh TTL, retaining coalescing and failure backoff."""
+        if not revalidate and key in self._fresh:
             return CachedResult(deepcopy(self._fresh[key]), cached_at=self._saved_at.get(key))
         task = self._pending.get(key)
         if task is None:
@@ -141,9 +155,10 @@ class AsyncTTLStore(Generic[T]):
         try:
             data = await loader()
         except DataSourceError as error:
+            self._fresh.pop(key, None)
             attempts = min((failure.attempts if failure else 0) + 1, 5)
             self._failures[key] = RetryState(
-                attempts, self._timer() + min(2 ** attempts, 30), type(error), str(error)
+                attempts, self._timer() + min(2 ** attempts, 30), type(error), str(error), utc_now()
             )
             fallback = await self._fallback(key)
             if fallback is not None:

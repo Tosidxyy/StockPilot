@@ -129,16 +129,16 @@ class WatchlistCollector:
         for offset in range(0, len(symbols), 50):
             batch = symbols[offset:offset + 50]
             jobs[("quotes", batch)] = (
-                "quotes", live_interval, lambda batch=batch: self._stocks.get_quotes(batch),
+                "quotes", live_interval, lambda batch=batch: self._stocks.get_quotes(batch, revalidate=True),
             )
         for symbol in symbols:
             jobs[("intraday", symbol)] = (
-                "intraday", live_interval, lambda symbol=symbol: self._stocks.get_intraday(symbol),
+                "intraday", live_interval, lambda symbol=symbol: self._stocks.get_intraday(symbol, revalidate=True),
             )
             for period in ("daily", "weekly"):
                 jobs[(period, symbol)] = (
                     "history", history_interval,
-                    lambda symbol=symbol, period=period: self._stocks.get_kline(symbol, period, 120),
+                    lambda symbol=symbol, period=period: self._stocks.get_kline(symbol, period, 120, revalidate=True),
                 )
         # Removed entries retain their stored snapshots, but get no new scheduled requests.
         self._attempted = {key: value for key, value in self._attempted.items() if key in jobs}

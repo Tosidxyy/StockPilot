@@ -1,0 +1,6171 @@
+{
+  "started_at": "2026-10-08T02:56:50.472561+00:00",
+  "beijing_date": "2026-10-08",
+  "market_session_at_start": true,
+  "duration_requested_seconds": 180,
+  "mode": "Real HTTP sources; isolated temporary SQLite; no detail reads during collection; no model calls.",
+  "limitations": [
+    "Bounded three-stock sample, not all user watchlist stocks or long-term stability.",
+    "Source timestamps and repeated prices do not prove a new trade every two seconds.",
+    "Offline restart below is controlled source failure, not a naturally observed outage."
+  ],
+  "source_sha256": {
+    "backend\\app\\providers\\resilient.py": "b7626d89cc4668e85c11c55546275f6c0c208860e0d88832fbaefb795a7bbd39",
+    "backend\\app\\services\\collector.py": "bf2efbeb63ccf68e6c2c3cbdad017658b150da8c2461450d44fa9823592a6e74",
+    "backend\\app\\services\\snapshots.py": "957a6ebaa04d8b03e77af45ac813a2ab57b6814233098532c843868a23eb8527"
+  },
+  "initial_watchlist": [
+    "600519",
+    "300750",
+    "600578"
+  ],
+  "checkpoints": [
+    {
+      "elapsed_seconds": 30.268,
+      "market": [
+        {
+          "namespace": "stock_intraday",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:57:19.598857"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:57:18.747692"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:57:18.731702"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:56:51.566691"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "600578"
+          ],
+          "saved_at": "2026-10-08T02:57:20.266864"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.576353"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.659361"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:56:51.671263"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:51.724844"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.152869"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.190124"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.497862"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.893043"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:53.111756"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.222000"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.020354"
+        }
+      ],
+      "news": [
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.819356"
+        },
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.479738"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:59.657406"
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.601716"
+        },
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.020743"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:57:01.345565"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 60.011,
+      "market": [
+        {
+          "namespace": "stock_intraday",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:57:49.085321"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:57:46.473136"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:57:46.391234"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:56:51.566691"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "600578"
+          ],
+          "saved_at": "2026-10-08T02:57:49.754735"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.576353"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.659361"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:56:51.671263"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:51.724844"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.152869"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.190124"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.497862"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.893043"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:53.111756"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.222000"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.020354"
+        }
+      ],
+      "news": [
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.819356"
+        },
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.479738"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:59.657406"
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.601716"
+        },
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.020743"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:57:01.345565"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 90.036,
+      "market": [
+        {
+          "namespace": "stock_intraday",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:58:20.473657"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:58:20.461377"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:58:20.448712"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:57:53.490436"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "600578"
+          ],
+          "saved_at": "2026-10-08T02:58:19.551061"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:57:53.507947"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.659361"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:56:51.671263"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:51.724844"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.152869"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.190124"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:57:58.436976"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.893043"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:57:57.321410"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.222000"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.020354"
+        }
+      ],
+      "news": [
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.819356"
+        },
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.479738"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:59.657406"
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.601716"
+        },
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.020743"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:57:01.345565"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 120.091,
+      "market": [
+        {
+          "namespace": "stock_intraday",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:58:20.473657"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:58:49.305769"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:58:49.298217"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:57:53.490436"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "600578"
+          ],
+          "saved_at": "2026-10-08T02:58:21.626238"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:57:53.507947"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.659361"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:56:51.671263"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:51.724844"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.152869"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.190124"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:57:58.436976"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.893043"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:57:57.321410"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.222000"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.020354"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "002414",
+          "saved_at": "2026-10-08T02:58:21.934685"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "002414"
+          ],
+          "saved_at": "2026-10-08T02:58:49.285937"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "002414",
+          "saved_at": "2026-10-08T02:58:49.322762"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "002414",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:23.193663"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "002414",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:23.215514"
+        }
+      ],
+      "news": [
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.819356"
+        },
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.479738"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:59.657406"
+        },
+        {
+          "scope": "002414",
+          "failed": false,
+          "saved_at": "2026-10-08T02:58:22.131231"
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.601716"
+        },
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.020743"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:57:01.345565"
+        },
+        {
+          "scope": "002414",
+          "failed": false,
+          "saved_at": "2026-10-08T02:58:22.097053"
+        }
+      ]
+    },
+    {
+      "elapsed_seconds": 150.088,
+      "market": [
+        {
+          "namespace": "stock_intraday",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:58:20.473657"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:59:20.177802"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:59:20.167071"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:58:54.560459"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "600578"
+          ],
+          "saved_at": "2026-10-08T02:58:21.626238"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:58:54.573599"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600519",
+          "saved_at": "2026-10-08T02:56:51.659361"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "300750",
+          "saved_at": "2026-10-08T02:58:54.719817"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:51.747243"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:52.347028"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600519",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:51.846361"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "300750",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:57:58.436976"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:56:52.893043"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "600578",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:57:57.321410"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.222000"
+        },
+        {
+          "namespace": "stock_money_flow",
+          "key": "600578",
+          "saved_at": "2026-10-08T02:56:56.020354"
+        },
+        {
+          "namespace": "stock_sentiment",
+          "key": "002414",
+          "saved_at": "2026-10-08T02:58:21.934685"
+        },
+        {
+          "namespace": "stock_quotes",
+          "key": [
+            "600519",
+            "300750",
+            "002414"
+          ],
+          "saved_at": "2026-10-08T02:59:20.160019"
+        },
+        {
+          "namespace": "stock_intraday",
+          "key": "002414",
+          "saved_at": "2026-10-08T02:59:20.184575"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "002414",
+            "weekly",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:23.193663"
+        },
+        {
+          "namespace": "stock_klines",
+          "key": [
+            "002414",
+            "daily",
+            120
+          ],
+          "saved_at": "2026-10-08T02:58:23.215514"
+        }
+      ],
+      "news": [
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.819356"
+        },
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.479738"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:59.657406"
+        },
+        {
+          "scope": "002414",
+          "failed": false,
+          "saved_at": "2026-10-08T02:58:22.131231"
+        }
+      ],
+      "announcements": [
+        {
+          "scope": "600519",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:51.601716"
+        },
+        {
+          "scope": "300750",
+          "failed": false,
+          "saved_at": "2026-10-08T02:56:52.020743"
+        },
+        {
+          "scope": "600578",
+          "failed": false,
+          "saved_at": "2026-10-08T02:57:01.345565"
+        },
+        {
+          "scope": "002414",
+          "failed": false,
+          "saved_at": "2026-10-08T02:58:22.097053"
+        }
+      ]
+    }
+  ],
+  "membership_change": {
+    "elapsed_seconds": 90.036,
+    "remove": "600578",
+    "add": "002414"
+  },
+  "collection_finished_at": "2026-10-08T02:59:50.690731+00:00",
+  "background_events": [
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 0.865,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 0.998,
+      "duration_seconds": 0.133
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.865,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 1.022,
+      "duration_seconds": 0.157
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.863,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 1.035,
+      "duration_seconds": 0.171
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.875,
+      "success": true,
+      "finished_seconds": 1.044,
+      "duration_seconds": 0.169
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.887,
+      "success": true,
+      "finished_seconds": 1.07,
+      "duration_seconds": 0.183
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.887,
+      "success": true,
+      "finished_seconds": 1.086,
+      "duration_seconds": 0.199
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 0.863,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:56:53+08:00",
+      "finished_seconds": 1.101,
+      "duration_seconds": 0.239
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.886,
+      "success": true,
+      "finished_seconds": 1.187,
+      "duration_seconds": 0.3
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.886,
+      "success": true,
+      "finished_seconds": 1.199,
+      "duration_seconds": 0.313
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600519",
+        "weekly",
+        120
+      ],
+      "started_seconds": 0.864,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 1.252,
+      "duration_seconds": 0.388
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.873,
+      "success": true,
+      "finished_seconds": 1.281,
+      "duration_seconds": 0.408
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 0.894,
+      "success": true,
+      "finished_seconds": 1.345,
+      "duration_seconds": 0.45
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 0.894,
+      "success": true,
+      "finished_seconds": 1.404,
+      "duration_seconds": 0.51
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "300750",
+        "daily",
+        120
+      ],
+      "started_seconds": 1.315,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 1.68,
+      "duration_seconds": 0.365
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600519",
+        "daily",
+        120
+      ],
+      "started_seconds": 0.864,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 1.717,
+      "duration_seconds": 0.854
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "300750",
+        "weekly",
+        120
+      ],
+      "started_seconds": 1.764,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 2.025,
+      "duration_seconds": 0.26
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600578",
+        "daily",
+        120
+      ],
+      "started_seconds": 1.873,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 2.42,
+      "duration_seconds": 0.547
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600578",
+        "weekly",
+        120
+      ],
+      "started_seconds": 2.366,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 2.639,
+      "duration_seconds": 0.273
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 3.716,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:56:56+08:00",
+      "finished_seconds": 4.896,
+      "duration_seconds": 1.18
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 3.732,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 5.244,
+      "duration_seconds": 1.512
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 3.856,
+      "success": true,
+      "finished_seconds": 5.414,
+      "duration_seconds": 1.558
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 3.345,
+      "success": true,
+      "finished_seconds": 5.533,
+      "duration_seconds": 2.188
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 3.748,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 5.808,
+      "duration_seconds": 2.06
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 3.81,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 6.635,
+      "duration_seconds": 2.825
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 4.613,
+      "success": true,
+      "finished_seconds": 7.86,
+      "duration_seconds": 3.247
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 8.249,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:02+08:00",
+      "finished_seconds": 8.844,
+      "duration_seconds": 0.594
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 4.426,
+      "success": true,
+      "finished_seconds": 9.185,
+      "duration_seconds": 4.758
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 9.481,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 9.981,
+      "duration_seconds": 0.5
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 9.528,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 10.01,
+      "duration_seconds": 0.482
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 10.156,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 10.521,
+      "duration_seconds": 0.365
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 13.148,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:05+08:00",
+      "finished_seconds": 13.302,
+      "duration_seconds": 0.153
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 13.824,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 14.436,
+      "duration_seconds": 0.612
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 13.795,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 14.562,
+      "duration_seconds": 0.767
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 14.59,
+      "success": true,
+      "count": 87,
+      "source": "sina",
+      "source_time": "2026-10-08T10:57:00",
+      "finished_seconds": 14.671,
+      "duration_seconds": 0.081
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 15.449,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:08+08:00",
+      "finished_seconds": 15.742,
+      "duration_seconds": 0.293
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 15.852,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 16.601,
+      "duration_seconds": 0.749
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 15.918,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 16.801,
+      "duration_seconds": 0.883
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 16.801,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 17.037,
+      "duration_seconds": 0.237
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 17.315,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:11+08:00",
+      "finished_seconds": 17.366,
+      "duration_seconds": 0.051
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 17.946,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 17.989,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 18.583,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 18.765,
+      "duration_seconds": 0.182
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 19.371,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:11+08:00",
+      "finished_seconds": 19.417,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 20.056,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 20.103,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 20.057,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 20.114,
+      "duration_seconds": 0.057
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 20.517,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 20.565,
+      "duration_seconds": 0.048
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 21.432,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:14+08:00",
+      "finished_seconds": 21.572,
+      "duration_seconds": 0.141
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 22.07,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 22.13,
+      "duration_seconds": 0.06
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 22.07,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 22.146,
+      "duration_seconds": 0.075
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 22.607,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 22.9,
+      "duration_seconds": 0.293
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 23.648,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:17+08:00",
+      "finished_seconds": 23.735,
+      "duration_seconds": 0.087
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 24.081,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 24.183,
+      "duration_seconds": 0.101
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 24.082,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 24.19,
+      "duration_seconds": 0.108
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 25.079,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 25.421,
+      "duration_seconds": 0.342
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 25.632,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:17+08:00",
+      "finished_seconds": 25.665,
+      "duration_seconds": 0.033
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 26.109,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 26.17,
+      "duration_seconds": 0.06
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 26.109,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 26.185,
+      "duration_seconds": 0.077
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 26.92,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 27.01,
+      "duration_seconds": 0.09
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 27.716,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:20+08:00",
+      "finished_seconds": 27.858,
+      "duration_seconds": 0.142
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 28.211,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 28.259,
+      "duration_seconds": 0.048
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 28.212,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 28.274,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 29.084,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 29.126,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 29.729,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:23+08:00",
+      "finished_seconds": 29.794,
+      "duration_seconds": 0.065
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 30.413,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 30.649,
+      "duration_seconds": 0.236
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 30.417,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 30.748,
+      "duration_seconds": 0.331
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 31.099,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 31.217,
+      "duration_seconds": 0.118
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 31.779,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:23+08:00",
+      "finished_seconds": 31.922,
+      "duration_seconds": 0.143
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 32.496,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 32.835,
+      "duration_seconds": 0.339
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 32.502,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 32.932,
+      "duration_seconds": 0.431
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 33.149,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 33.194,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 34.119,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:26+08:00",
+      "finished_seconds": 34.441,
+      "duration_seconds": 0.323
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 34.598,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 35.199,
+      "duration_seconds": 0.602
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 34.629,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 35.477,
+      "duration_seconds": 0.848
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 35.55,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 35.979,
+      "duration_seconds": 0.43
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 36.073,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:29+08:00",
+      "finished_seconds": 36.232,
+      "duration_seconds": 0.159
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 38.202,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:32+08:00",
+      "finished_seconds": 38.53,
+      "duration_seconds": 0.328
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 38.796,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 39.253,
+      "duration_seconds": 0.457
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 38.816,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 39.314,
+      "duration_seconds": 0.498
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 39.397,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 39.665,
+      "duration_seconds": 0.268
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 40.345,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:32+08:00",
+      "finished_seconds": 40.688,
+      "duration_seconds": 0.343
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 41.436,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 41.63,
+      "duration_seconds": 0.195
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 42.43,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:35+08:00",
+      "finished_seconds": 42.848,
+      "duration_seconds": 0.418
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 42.978,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 43.353,
+      "duration_seconds": 0.376
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 42.988,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 43.495,
+      "duration_seconds": 0.507
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 43.594,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 43.727,
+      "duration_seconds": 0.133
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 44.41,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:38+08:00",
+      "finished_seconds": 44.684,
+      "duration_seconds": 0.273
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 45.552,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 45.597,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 46.641,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:41+08:00",
+      "finished_seconds": 47.073,
+      "duration_seconds": 0.432
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 47.317,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 48.212,
+      "duration_seconds": 0.896
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 47.348,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 48.589,
+      "duration_seconds": 1.241
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 48.347,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 49.078,
+      "duration_seconds": 0.731
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 48.812,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:41+08:00",
+      "finished_seconds": 49.344,
+      "duration_seconds": 0.531
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 51.585,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 52.231,
+      "duration_seconds": 0.646
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 51.586,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 52.478,
+      "duration_seconds": 0.892
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 52.485,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 52.837,
+      "duration_seconds": 0.352
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 52.887,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:44+08:00",
+      "finished_seconds": 53.012,
+      "duration_seconds": 0.124
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 55.568,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 55.86,
+      "duration_seconds": 0.292
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 55.571,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 56.0,
+      "duration_seconds": 0.429
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 56.127,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 56.333,
+      "duration_seconds": 0.206
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 57.021,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:47+08:00",
+      "finished_seconds": 57.27,
+      "duration_seconds": 0.249
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 58.271,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 58.595,
+      "duration_seconds": 0.324
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 59.11,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:53+08:00",
+      "finished_seconds": 59.282,
+      "duration_seconds": 0.172
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 59.935,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 60.762,
+      "duration_seconds": 0.827
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 59.965,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 60.864,
+      "duration_seconds": 0.899
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 60.273,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 61.347,
+      "duration_seconds": 1.073
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 61.429,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:56+08:00",
+      "finished_seconds": 61.819,
+      "duration_seconds": 0.391
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 62.83,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 62.908,
+      "duration_seconds": 0.078
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 62.422,
+      "success": true,
+      "finished_seconds": 63.008,
+      "duration_seconds": 0.586
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 62.548,
+      "success": true,
+      "finished_seconds": 63.027,
+      "duration_seconds": 0.479
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 62.728,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 63.332,
+      "duration_seconds": 0.603
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 62.698,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 63.332,
+      "duration_seconds": 0.634
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 63.669,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:56+08:00",
+      "finished_seconds": 63.705,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 64.441,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 65.344,
+      "duration_seconds": 0.902
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 64.472,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 65.767,
+      "duration_seconds": 1.294
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 65.481,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 66.393,
+      "duration_seconds": 0.912
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 65.994,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:59+08:00",
+      "finished_seconds": 66.552,
+      "duration_seconds": 0.559
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600578",
+        "weekly",
+        120
+      ],
+      "started_seconds": 62.83,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 66.835,
+      "duration_seconds": 4.005
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "300750",
+        "weekly",
+        120
+      ],
+      "started_seconds": 62.294,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 67.948,
+      "duration_seconds": 5.653
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 68.118,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:57:59+08:00",
+      "finished_seconds": 68.644,
+      "duration_seconds": 0.526
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 69.295,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 69.973,
+      "duration_seconds": 0.678
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 69.31,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 70.454,
+      "duration_seconds": 1.144
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 70.454,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:05+08:00",
+      "finished_seconds": 71.384,
+      "duration_seconds": 0.93
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 71.689,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 72.442,
+      "duration_seconds": 0.753
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 69.604,
+      "success": true,
+      "count": 90,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 72.854,
+      "duration_seconds": 3.25
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 73.633,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 74.057,
+      "duration_seconds": 0.423
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 74.375,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:05+08:00",
+      "finished_seconds": 74.499,
+      "duration_seconds": 0.123
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 75.274,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 75.751,
+      "duration_seconds": 0.477
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 75.318,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 75.912,
+      "duration_seconds": 0.594
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 77.345,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 77.999,
+      "duration_seconds": 0.653
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 77.39,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 78.215,
+      "duration_seconds": 0.825
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 77.449,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 78.949,
+      "duration_seconds": 1.5
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 78.65,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:11+08:00",
+      "finished_seconds": 79.035,
+      "duration_seconds": 0.385
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 79.701,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 80.005,
+      "duration_seconds": 0.304
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 80.646,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:14+08:00",
+      "finished_seconds": 80.868,
+      "duration_seconds": 0.222
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 81.929,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 82.007,
+      "duration_seconds": 0.079
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 81.929,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 82.028,
+      "duration_seconds": 0.099
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 82.717,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:14+08:00",
+      "finished_seconds": 82.838,
+      "duration_seconds": 0.121
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 83.843,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 84.403,
+      "duration_seconds": 0.559
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 83.89,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 84.43,
+      "duration_seconds": 0.541
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 83.921,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 84.723,
+      "duration_seconds": 0.802
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 85.01,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:20+08:00",
+      "finished_seconds": 85.389,
+      "duration_seconds": 0.379
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 85.827,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 86.055,
+      "duration_seconds": 0.228
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 85.898,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 86.07,
+      "duration_seconds": 0.172
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 88.217,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 88.351,
+      "duration_seconds": 0.135
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 88.258,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 88.372,
+      "duration_seconds": 0.115
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 88.258,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 88.39,
+      "duration_seconds": 0.132
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 89.044,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:20+08:00",
+      "finished_seconds": 89.078,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 89.926,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 89.976,
+      "duration_seconds": 0.05
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 89.927,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 89.989,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600578"
+      ],
+      "started_seconds": 89.927,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 90.001,
+      "duration_seconds": 0.073
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "600578"
+        ]
+      ],
+      "started_seconds": 91.119,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:26+08:00",
+      "finished_seconds": 91.154,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 91.307,
+      "success": true,
+      "finished_seconds": 91.459,
+      "duration_seconds": 0.151
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 91.276,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 91.461,
+      "duration_seconds": 0.185
+    },
+    {
+      "method": "get_stock_announcements",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 91.414,
+      "success": true,
+      "finished_seconds": 91.601,
+      "duration_seconds": 0.186
+    },
+    {
+      "method": "get_stock_news",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 91.31,
+      "success": true,
+      "finished_seconds": 91.659,
+      "duration_seconds": 0.349
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 92.017,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:24+08:00",
+      "finished_seconds": 92.133,
+      "duration_seconds": 0.116
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 92.019,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 92.142,
+      "duration_seconds": 0.122
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 92.02,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 92.154,
+      "duration_seconds": 0.134
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 92.018,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 92.162,
+      "duration_seconds": 0.144
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "002414",
+        "weekly",
+        120
+      ],
+      "started_seconds": 92.019,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 92.721,
+      "duration_seconds": 0.702
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "002414",
+        "daily",
+        120
+      ],
+      "started_seconds": 92.018,
+      "success": true,
+      "count": 120,
+      "source": "tencent",
+      "source_time": "2026-10-08",
+      "finished_seconds": 92.741,
+      "duration_seconds": 0.722
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 94.104,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:27+08:00",
+      "finished_seconds": 94.139,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 94.104,
+      "success": true,
+      "count": 88,
+      "source": "sina",
+      "source_time": "2026-10-08T10:58:00",
+      "finished_seconds": 94.148,
+      "duration_seconds": 0.044
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 94.105,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 94.164,
+      "duration_seconds": 0.06
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 94.104,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 94.172,
+      "duration_seconds": 0.068
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 96.215,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:27+08:00",
+      "finished_seconds": 96.615,
+      "duration_seconds": 0.4
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 96.215,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 96.747,
+      "duration_seconds": 0.532
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 96.216,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 96.907,
+      "duration_seconds": 0.691
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 96.262,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 97.074,
+      "duration_seconds": 0.812
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 98.274,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:30+08:00",
+      "finished_seconds": 98.547,
+      "duration_seconds": 0.272
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 98.284,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 98.747,
+      "duration_seconds": 0.463
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 98.33,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 98.867,
+      "duration_seconds": 0.537
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 100.378,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:36+08:00",
+      "finished_seconds": 100.701,
+      "duration_seconds": 0.323
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 100.383,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 100.843,
+      "duration_seconds": 0.46
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 100.392,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 100.956,
+      "duration_seconds": 0.564
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 100.438,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 101.159,
+      "duration_seconds": 0.72
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 102.352,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:36+08:00",
+      "finished_seconds": 102.387,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 102.353,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 102.399,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 102.353,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 102.414,
+      "duration_seconds": 0.061
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 104.4,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:39+08:00",
+      "finished_seconds": 104.436,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 104.4,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 104.456,
+      "duration_seconds": 0.056
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 104.401,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 104.469,
+      "duration_seconds": 0.068
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 104.401,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 104.485,
+      "duration_seconds": 0.084
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 106.459,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:39+08:00",
+      "finished_seconds": 106.494,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 106.46,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 106.509,
+      "duration_seconds": 0.049
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 106.46,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 106.523,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 106.46,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 106.537,
+      "duration_seconds": 0.077
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 108.513,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:42+08:00",
+      "finished_seconds": 108.548,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 108.514,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 108.559,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 108.515,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 108.578,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 108.514,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 108.593,
+      "duration_seconds": 0.079
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 110.567,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:45+08:00",
+      "finished_seconds": 110.603,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 110.567,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 110.622,
+      "duration_seconds": 0.054
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 110.568,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 110.639,
+      "duration_seconds": 0.071
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 110.568,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 110.651,
+      "duration_seconds": 0.083
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 112.617,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:45+08:00",
+      "finished_seconds": 112.657,
+      "duration_seconds": 0.04
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 112.617,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 112.668,
+      "duration_seconds": 0.051
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 112.618,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 112.681,
+      "duration_seconds": 0.064
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 112.618,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 112.693,
+      "duration_seconds": 0.075
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 114.676,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:48+08:00",
+      "finished_seconds": 114.713,
+      "duration_seconds": 0.037
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 114.676,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 114.725,
+      "duration_seconds": 0.049
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 114.677,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 114.742,
+      "duration_seconds": 0.065
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 114.676,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 114.755,
+      "duration_seconds": 0.079
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 116.731,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:48+08:00",
+      "finished_seconds": 116.766,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 116.731,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 116.78,
+      "duration_seconds": 0.049
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 116.732,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 116.794,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 116.731,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 116.808,
+      "duration_seconds": 0.078
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 118.779,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:51+08:00",
+      "finished_seconds": 118.813,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 118.779,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 118.826,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 118.78,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 118.833,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 118.78,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 118.85,
+      "duration_seconds": 0.07
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 120.834,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:51+08:00",
+      "finished_seconds": 120.868,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 120.834,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 120.877,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 120.835,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 120.887,
+      "duration_seconds": 0.052
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 120.835,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 120.893,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600519",
+        "weekly",
+        120
+      ],
+      "started_seconds": 120.937,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 121.275,
+      "duration_seconds": 0.337
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "600519",
+        "daily",
+        120
+      ],
+      "started_seconds": 120.937,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 121.374,
+      "duration_seconds": 0.437
+    },
+    {
+      "method": "get_kline",
+      "args": [
+        "300750",
+        "daily",
+        120
+      ],
+      "started_seconds": 121.587,
+      "success": true,
+      "count": 120,
+      "source": "eastmoney",
+      "source_time": "2026-10-08",
+      "finished_seconds": 121.874,
+      "duration_seconds": 0.287
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 122.899,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:54+08:00",
+      "finished_seconds": 122.934,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 122.899,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 122.944,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 122.9,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 122.953,
+      "duration_seconds": 0.054
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 122.9,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 122.963,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 123.937,
+      "success": true,
+      "finished_seconds": 124.084,
+      "duration_seconds": 0.147
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 123.937,
+      "success": true,
+      "finished_seconds": 124.097,
+      "duration_seconds": 0.16
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 123.968,
+      "success": false,
+      "error_type": "DataSourceError",
+      "finished_seconds": 124.202,
+      "duration_seconds": 0.235
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 123.967,
+      "success": true,
+      "finished_seconds": 124.247,
+      "duration_seconds": 0.28
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 124.956,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:58:57+08:00",
+      "finished_seconds": 124.99,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 124.956,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 125.009,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 124.957,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 125.021,
+      "duration_seconds": 0.064
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 124.957,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 125.029,
+      "duration_seconds": 0.072
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 127.023,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:00+08:00",
+      "finished_seconds": 127.057,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 127.024,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 127.067,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 127.024,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 127.075,
+      "duration_seconds": 0.052
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 127.023,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 127.085,
+      "duration_seconds": 0.061
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 129.081,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:03+08:00",
+      "finished_seconds": 129.137,
+      "duration_seconds": 0.057
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 129.081,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 129.148,
+      "duration_seconds": 0.067
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 129.082,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 129.158,
+      "duration_seconds": 0.076
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 129.082,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 129.166,
+      "duration_seconds": 0.084
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 131.131,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:03+08:00",
+      "finished_seconds": 131.165,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 131.131,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 131.174,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 131.131,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 131.184,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 131.132,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 131.191,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 133.184,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:06+08:00",
+      "finished_seconds": 133.219,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 133.184,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 133.228,
+      "duration_seconds": 0.044
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 133.185,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 133.241,
+      "duration_seconds": 0.056
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 133.185,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 133.252,
+      "duration_seconds": 0.068
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 135.235,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:09+08:00",
+      "finished_seconds": 135.273,
+      "duration_seconds": 0.038
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 135.235,
+      "success": true,
+      "count": 89,
+      "source": "sina",
+      "source_time": "2026-10-08T10:59:00",
+      "finished_seconds": 135.282,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 135.236,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 135.291,
+      "duration_seconds": 0.055
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 135.236,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 135.302,
+      "duration_seconds": 0.066
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 137.292,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:09+08:00",
+      "finished_seconds": 137.326,
+      "duration_seconds": 0.033
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 137.293,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 137.339,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 137.293,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 137.346,
+      "duration_seconds": 0.054
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 137.293,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 137.355,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 139.345,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:12+08:00",
+      "finished_seconds": 139.379,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 139.345,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 139.39,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 139.345,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 139.401,
+      "duration_seconds": 0.055
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 139.346,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 139.409,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 141.397,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:15+08:00",
+      "finished_seconds": 141.431,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 141.397,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 141.44,
+      "duration_seconds": 0.042
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 141.398,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 141.448,
+      "duration_seconds": 0.05
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 141.398,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 141.457,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 143.46,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:18+08:00",
+      "finished_seconds": 143.494,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 143.46,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 143.502,
+      "duration_seconds": 0.042
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 143.46,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 143.511,
+      "duration_seconds": 0.05
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 143.461,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 143.521,
+      "duration_seconds": 0.061
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 145.534,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:18+08:00",
+      "finished_seconds": 145.57,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 145.534,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 145.577,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 145.534,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 145.586,
+      "duration_seconds": 0.052
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 145.534,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 145.602,
+      "duration_seconds": 0.068
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 147.595,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:21+08:00",
+      "finished_seconds": 147.629,
+      "duration_seconds": 0.035
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 147.595,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 147.641,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 147.595,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 147.648,
+      "duration_seconds": 0.052
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 147.595,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 147.659,
+      "duration_seconds": 0.064
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 149.652,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:24+08:00",
+      "finished_seconds": 149.687,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 149.652,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 149.694,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 149.652,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 149.705,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 149.652,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 149.712,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 151.726,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:24+08:00",
+      "finished_seconds": 151.762,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 151.727,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 151.772,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 151.727,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 151.78,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 151.726,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 151.786,
+      "duration_seconds": 0.06
+    },
+    {
+      "method": "get_stock_comments",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 152.067,
+      "success": true,
+      "finished_seconds": 152.205,
+      "duration_seconds": 0.138
+    },
+    {
+      "method": "get_stock_money_flow",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 152.098,
+      "success": true,
+      "finished_seconds": 152.391,
+      "duration_seconds": 0.293
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 153.786,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:27+08:00",
+      "finished_seconds": 153.82,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 153.786,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 153.832,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 153.786,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 153.839,
+      "duration_seconds": 0.052
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 153.787,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 153.863,
+      "duration_seconds": 0.077
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 155.849,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:30+08:00",
+      "finished_seconds": 155.882,
+      "duration_seconds": 0.033
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 155.849,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 155.89,
+      "duration_seconds": 0.041
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 155.85,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 155.9,
+      "duration_seconds": 0.051
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 155.849,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 155.907,
+      "duration_seconds": 0.057
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 157.913,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:30+08:00",
+      "finished_seconds": 157.951,
+      "duration_seconds": 0.038
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 157.914,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 157.959,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 157.914,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 157.968,
+      "duration_seconds": 0.055
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 157.913,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 157.976,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 159.973,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:33+08:00",
+      "finished_seconds": 160.006,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 159.973,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 160.017,
+      "duration_seconds": 0.044
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 159.974,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 160.027,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 159.974,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 160.034,
+      "duration_seconds": 0.06
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 162.039,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:33+08:00",
+      "finished_seconds": 162.073,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 162.039,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 162.085,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 162.039,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 162.097,
+      "duration_seconds": 0.058
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 162.04,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 162.11,
+      "duration_seconds": 0.071
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 164.103,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:36+08:00",
+      "finished_seconds": 164.139,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 164.103,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 164.146,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 164.103,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 164.154,
+      "duration_seconds": 0.051
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 164.104,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 164.166,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 166.154,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:39+08:00",
+      "finished_seconds": 166.188,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 166.155,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 166.196,
+      "duration_seconds": 0.041
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 166.155,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 166.209,
+      "duration_seconds": 0.053
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 166.155,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 166.217,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 168.21,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:39+08:00",
+      "finished_seconds": 168.246,
+      "duration_seconds": 0.036
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 168.212,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 168.26,
+      "duration_seconds": 0.047
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 168.213,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 168.267,
+      "duration_seconds": 0.054
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 168.212,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 168.279,
+      "duration_seconds": 0.067
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 170.262,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:42+08:00",
+      "finished_seconds": 170.295,
+      "duration_seconds": 0.033
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 170.262,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 170.304,
+      "duration_seconds": 0.042
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 170.262,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 170.321,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 170.263,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 170.328,
+      "duration_seconds": 0.065
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 172.332,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:42+08:00",
+      "finished_seconds": 172.366,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 172.332,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 172.377,
+      "duration_seconds": 0.045
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 172.333,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 172.384,
+      "duration_seconds": 0.051
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 172.333,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 172.395,
+      "duration_seconds": 0.062
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 174.383,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:48+08:00",
+      "finished_seconds": 174.42,
+      "duration_seconds": 0.037
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 174.383,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 174.433,
+      "duration_seconds": 0.049
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 174.384,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 174.447,
+      "duration_seconds": 0.063
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 174.384,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 174.457,
+      "duration_seconds": 0.073
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 176.448,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:48+08:00",
+      "finished_seconds": 176.482,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 176.449,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 176.491,
+      "duration_seconds": 0.043
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 176.449,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 176.508,
+      "duration_seconds": 0.059
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 176.449,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 176.515,
+      "duration_seconds": 0.066
+    },
+    {
+      "method": "get_quotes",
+      "args": [
+        [
+          "600519",
+          "300750",
+          "002414"
+        ]
+      ],
+      "started_seconds": 178.503,
+      "success": true,
+      "count": 3,
+      "source": "tencent",
+      "source_time": "2026-10-08T10:59:51+08:00",
+      "finished_seconds": 178.537,
+      "duration_seconds": 0.034
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "300750"
+      ],
+      "started_seconds": 178.503,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 178.549,
+      "duration_seconds": 0.046
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "002414"
+      ],
+      "started_seconds": 178.503,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 178.558,
+      "duration_seconds": 0.055
+    },
+    {
+      "method": "get_stock_intraday",
+      "args": [
+        "600519"
+      ],
+      "started_seconds": 178.503,
+      "success": true,
+      "count": 90,
+      "source": "sina",
+      "source_time": "2026-10-08T11:00:00",
+      "finished_seconds": 178.568,
+      "duration_seconds": 0.065
+    }
+  ],
+  "background_summary": {
+    "get_stock_intraday:[\"600578\"]": {
+      "attempts": 32,
+      "successes": 32,
+      "failures": 0,
+      "max_success_gap_seconds": 5.637,
+      "last_source_time": "2026-10-08T10:59:00"
+    },
+    "get_stock_intraday:[\"300750\"]": {
+      "attempts": 72,
+      "successes": 72,
+      "failures": 0,
+      "max_success_gap_seconds": 5.094,
+      "last_source_time": "2026-10-08T11:00:00"
+    },
+    "get_stock_intraday:[\"600519\"]": {
+      "attempts": 72,
+      "successes": 72,
+      "failures": 0,
+      "max_success_gap_seconds": 7.51,
+      "last_source_time": "2026-10-08T11:00:00"
+    },
+    "get_stock_announcements:[\"600519\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_comments:[\"300750\"]": {
+      "attempts": 3,
+      "successes": 3,
+      "failures": 0,
+      "max_success_gap_seconds": 61.938,
+      "last_source_time": null
+    },
+    "get_stock_comments:[\"600519\"]": {
+      "attempts": 3,
+      "successes": 3,
+      "failures": 0,
+      "max_success_gap_seconds": 61.941,
+      "last_source_time": null
+    },
+    "get_quotes:[[\"600519\", \"300750\", \"600578\"]]": {
+      "attempts": 36,
+      "successes": 36,
+      "failures": 0,
+      "max_success_gap_seconds": 4.536,
+      "last_source_time": "2026-10-08T10:58:26+08:00"
+    },
+    "get_stock_money_flow:[\"600519\"]": {
+      "attempts": 3,
+      "successes": 1,
+      "failures": 2,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_money_flow:[\"300750\"]": {
+      "attempts": 3,
+      "successes": 2,
+      "failures": 1,
+      "max_success_gap_seconds": 123.048,
+      "last_source_time": null
+    },
+    "get_kline:[\"600519\", \"weekly\", 120]": {
+      "attempts": 2,
+      "successes": 2,
+      "failures": 0,
+      "max_success_gap_seconds": 120.023,
+      "last_source_time": "2026-10-08"
+    },
+    "get_stock_announcements:[\"300750\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"300750\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"600519\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_kline:[\"300750\", \"daily\", 120]": {
+      "attempts": 2,
+      "successes": 2,
+      "failures": 0,
+      "max_success_gap_seconds": 120.194,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"600519\", \"daily\", 120]": {
+      "attempts": 2,
+      "successes": 2,
+      "failures": 0,
+      "max_success_gap_seconds": 119.657,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"300750\", \"weekly\", 120]": {
+      "attempts": 2,
+      "successes": 2,
+      "failures": 0,
+      "max_success_gap_seconds": 65.923,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"600578\", \"daily\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"600578\", \"weekly\", 120]": {
+      "attempts": 2,
+      "successes": 2,
+      "failures": 0,
+      "max_success_gap_seconds": 64.196,
+      "last_source_time": "2026-10-08"
+    },
+    "get_stock_comments:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_money_flow:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_announcements:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"600578\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_comments:[\"002414\"]": {
+      "attempts": 2,
+      "successes": 2,
+      "failures": 0,
+      "max_success_gap_seconds": 60.746,
+      "last_source_time": null
+    },
+    "get_stock_money_flow:[\"002414\"]": {
+      "attempts": 2,
+      "successes": 1,
+      "failures": 1,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_announcements:[\"002414\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_stock_news:[\"002414\"]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": null
+    },
+    "get_quotes:[[\"600519\", \"300750\", \"002414\"]]": {
+      "attempts": 43,
+      "successes": 43,
+      "failures": 0,
+      "max_success_gap_seconds": 2.476,
+      "last_source_time": "2026-10-08T10:59:51+08:00"
+    },
+    "get_stock_intraday:[\"002414\"]": {
+      "attempts": 41,
+      "successes": 41,
+      "failures": 0,
+      "max_success_gap_seconds": 4.085,
+      "last_source_time": "2026-10-08T11:00:00"
+    },
+    "get_kline:[\"002414\", \"weekly\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    },
+    "get_kline:[\"002414\", \"daily\", 120]": {
+      "attempts": 1,
+      "successes": 1,
+      "failures": 0,
+      "max_success_gap_seconds": null,
+      "last_source_time": "2026-10-08"
+    }
+  },
+  "final_snapshots": {
+    "market": [
+      {
+        "namespace": "stock_intraday",
+        "key": "600578",
+        "saved_at": "2026-10-08T02:58:20.473657"
+      },
+      {
+        "namespace": "stock_intraday",
+        "key": "300750",
+        "saved_at": "2026-10-08T02:59:49.022303"
+      },
+      {
+        "namespace": "stock_intraday",
+        "key": "600519",
+        "saved_at": "2026-10-08T02:59:49.040813"
+      },
+      {
+        "namespace": "stock_sentiment",
+        "key": "300750",
+        "saved_at": "2026-10-08T02:58:54.560459"
+      },
+      {
+        "namespace": "stock_quotes",
+        "key": [
+          "600519",
+          "300750",
+          "600578"
+        ],
+        "saved_at": "2026-10-08T02:58:21.626238"
+      },
+      {
+        "namespace": "stock_sentiment",
+        "key": "600519",
+        "saved_at": "2026-10-08T02:58:54.573599"
+      },
+      {
+        "namespace": "stock_money_flow",
+        "key": "600519",
+        "saved_at": "2026-10-08T02:56:51.659361"
+      },
+      {
+        "namespace": "stock_money_flow",
+        "key": "300750",
+        "saved_at": "2026-10-08T02:58:54.719817"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600519",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T02:58:51.747243"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "300750",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T02:58:52.347028"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600519",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T02:58:51.846361"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "300750",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T02:57:58.436976"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600578",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T02:56:52.893043"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "600578",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T02:57:57.321410"
+      },
+      {
+        "namespace": "stock_sentiment",
+        "key": "600578",
+        "saved_at": "2026-10-08T02:56:56.222000"
+      },
+      {
+        "namespace": "stock_money_flow",
+        "key": "600578",
+        "saved_at": "2026-10-08T02:56:56.020354"
+      },
+      {
+        "namespace": "stock_sentiment",
+        "key": "002414",
+        "saved_at": "2026-10-08T02:59:22.679435"
+      },
+      {
+        "namespace": "stock_quotes",
+        "key": [
+          "600519",
+          "300750",
+          "002414"
+        ],
+        "saved_at": "2026-10-08T02:59:49.009517"
+      },
+      {
+        "namespace": "stock_intraday",
+        "key": "002414",
+        "saved_at": "2026-10-08T02:59:49.031125"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "002414",
+          "weekly",
+          120
+        ],
+        "saved_at": "2026-10-08T02:58:23.193663"
+      },
+      {
+        "namespace": "stock_klines",
+        "key": [
+          "002414",
+          "daily",
+          120
+        ],
+        "saved_at": "2026-10-08T02:58:23.215514"
+      },
+      {
+        "namespace": "stock_money_flow",
+        "key": "002414",
+        "saved_at": "2026-10-08T02:59:22.863671"
+      }
+    ],
+    "news": [
+      {
+        "scope": "300750",
+        "failed": false,
+        "saved_at": "2026-10-08T02:56:51.819356"
+      },
+      {
+        "scope": "600519",
+        "failed": false,
+        "saved_at": "2026-10-08T02:56:52.479738"
+      },
+      {
+        "scope": "600578",
+        "failed": false,
+        "saved_at": "2026-10-08T02:56:59.657406"
+      },
+      {
+        "scope": "002414",
+        "failed": false,
+        "saved_at": "2026-10-08T02:58:22.131231"
+      }
+    ],
+    "announcements": [
+      {
+        "scope": "600519",
+        "failed": false,
+        "saved_at": "2026-10-08T02:56:51.601716"
+      },
+      {
+        "scope": "300750",
+        "failed": false,
+        "saved_at": "2026-10-08T02:56:52.020743"
+      },
+      {
+        "scope": "600578",
+        "failed": false,
+        "saved_at": "2026-10-08T02:57:01.345565"
+      },
+      {
+        "scope": "002414",
+        "failed": false,
+        "saved_at": "2026-10-08T02:58:22.097053"
+      }
+    ]
+  },
+  "api_checks": [
+    {
+      "path": "/health",
+      "http_status": 200,
+      "stale": null,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": false
+    },
+    {
+      "path": "/api/watchlist/status",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": true
+    },
+    {
+      "path": "/api/watchlist/quotes",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.009517Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/market/indices",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": null,
+      "cached_at": "2026-10-08T02:59:50.804899Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/market/breadth",
+      "http_status": 503,
+      "stale": null,
+      "collection_state": null,
+      "cached_at": null,
+      "has_data": false
+    },
+    {
+      "path": "/api/stocks/600519/quote",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.009517Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/600519/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.040813Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/600519/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:58:51.846361Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/600519/money-flow",
+      "http_status": 200,
+      "stale": true,
+      "collection_state": "stale",
+      "cached_at": "2026-10-08T02:56:51.659361Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/600519/sentiment",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:58:54.573599Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/300750/quote",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.009517Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.022303Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/300750/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:58:52.347028Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/300750/money-flow",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:58:54.719817Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/300750/sentiment",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:58:54.560459Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/002414/quote",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.009517Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/002414/intraday",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:49.031125Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/002414/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:58:23.215514Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/002414/money-flow",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:22.863671Z",
+      "has_data": true
+    },
+    {
+      "path": "/api/stocks/002414/sentiment",
+      "http_status": 200,
+      "stale": false,
+      "collection_state": "ready",
+      "cached_at": "2026-10-08T02:59:22.679435Z",
+      "has_data": true
+    }
+  ],
+  "controlled_offline_restart": [
+    {
+      "path": "/api/market/indices",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/600519/quote",
+      "http_status": 200,
+      "stale": true,
+      "same_data": false,
+      "same_cached_at": false
+    },
+    {
+      "path": "/api/stocks/600519/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": false
+    },
+    {
+      "path": "/api/stocks/600519/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/600519/money-flow",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/600519/sentiment",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/300750/quote",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/300750/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/300750/money-flow",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/300750/sentiment",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/002414/quote",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/002414/intraday",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/002414/kline?period=daily&limit=120",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/002414/money-flow",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    },
+    {
+      "path": "/api/stocks/002414/sentiment",
+      "http_status": 200,
+      "stale": true,
+      "same_data": true,
+      "same_cached_at": true
+    }
+  ],
+  "finished_at": "2026-10-08T02:59:51.531770+00:00"
+}

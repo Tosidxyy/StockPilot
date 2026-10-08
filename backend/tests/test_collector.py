@@ -215,6 +215,54 @@ def test_failed_stock_does_not_block_other_resources(tmp_path):
     asyncio.run(run())
 
 
+def test_slow_completed_fetch_does_not_make_next_scheduled_refresh_skip(tmp_path):
+    async def run():
+        clock = Clock()
+        started = asyncio.Event()
+        release = asyncio.Event()
+
+        class DelayedProvider(RecordingProvider):
+            async def get_quotes(self, symbols):
+                started.set()
+                await release.wait()
+                return await super().get_quotes(symbols)
+
+            async def get_stock_intraday(self, symbol):
+                await release.wait()
+                return await super().get_stock_intraday(symbol)
+
+            async def get_kline(self, symbol, period="daily", limit=120):
+                await release.wait()
+                return await super().get_kline(symbol, period, limit)
+
+        engine, _, provider, stocks, watch, collector = setup(tmp_path, DelayedProvider(), clock)
+        watch.add("600519")
+        try:
+            await collector.poll()
+            await asyncio.wait_for(started.wait(), 2)
+            # The first result only arrives 1.5s after its scheduled start.
+            clock.now = 1.5
+            release.set()
+            await settle(collector)
+            assert len(provider.quote_batches) == len(provider.intraday) == 1
+            first = await stocks.cached_intraday("600519")
+            clock.now = 2
+            # A page read still reuses the 0.5s-old result, without another fetch.
+            assert (await stocks.get_intraday("600519")).cached_at == first.cached_at
+            assert len(provider.intraday) == 1
+            await settle(collector)
+            assert len(provider.quote_batches) == len(provider.intraday) == 2
+            assert len(provider.history) == 2
+            clock.now = 60
+            await settle(collector)
+            assert len(provider.history) == 4  # Still inside the original history cache TTL.
+        finally:
+            await collector.stop()
+            await stocks.aclose()
+            engine.dispose()
+    asyncio.run(run())
+
+
 def test_slow_requests_are_bounded_fair_and_shutdown_cancels_loaders(tmp_path):
     async def run():
         started = asyncio.Event()

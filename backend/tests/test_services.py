@@ -96,6 +96,48 @@ def test_stock_service_batches_caches_and_returns_stale_after_failure() -> None:
     asyncio.run(run())
 
 
+def test_scheduled_revalidation_coalesces_and_keeps_backoff_original_stale_time():
+    from app.services.cache import AsyncTTLStore
+
+    async def run():
+        clock = Clock()
+        store = AsyncTTLStore(ttl=60, stale_ttl=400, timer=clock)
+        calls = 0
+        release = asyncio.Event()
+
+        async def load():
+            nonlocal calls
+            calls += 1
+            await release.wait()
+            return [calls]
+
+        release.set()
+        await store.get("stock", load)
+        release.clear()
+        tasks = [asyncio.create_task(store.get("stock", load, revalidate=True)) for _ in range(2)]
+        await asyncio.sleep(0)
+        await asyncio.sleep(0)
+        assert calls == 2
+        release.set()
+        results = await asyncio.gather(*tasks)
+        assert results[0] == results[1]
+
+        async def fail():
+            nonlocal calls
+            calls += 1
+            raise DataSourceError("offline")
+
+        clock.now = 2
+        previous = results[0]
+        stale = await store.get("stock", fail, revalidate=True)
+        assert stale.stale and stale.data == previous.data and stale.cached_at == previous.cached_at
+        assert (await store.get("stock", fail)).stale
+        assert (await store.get("stock", fail, revalidate=True)).cached_at == previous.cached_at
+        assert calls == 3
+        await store.aclose()
+    asyncio.run(run())
+
+
 def test_market_service_uses_short_cache_and_stale_flag() -> None:
     async def run() -> None:
         clock = Clock()
