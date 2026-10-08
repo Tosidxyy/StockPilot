@@ -1,5 +1,6 @@
 """Public quote failover and measured Sina-first minutes, with cached fallback."""
 
+import asyncio
 from typing import Literal, Sequence
 from dataclasses import dataclass
 from time import monotonic
@@ -9,7 +10,7 @@ from cachetools import TTLCache
 from app.models.market import IntradayPoint, KlineItem, MarketIndex, StockQuote, SymbolSearchResult
 from app.providers.base import MarketDataProvider
 from app.providers.eastmoney import EastMoneyProvider
-from app.providers.exceptions import DataSourceError
+from app.providers.exceptions import DataSourceError, ProviderTimeoutError
 from app.providers.history import TencentHistory
 from app.providers.intraday import TencentIntraday
 from app.providers.quotes import INDEX_CODES, PublicQuotes
@@ -48,7 +49,11 @@ class ResilientMarketProvider(MarketDataProvider):
         self, primary: MarketDataProvider | None = None, history: TencentHistory | None = None,
         intraday: TencentIntraday | None = None, *, timer=monotonic, quote_sources=None, minute_sources=None,
         index_sources=None,
+        minute_timeout: float = 2.0,
     ) -> None:
+        if not isfinite(minute_timeout) or minute_timeout <= 0:
+            raise ValueError("minute_timeout must be finite and positive")
+        self._minute_timeout = minute_timeout
         self._primary = primary if primary is not None else EastMoneyProvider()
         self._history = history if history is not None else TencentHistory()
         self._intraday = intraday if intraday is not None else TencentIntraday()
@@ -146,19 +151,32 @@ class ResilientMarketProvider(MarketDataProvider):
 
     async def _minutes(self, kind, code):
         last_error = None
+        # Share one budget across the source chain. A slow backup must not keep
+        # the preferred source's next retry blocked for several polling cycles.
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + self._minute_timeout
         for position, source in enumerate(self._minute_sources):
             key = (kind, code, position)
             sina = isinstance(source, SinaIntraday)
             retry = self._sina_retry.get(key) if sina else None
             if (retry is not None and self._timer() < retry.retry_at) or key in self._intraday_retry:
                 continue
+            remaining = deadline - loop.time()
+            if remaining <= 0:
+                last_error = ProviderTimeoutError("Minute refresh time budget exhausted")
+                break
             try:
-                points = await (source.get_stock_intraday(code) if kind == "stock" else source.get_index_intraday(code))
+                async with asyncio.timeout(remaining):
+                    points = await (source.get_stock_intraday(code) if kind == "stock" else source.get_index_intraday(code))
                 if not points:
                     raise DataSourceError("Minute source returned no points")
                 self._sina_retry.pop(key, None)
                 return points
-            except DataSourceError as error:
+            except (DataSourceError, TimeoutError) as error:
+                if isinstance(error, TimeoutError):
+                    timed_out = ProviderTimeoutError("Minute refresh time budget exhausted")
+                    timed_out.__cause__ = error
+                    error = timed_out
                 if sina:
                     attempts = min(retry.attempts + 1 if retry else 1, 5)
                     self._sina_retry[key] = MinuteRetry(attempts, self._timer() + min(2 ** attempts, 30))

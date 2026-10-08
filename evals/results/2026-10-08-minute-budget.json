@@ -1,0 +1,120 @@
+{
+  "started_at": "2026-10-08T03:50:09.723739+00:00",
+  "market_session": false,
+  "beijing_time": "2026-10-08T11:50:09.723739+08:00",
+  "minute_chain_budget_seconds": 2,
+  "mode": "Real HTTP normal reads; controlled one preferred failure and indefinitely slow backup; real preferred recovery.",
+  "limits": [
+    "A short check, not long-term two-second source stability.",
+    "Off-session source timestamps/prices may remain unchanged; a new cache time is not a new trade.",
+    "Source failures and simulated failures are reported separately; no model calls or user database writes."
+  ],
+  "source_sha256": {
+    "evals\\check_minute_budget.py": "d5e8a1097a63ea2c5e60ef64adcccbf7393f961b2dad65b9b4a35b497bf08cf3",
+    "backend\\app\\providers\\resilient.py": "c67e29d91ce57d8ddb52839fb7395ff4c954551f294d0432de1f4fbab05e4b44",
+    "backend\\app\\services\\cache.py": "e62443eb047cb3d2b87a31c4e71a366d9ff7034b1da398ad7ec32355fc2f3128"
+  },
+  "health": 200,
+  "normal_reads": [
+    {
+      "path": "/api/stocks/600519/intraday",
+      "http_status": 200,
+      "elapsed_seconds": 0.2515,
+      "point_count": 120,
+      "stale": false,
+      "cached_at": "2026-10-08T03:50:10.432019Z",
+      "source": "sina",
+      "source_time": "2026-10-08T11:30:00"
+    },
+    {
+      "path": "/api/stocks/300750/intraday",
+      "http_status": 200,
+      "elapsed_seconds": 0.2273,
+      "point_count": 120,
+      "stale": false,
+      "cached_at": "2026-10-08T03:50:10.415519Z",
+      "source": "sina",
+      "source_time": "2026-10-08T11:30:00"
+    },
+    {
+      "path": "/api/stocks/000001/intraday",
+      "http_status": 200,
+      "elapsed_seconds": 0.2653,
+      "point_count": 120,
+      "stale": false,
+      "cached_at": "2026-10-08T03:50:10.438884Z",
+      "source": "sina",
+      "source_time": "2026-10-08T11:30:00"
+    },
+    {
+      "path": "/api/market/indices/000001/intraday",
+      "http_status": 200,
+      "elapsed_seconds": 0.2133,
+      "point_count": 120,
+      "stale": false,
+      "cached_at": "2026-10-08T03:50:10.408948Z",
+      "source": "sina",
+      "source_time": "2026-10-08T11:30:00"
+    },
+    {
+      "path": "/api/market/indices/399001/intraday",
+      "http_status": 200,
+      "elapsed_seconds": 0.2115,
+      "point_count": 120,
+      "stale": false,
+      "cached_at": "2026-10-08T03:50:10.389650Z",
+      "source": "sina",
+      "source_time": "2026-10-08T11:30:00"
+    },
+    {
+      "path": "/api/market/indices/399006/intraday",
+      "http_status": 200,
+      "elapsed_seconds": 0.2351,
+      "point_count": 120,
+      "stale": false,
+      "cached_at": "2026-10-08T03:50:10.424047Z",
+      "source": "sina",
+      "source_time": "2026-10-08T11:30:00"
+    }
+  ],
+  "controlled_recovery": {
+    "elapsed_seconds": 2.0053,
+    "preferred_failures": 1,
+    "last_source_calls": 0,
+    "slow_backup_calls": 1,
+    "slow_backup_cancelled": 1,
+    "stale": true,
+    "same_data": true,
+    "same_cached_at": true,
+    "cache_http_status": 200,
+    "cache_api_stale": true,
+    "cache_api_keeps_time": true,
+    "recovered_fresh": true,
+    "recovered_source": "sina",
+    "recovered_source_time": "2026-10-08T11:30:00",
+    "original_cached_at": "2026-10-08T03:50:10.432019+00:00",
+    "recovered_cached_at": "2026-10-08T03:50:14.659332+00:00",
+    "cache_time_advanced": true
+  },
+  "auxiliary_sources": [
+    {
+      "resource": "market_breadth",
+      "success": false,
+      "error_type": "DataSourceError",
+      "cause_type": null
+    },
+    {
+      "resource": "300750_money_flow",
+      "success": false,
+      "error_type": "DataSourceError",
+      "cause_type": "RemoteProtocolError"
+    },
+    {
+      "resource": "300750_comments",
+      "success": false,
+      "error_type": "DataSourceError",
+      "cause_type": null
+    }
+  ],
+  "finished_at": "2026-10-08T03:50:14.959139+00:00"
+}
