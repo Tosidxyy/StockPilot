@@ -4,6 +4,7 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from app import __version__
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
@@ -140,7 +141,7 @@ def create_app(
                 await data_provider.aclose()
             engine.dispose()
 
-    application = FastAPI(title=get_settings().app_name, lifespan=lifespan)
+    application = FastAPI(title=get_settings().app_name, version=__version__, lifespan=lifespan)
     application.add_middleware(
         CORSMiddleware,
         allow_origins=get_settings().cors_origins,
