@@ -23,13 +23,40 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
   const [apiConnected, setApiConnected] = useState<boolean | null>(null);
 
   useEffect(() => {
-    const controller = new AbortController();
-    void apiRequest<{ status: string }>("/health", { signal: controller.signal })
-      .then((result) => setApiConnected(result.status === "ok"))
-      .catch((error) => {
-        if (!(error instanceof Error && error.name === "AbortError")) setApiConnected(false);
-      });
-    return () => controller.abort();
+    let disposed = false;
+    let controller: AbortController | null = null;
+    let retry: ReturnType<typeof setTimeout> | undefined;
+    async function checkConnection() {
+      if (disposed || controller) return;
+      const current = new AbortController();
+      controller = current;
+      const timeout = setTimeout(() => current.abort(), 5000);
+      try {
+        const result = await apiRequest<{ status: string }>("/health", { signal: current.signal });
+        if (!disposed) setApiConnected(result.status === "ok");
+      } catch {
+        if (!disposed) setApiConnected(false);
+      } finally {
+        clearTimeout(timeout);
+        controller = null;
+        if (!disposed) retry = setTimeout(checkConnection, 10000);
+      }
+    }
+    function recheck() {
+      if (document.visibilityState !== "visible") return;
+      clearTimeout(retry);
+      void checkConnection();
+    }
+    void checkConnection();
+    window.addEventListener("online", recheck);
+    document.addEventListener("visibilitychange", recheck);
+    return () => {
+      disposed = true;
+      clearTimeout(retry);
+      controller?.abort();
+      window.removeEventListener("online", recheck);
+      document.removeEventListener("visibilitychange", recheck);
+    };
   }, []);
 
   return (
